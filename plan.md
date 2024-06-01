@@ -6,7 +6,7 @@ Project description: An application for organizing ideas into story structures.
 
 ## MVP Checklist
 
-* [ ] Table of stories
+    * [ ] Table of stories
 * Each story has:
     - [ ] Reorder buttons
     - [ ] Delete button
