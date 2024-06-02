@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'storybuilder.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'STORYBUILDER_DB',
+        'NAME': 'storybuilder',
     }
 }
 
