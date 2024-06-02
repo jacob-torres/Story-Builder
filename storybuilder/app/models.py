@@ -2,6 +2,36 @@ import uuid
 from django.db import models
 
 # Create your models here.
+class Story(models.Model):
+    """A collection of ideas."""
+
+    story_id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        db_column='story_id',
+        editable=False
+    )
+
+    story_rank = models.AutoField(
+        default=0,
+        db_column='story_rank',
+        unique=True
+    )
+
+    story_title = models.CharField(
+        max_length=250,
+        default='Story Title',
+        db_column='story_title',
+        help_text='Enter your story title.'
+    )
+
+    story_ideas = models.JSONField(
+        db_column='story_ideas',
+        null=True,
+        help_text='The list of ideas which make up your story.'
+    )
+
+
 class Idea(models.Model):
     """The smallest unit of a story.
     
@@ -32,7 +62,7 @@ class Idea(models.Model):
 
     idea_text = models.TextField(
         default='Idea Text',
-        db_name='idea_text',
+        db_column='idea_text',
         help_text='Write anything you want to about your idea.'
     )
 
@@ -46,34 +76,4 @@ class Idea(models.Model):
         db_column='idea_links',
         null=True,
         help_text='A list of links to your idea references.'
-    )
-
-
-class Story(models.Model):
-    """A collection of ideas."""
-
-    story_id = models.UUIDField(
-        primary_key=True,
-        default=uuid.uuid4,
-        db_column='story_id',
-        editable=False
-    )
-
-    story_rank = models.AutoField(
-        default=0,
-        db_column='story_rank',
-        unique=True
-    )
-
-    story_title = models.CharField(
-        max_length=250,
-        default='Story Title',
-        db_column='story_title',
-        help_text='Enter your story title.'
-    )
-
-    story_ideas = models.JSONField(
-        db_column='story_ideas',
-        null=True,
-        help_text='The list of ideas which make up your story.'
     )
