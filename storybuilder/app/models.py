@@ -42,7 +42,7 @@ class Idea(models.Model):
         help_text='Upload an image to visualize your idea.'
     )
 
-    idea_links = JSONField(
+    idea_links = models.JSONField(
         db_column='idea_links',
         null=True,
         help_text='A list of links to your idea references.'
@@ -72,7 +72,7 @@ class Story(models.Model):
         help_text='Enter your story title.'
     )
 
-    story_ideas = JSONField(
+    story_ideas = models.JSONField(
         db_column='story_ideas',
         null=True,
         help_text='The list of ideas which make up your story.'
