@@ -6,13 +6,13 @@ class Story(models.Model):
     """A collection of ideas."""
 
     story_id = models.UUIDField(
-        primary_key=True,
         default=uuid.uuid4,
         db_column='story_id',
         editable=False
     )
 
     story_rank = models.AutoField(
+        primary_key=True,
         default=0,
         db_column='story_rank',
         unique=True
@@ -39,7 +39,6 @@ class Idea(models.Model):
     """
 
     idea_id = models.UUIDField(
-        primary_key=True,
         default=uuid.uuid4,
         db_column='idea_id',
         editable=False
@@ -48,6 +47,7 @@ class Idea(models.Model):
     idea_story = models.ForeignKey(to=Story, on_delete=models.CASCADE)
 
     idea_rank = models.AutoField(
+        primary_key=True,
         default=0,
         db_column='idea_rank',
         unique=True
