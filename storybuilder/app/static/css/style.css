@@ -1,5 +1,27 @@
-body {
-    background-color: #191970; /* Midnight Blue */
-    color: #F5F5DC; /* Cream White */
+html{
+    background-color: #fff; /* Pure White */
+    color: #191970;  /* Midnight Blue */
     font-family: Arial, sans-serif;
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+}
+
+body {
+    padding: 1rem;
+    margin: auto;
+}
+
+header {
+    font-size: 1.2rem;
+    padding: 1rem 0.75rem;
+    margin: 0.5 auto;
+    margin-bottom: 1.5rem;
+    border: hidden;
+}
+
+main {
+    background-color: #808080; /* Medium Gray */
+    color: #fff; /* Pure White */
+    padding: 1em;
 }
