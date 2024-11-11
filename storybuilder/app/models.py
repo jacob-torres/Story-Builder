@@ -1,11 +1,46 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 max_length = 100
 
+
+# User models
+class CustomUser(AbstractUser):
+    """Custom user object extending Django AbstractUser class."""
+
+    # User info
+    age = models.PositiveSmallIntegerField(null=True)
+    gender = models.CharField(max_length=max_length, blank=True)
+    story_genres = ArrayField(models.CharField(max_length=max_length))
+
+    # Add related_name for groups and user_permissions to avoid auth clash
+    groups = models.ManyToManyField(
+        Group,
+        related_name='customuser_set', # Add this line
+        blank=True,
+        verbose_name='groups',
+        help_text='The groups this user belongs to.'
+    )
+
+    user_permissions = models.ManyToManyField(
+        Permission,
+        verbose_name='user permissions',
+        blank=True,
+        help_text='Specific permissions for this user.'
+    )
+
+
 # Story models
+class StoryCollection(models.Model):
+    """Collection of stories."""
+
+    name = models.CharField(max_length=max_length, blank=False)
+    description = models.TextField(blank=True)
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='story_collections')
+
+
 class Character(models.Model):
     """Story character."""
 
@@ -77,7 +112,9 @@ class Story(models.Model):
     date_last_saved = models.DateField(auto_now=True)
     date_finished = models.DateField(null=True)
 
-    # Relationships: One or more characters, plots, and scenes
+    # Relationships: One collection, one author, One or more characters
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='stories')
+    story_collection = models.ForeignKey(StoryCollection, on_delete=models.CASCADE)
     characters = models.ManyToManyField(Character)
 
 
@@ -124,23 +161,3 @@ class World(models.Model):
     characters = models.ManyToManyField(Character)
 
 
-class StoryCollection(models.Model):
-    """Collection of stories."""
-
-    name = models.CharField(max_length=max_length, blank=False)
-    description = models.TextField(blank=True)
-
-    # Relationships: One or more stories
-    stories = models.ManyToManyField(Story)
-
-
-# User models
-class CustomUser(AbstractUser):
-    """Custom user object extending Django AbstractUser class."""
-
-    # User info
-    age = models.PositiveSmallIntegerField(null=True)
-    gender = models.CharField(max_length=max_length, blank=True)
-    story_genres = ArrayField(models.CharField(max_length=max_length))
-    story_collections = ArrayField(StoryCollection)
-    
