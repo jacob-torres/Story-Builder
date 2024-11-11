@@ -22,3 +22,38 @@ main {
     background-color: #808080; /* Medium Gray */
     color: #fff; /* Pure White */
 }
+
+.container {
+    display: flex;
+  }
+  
+  .column {
+    border: 1px solid black;
+    padding: 1.25rem;
+  }
+
+  .left {
+    flex: 0 0 60%; /* Fixed width of 60% */
+    background-color: #191970; /* Midnight Blue */
+    color: #fff;
+  }
+  
+  .right {
+    flex: 1; /* Remaining space */
+  }
+
+  .contribution-aside, .start-btn {
+    background-color: #bdbbd7; /* Lavender Gray */
+    color: #191970; /* Midnight Blue */
+  }
+
+  button.start-btn {
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    font-size: 1.25rem;
+    border: 2px solid black;
+    border-radius: 25%;
+    padding: 0.5rem;
+    margin: 1rem 0.5rem;
+}
