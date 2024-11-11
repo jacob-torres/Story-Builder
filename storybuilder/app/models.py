@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 max_length = 100
@@ -124,7 +124,7 @@ class World(models.Model):
     characters = models.ManyToManyField(Character)
 
 
-class Collection(models.Model):
+class StoryCollection(models.Model):
     """Collection of stories."""
 
     name = models.CharField(max_length=max_length, blank=False)
@@ -137,4 +137,10 @@ class Collection(models.Model):
 # User models
 class CustomUser(AbstractUser):
     """Custom user object extending Django AbstractUser class."""
+
+    # User info
+    age = models.PositiveSmallIntegerField(null=True)
+    gender = models.CharField(max_length=max_length, blank=True)
+    story_genres = ArrayField(models.CharField(max_length=max_length))
+    story_collections = ArrayField(StoryCollection)
     
