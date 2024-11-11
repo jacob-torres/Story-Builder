@@ -113,7 +113,7 @@ class Story(models.Model):
     date_finished = models.DateField(null=True)
 
     # Relationships: One collection, one author, One or more characters
-    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='stories')
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='stories', default=None)
     story_collection = models.ForeignKey(StoryCollection, on_delete=models.CASCADE)
     characters = models.ManyToManyField(Character)
 
