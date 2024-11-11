@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 max_length = 100
 
-
+# Story models
 class Character(models.Model):
     """Story character."""
 
@@ -132,3 +132,9 @@ class Collection(models.Model):
 
     # Relationships: One or more stories
     stories = models.ManyToManyField(Story)
+
+
+# User models
+class CustomUser(AbstractUser):
+    """Custom user object extending Django AbstractUser class."""
+    
