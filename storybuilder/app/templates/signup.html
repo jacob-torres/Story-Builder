@@ -2,5 +2,14 @@
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
-
+    <section role="form" aria-label="Signup Form">
+        <h1>Sign Up for the Story Builder</h1>
+        <form>
+            <input type="email" aria-label="User Email" required>
+            <input type="password" aria-label="User Password" required>
+            <input type="text" aria-label="Username" required>
+            <input type="submit" aria-label="Submit">
+        </form>
+    </section>
+    <hr>
 {% endblock %}
