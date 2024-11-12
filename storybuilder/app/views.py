@@ -9,9 +9,12 @@ def welcome(request):
 
 def login(request):
     """Login view."""
+    return render(request, 'login.html')
 
 def logout(request):
     """Logout view."""
+    return render(request, 'logout.html')
 
 def signup(request):
     """Signup view."""
+    return render(request, 'signup.html')
