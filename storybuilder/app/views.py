@@ -4,9 +4,9 @@ from django.contrib.auth import login, logout, authenticate
 from .forms import LoginForm
 
 # Create your views here.
-def welcome(request):
-    """Welcome page."""
-    return render(request, 'welcome.html')
+def home(request):
+    """Home page."""
+    return render(request, 'home.html')
 
 def login_view(request):
     """Login view."""
@@ -21,7 +21,7 @@ def login_view(request):
 
             if user is not None:
                 login(request, user)
-                return redirect('')
+                return redirect('home')
             else:
                 form.add_error(None, 'Invalid username or password')
 
@@ -34,7 +34,7 @@ def login_view(request):
 def logout_view(request):
     """Logout view."""
     logout(request)
-    return redirect('')  # Redirect to welcome/home page
+    return redirect('home')
 
 def signup_view(request):
     """Signup view."""
