@@ -3,33 +3,44 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+    {% if user.is_authenticated %}
     <section class="introduction" role="region" aria-label="introduction">
         <div class="top">
-            <h1>Welcome to the Story Builder</h1>
+            <h1>Welcome {{ user.first_name }}!</h1>
             <p>This is the beginning of your story. <a href="">Start crafting new worlds today!</a></p>
         </div>
         <hr>
+    </section>
 
-        <div class="container">
-            <div class="column left">
-                <article>
-                    <h2>Coming Soon: Your Digital Canvas for Creative Storytelling</h2>
-                    <p>Story Builder is a powerful and intuitive tool designed to help writers and other creative minds bring their stories to life. Whether you're crafting a novel, scripting a game, or worldbuilding a fantasy realm, Story Builder provides a comprehensive suite of features to organize and develop your narrative.</p>
-                    <p>Key features include:</p>
-            
-                    <ul>
-                        <li>Character Creation: Design detailed characters with unique personalities, backstories, and relationships.</li>
-                        <li>Plot Development: Outline your story's arc and create intricate plot lines to keep your audience on their toes.</li>
-                        <li>World Building: Construct immersive worlds with rich histories, cultures, and geographies.</li>
-                        <li>Scene Writing: Break down your story into scenes, easily revising and reorganizing as you go.</li>
-                        <li>Collaboration Tools: Share your projects with fellow writers, collaborate on ideas, and receive feedback from your audience.</li>
-                    </ul>
-            
-                    <p>With Story Builder, you can streamline your creative process, enhance your storytelling abilities, and bring your imaginative visions to life.</p>
-            
-                    <button class="start-btn">Let's get started!</button>
-                </article>
+{% else %}
+        <section class="introduction" role="region" aria-label="introduction">
+            <div class="top">
+                <h1>Welcome to the Story Builder</h1>
+                <p>This is the beginning of your story. <a href="">Start crafting new worlds today!</a></p>
             </div>
+            <hr>
+
+            <div class="container">
+                <div class="column left">
+                    <article>
+                        <h2>Coming Soon: Your Digital Canvas for Creative Storytelling</h2>
+                        <p>Story Builder is a powerful and intuitive tool designed to help writers and other creative minds bring their stories to life. Whether you're crafting a novel, scripting a game, or worldbuilding a fantasy realm, Story Builder provides a comprehensive suite of features to organize and develop your narrative.</p>
+                        <p>Key features include:</p>
+                
+                        <ul>
+                            <li>Character Creation: Design detailed characters with unique personalities, backstories, and relationships.</li>
+                            <li>Plot Development: Outline your story's arc and create intricate plot lines to keep your audience on their toes.</li>
+                            <li>World Building: Construct immersive worlds with rich histories, cultures, and geographies.</li>
+                            <li>Scene Writing: Break down your story into scenes, easily revising and reorganizing as you go.</li>
+                            <li>Collaboration Tools: Share your projects with fellow writers, collaborate on ideas, and receive feedback from your audience.</li>
+                        </ul>
+                
+                        <p>With Story Builder, you can streamline your creative process, enhance your storytelling abilities, and bring your imaginative visions to life.</p>
+                
+                        <button class="start-btn">Let's get started!</button>
+                    </article>
+                </div>
+            {% endif %}
 
             <div class="column right">
                 <aside class="contribution-aside">

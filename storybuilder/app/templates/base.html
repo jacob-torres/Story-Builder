@@ -24,12 +24,16 @@
                     <li>
                         <a href="/">Home</a>
                     </li>
-                    <li>
+                    {% if user.is_authenticated %}<li>
+                        <a href="/logout">Log Out</a>
+                    </li>
+                    {% else %}<li>
                         <a href="/login">Log In</a>
                     </li>
                     <li>
                         <a href="/signup">Sign Up</a>
                     </li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>
