@@ -8,7 +8,7 @@ def welcome(request):
     """Welcome page."""
     return render(request, 'welcome.html')
 
-def login(request):
+def login_view(request):
     """Login view."""
 
     if request.method == 'POST':
@@ -20,7 +20,7 @@ def login(request):
             user = authenticate(request, username=username, password=password)
 
             if user is not None:
-                login(request)
+                login(request, user)
                 return redirect('')
             else:
                 form.add_error(None, 'Invalid username or password')
@@ -31,11 +31,11 @@ def login(request):
     context = {'form': form}
     return render(request, 'login.html', context=context)
 
-def logout(request):
+def logout_view(request):
     """Logout view."""
     logout(request)
     return redirect('')  # Redirect to welcome/home page
 
-def signup(request):
+def signup_view(request):
     """Signup view."""
     return render(request, 'signup.html')
