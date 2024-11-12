@@ -6,3 +6,12 @@ from django.http import HttpResponse
 def welcome(request):
     """Welcome page."""
     return render(request, 'welcome.html')
+
+def login(request):
+    """Login view."""
+
+def logout(request):
+    """Logout view."""
+
+def signup(request):
+    """Signup view."""
