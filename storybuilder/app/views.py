@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
-from .forms import LoginForm
+from .forms import LoginForm, SignupForm
 
 # Create your views here.
 def home(request):
@@ -38,4 +38,18 @@ def logout_view(request):
 
 def signup_view(request):
     """Signup view."""
-    return render(request, 'signup.html')
+
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+        else:
+            form.add_error(None, 'There was an error registering, try again.')
+
+    else:
+        form = SignupForm()
+    
+    context = {'form': form}
+    return render(request, 'signup.html', context=context)

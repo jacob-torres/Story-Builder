@@ -12,24 +12,24 @@ class CustomUser(AbstractUser):
 
     # User info
     age = models.PositiveSmallIntegerField(null=True)
-    gender = models.CharField(max_length=max_length, blank=True)
-    story_genres = ArrayField(models.CharField(max_length=max_length))
+    gender = models.CharField(max_length=max_length, null=True)
+    story_genres = ArrayField(models.CharField(max_length=max_length), null=True)
 
-    # Add related_name for groups and user_permissions to avoid auth clash
-    groups = models.ManyToManyField(
-        Group,
-        related_name='customuser_set', # Add this line
-        blank=True,
-        verbose_name='groups',
-        help_text='The groups this user belongs to.'
-    )
+    # # Add related_name for groups and user_permissions to avoid auth clash
+    # groups = models.ManyToManyField(
+    #     Group,
+    #     related_name='customuser_set', # Add this line
+    #     blank=True,
+    #     verbose_name='groups',
+    #     help_text='The groups this user belongs to.'
+    # )
 
-    user_permissions = models.ManyToManyField(
-        Permission,
-        verbose_name='user permissions',
-        blank=True,
-        help_text='Specific permissions for this user.'
-    )
+    # user_permissions = models.ManyToManyField(
+    #     Permission,
+    #     verbose_name='user permissions',
+    #     blank=True,
+    #     help_text='Specific permissions for this user.'
+    # )
 
 
 # Story models
