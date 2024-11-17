@@ -11,18 +11,18 @@ class NewStoryForm(forms.ModelForm):
 
     # Genre field definition
     genre_choices = [
-        ('1', 'Contemporary Fiction'),
-        ('2', 'Literary Fiction'),
-        ('3', 'Science Fiction'),
-        ('4', 'Fantasy'),
-        ('5', 'Romance'),
-        ('6', 'Horror'),
-        ('7', 'Historical Fiction'),
-        ('8', 'Young Adult'),
-        ('9', 'Children\'s'),
-        ('10', 'Flash Fiction'),
-        ('11', 'Experimental'),
-        ('12', 'Game'),
+        ('Contemporary Fiction', 'Contemporary Fiction'),
+        ('Literary Fiction', 'Literary Fiction'),
+        ('Science Fiction', 'Science Fiction'),
+        ('Fantasy', 'Fantasy'),
+        ('Romance', 'Romance'),
+        ('Horror', 'Horror'),
+        ('Historical Fiction', 'Historical Fiction'),
+        ('Young Adult', 'Young Adult'),
+        ('Children\'s', 'Children\'s'),
+        ('Flash Fiction', 'Flash Fiction'),
+        ('Experimental', 'Experimental'),
+        ('Game', 'Game'),
         ('other', 'Other (Specify)')
     ]
 

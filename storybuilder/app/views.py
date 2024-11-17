@@ -32,9 +32,18 @@ def new_story(request):
     return render(request, 'new_story.html', context=context)
 
 
+def delete_story(request, story_id):
+    """View function for deleting a story."""
+
+    story = get_object_or_404(Story, pk=story_id)
+    story.delete()
+    return redirect('stories')
+
+
 def story_detail(request, story_id):
     """View function for displaying story details."""
 
     story = get_object_or_404(Story, pk=story_id)
-    context = {'story': story}
+    genres = ', '.join(story.genre.strip('[]').replace("'", '').split(','))
+    context = {'story': story, 'genres': genres}
     return render(request, 'story_detail.html', context=context)
