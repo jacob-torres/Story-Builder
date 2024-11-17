@@ -4,14 +4,6 @@ from django.db import models
 max_length = 250
 
 
-class Collection(models.Model):
-    """Collection of stories."""
-
-    name = models.CharField(max_length=max_length, null=False)
-    description = models.TextField(null=True)
-    num_stories = models.PositiveSmallIntegerField(default=0)
-
-
 class Character(models.Model):
     """Story character."""
 
@@ -83,8 +75,7 @@ class Story(models.Model):
     date_last_saved = models.DateField(auto_now=True)
     date_finished = models.DateField(null=True)
 
-    # Relationships: One collection, one or more characters
-    collection = models.ForeignKey(Collection, on_delete=models.CASCADE)
+    # Relationships: One or more characters
     characters = models.ManyToManyField(Character)
 
 
@@ -95,7 +86,7 @@ class Scene(models.Model):
     description = models.TextField(null=True)
 
     # Relationships: One story, one or more characters
-    story = models.ForeignKey(Story, on_delete=models.CASCADE)
+    story = models.ForeignKey(Story, on_delete=models.CASCADE, default=None)
     characters = models.ManyToManyField(Character)
 
 
@@ -106,7 +97,7 @@ class Plot(models.Model):
     description = models.TextField(null=True)
 
     # Relationships: One story
-    story = models.ForeignKey(Story, on_delete=models.CASCADE)
+    story = models.ForeignKey(Story, on_delete=models.CASCADE, default=None)
 
 
 class PlotPoint(models.Model):
@@ -116,7 +107,7 @@ class PlotPoint(models.Model):
     description = models.TextField(null=True)
 
     # Relationships: One plot, one or more scenes per plot point
-    plot = models.ForeignKey(Plot, on_delete=models.CASCADE)
+    plot = models.ForeignKey(Plot, on_delete=models.CASCADE, default=None)
     scenes = models.ManyToManyField(Scene)
 
 
