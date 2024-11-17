@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ story.title }}{% endblock %}
+
+{% block content %}
+<a href="/stories/">Back to Stories</a>
+<h1>Story Details</h1>
+<!-- Display details of the story passed from the story_detail view function.-->
+<ul>
+    <li>Title: {{ story.title }}</li>
+    <li>Genres: {{ story.genres }}</li>
+</ul>
+
+    <h2>Description</h2>
+    <p>{{ story.description }}</p>
+    <hr>
+
+  <button type="submit" onclick="window.location.href='delete/'">Delete Story</button>
+{% endblock %}
