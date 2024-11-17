@@ -7,8 +7,7 @@ class NewStoryForm(forms.ModelForm):
 
     class Meta:
         model = Story
-        fields = ('title', 'premise', 'description', 'genre')
-        premise = forms.CharField(required=False)
+        fields = ('title', 'description', 'genres')
 
     # Genre field definition
     genre_choices = [
@@ -27,7 +26,7 @@ class NewStoryForm(forms.ModelForm):
         ('Other', 'Other (Use a comma-separated list to include more than one genre.)')
     ]
 
-    genre = forms.MultipleChoiceField(
+    genres = forms.MultipleChoiceField(
         choices=genre_choices,
         widget=forms.CheckboxSelectMultiple
     )
@@ -37,14 +36,12 @@ class NewStoryForm(forms.ModelForm):
         """Data cleaning function."""
 
         clean_data = super().clean()
-        genre_choices = list(clean_data['genre'])
+        genre_choices = list(clean_data['genres'])
         if 'Other' in genre_choices:
             if not clean_data['other_choice']:
                 raise forms.ValidationError('Please specify your other choice.')
             genre_choices.remove('Other')
             genre_choices.append(clean_data['other_choice'])
-            print("Other Genre Choice:")
-            print(clean_data['other_choice'])
 
-        clean_data['genre'] = ', '.join(genre_choices)
+        clean_data['genres'] = ', '.join(genre_choices)
         return clean_data

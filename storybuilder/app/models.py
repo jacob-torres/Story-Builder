@@ -69,7 +69,7 @@ class Story(models.Model):
     title = models.CharField(max_length=max_length, null=False)
     description = models.TextField(null=True)
     premise = models.CharField(max_length=max_length, null=True)
-    genre = models.CharField(max_length=max_length, null=True)
+    genres = models.CharField(max_length=max_length, null=True)
     word_count = models.PositiveIntegerField(default=0)
     date_started = models.DateField(auto_now_add=True)
     date_last_saved = models.DateField(auto_now=True)
