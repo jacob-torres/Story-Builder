@@ -24,7 +24,7 @@ class NewStoryForm(forms.ModelForm):
         ('Flash Fiction', 'Flash Fiction'),
         ('Experimental', 'Experimental'),
         ('Game', 'Game'),
-        ('Other', 'Other (Specify)')
+        ('Other', 'Other (Use a comma-separated list to include more than one genre.)')
     ]
 
     genre = forms.MultipleChoiceField(
