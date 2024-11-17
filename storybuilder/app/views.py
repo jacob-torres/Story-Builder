@@ -44,6 +44,7 @@ def story_detail(request, story_id):
     """View function for displaying story details."""
 
     story = get_object_or_404(Story, pk=story_id)
-    genres = ', '.join(story.genre.strip('[]').replace("'", '').split(','))
+    # genres = ', '.join(story.genre.strip('[]').replace("'", '').split(','))
+    genres = story.genre
     context = {'story': story, 'genres': genres}
     return render(request, 'story_detail.html', context=context)

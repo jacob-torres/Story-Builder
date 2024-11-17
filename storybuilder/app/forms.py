@@ -24,7 +24,7 @@ class NewStoryForm(forms.ModelForm):
         ('Flash Fiction', 'Flash Fiction'),
         ('Experimental', 'Experimental'),
         ('Game', 'Game'),
-        ('other', 'Other (Specify)')
+        ('Other', 'Other (Specify)')
     ]
 
     genre = forms.MultipleChoiceField(
@@ -37,7 +37,14 @@ class NewStoryForm(forms.ModelForm):
         """Data cleaning function."""
 
         clean_data = super().clean()
-        if 'other' in clean_data['genre']:
+        genre_choices = list(clean_data['genre'])
+        if 'Other' in genre_choices:
             if not clean_data['other_choice']:
                 raise forms.ValidationError('Please specify your other choice.')
+            genre_choices.remove('Other')
+            genre_choices.append(clean_data['other_choice'])
+            print("Other Genre Choice:")
+            print(clean_data['other_choice'])
+
+        clean_data['genre'] = ', '.join(genre_choices)
         return clean_data
