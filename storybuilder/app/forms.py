@@ -8,6 +8,7 @@ class NewStoryForm(forms.ModelForm):
     class Meta:
         model = Story
         fields = ('title', 'premise', 'description', 'genre')
+        premise = forms.CharField(required=False)
 
     # Genre field definition
     genre_choices = [
