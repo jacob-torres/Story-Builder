@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-
+from .forms import NewStoryForm
 
 # Create your views here.
 def home(request):
@@ -11,10 +11,20 @@ def home(request):
 def stories(request):
     """View function for listing stories."""
 
-    return render(request, 'stories.html')
+    stories = []
+    context = {'stories': stories}
+    return render(request, 'stories.html', context=context)
 
 
 def new_story(request):
     """View function for creating a new story."""
 
-    return render(request, 'new_story.html')
+    if request.method == 'POST':
+        form = NewStoryForm(request.POST)
+        # ... form logic
+
+    else:
+        form = NewStoryForm()
+
+    context = {'form': form}
+    return render(request, 'new_story.html', context=context)
