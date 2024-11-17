@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .forms import NewStoryForm
+from .models import Story
 
 # Create your views here.
 def home(request):
@@ -21,10 +22,19 @@ def new_story(request):
 
     if request.method == 'POST':
         form = NewStoryForm(request.POST)
-        # ... form logic
-
+        if form.is_valid():
+            new_story = form.save()
+            return redirect('story_detail', story_id=new_story.id)
     else:
         form = NewStoryForm()
 
     context = {'form': form}
     return render(request, 'new_story.html', context=context)
+
+
+def story_detail(request, story_id):
+    """View function for displaying story details."""
+
+    story = get_object_or_404(Story, pk=story_id)
+    context = {'story': story}
+    return render(request, 'story_detail.html', context=context)
