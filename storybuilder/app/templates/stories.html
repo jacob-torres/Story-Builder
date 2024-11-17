@@ -5,5 +5,13 @@
 {% block content %}
 <h1>Your Stories</h1>
 <!-- Loop through the list of stories passed from the new_story view function.-->
+<ul>
+    {% for story in stories %}
+    <li>
+        <a href={{ story.id }}>{{ story.title }}</a>
+    </li>
+    {% endfor %}
+</ul>
+
 <button class="start-btn" onclick="window.location.href='stories/new/'">New Story</button>
 {% endblock %}

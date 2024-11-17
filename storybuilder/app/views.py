@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.http import HttpResponse
 from .forms import NewStoryForm
 from .models import Story
@@ -12,7 +12,7 @@ def home(request):
 def stories(request):
     """View function for listing stories."""
 
-    stories = []
+    stories = get_list_or_404(Story)
     context = {'stories': stories}
     return render(request, 'stories.html', context=context)
 
