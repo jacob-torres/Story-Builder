@@ -6,6 +6,10 @@
 <section class="stories-section">
     <h1>Your Stories</h1>
     <!-- Loop through the list of stories passed from the new_story view function.-->
+    {% if not stories %}
+    <p>You have no stories yet. When you do, they will be listed here.</p>
+
+    {% else %}
     <ul id="stories-list">
         {% for story in stories %}
         <li>
@@ -13,8 +17,11 @@
         </li>
         {% endfor %}
     </ul>
+    {% endif %}
+    <hr>
+
     <div class="big-btn">
-        <button class="start-btn" onclick="window.location.href='new/'">New Story</button></section>
+        <button class="big-btn" onclick="window.location.href='new/'">New Story</button></section>
     </div>
 </section>
 {% endblock %}
