@@ -3,15 +3,18 @@
 {% block title %}Stories{% endblock %}
 
 {% block content %}
-<h1>Your Stories</h1>
-<!-- Loop through the list of stories passed from the new_story view function.-->
-<ul>
-    {% for story in stories %}
-    <li>
-        <a href={{ story.id }}>{{ story.title }}</a>
-    </li>
-    {% endfor %}
-</ul>
-
-<button class="start-btn" onclick="window.location.href='stories/new/'">New Story</button>
+<section class="stories-section">
+    <h1>Your Stories</h1>
+    <!-- Loop through the list of stories passed from the new_story view function.-->
+    <ul id="stories-list">
+        {% for story in stories %}
+        <li>
+            <a href={{ story.id }}>{{ story.title }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    <div class="big-btn">
+        <button class="start-btn" onclick="window.location.href='new/'">New Story</button></section>
+    </div>
+</section>
 {% endblock %}

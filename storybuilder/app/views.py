@@ -12,7 +12,11 @@ def home(request):
 def stories(request):
     """View function for listing stories."""
 
-    stories = get_list_or_404(Story)
+    try:
+        stories = get_list_or_404(Story)
+    except:
+        stories = []
+
     context = {'stories': stories}
     return render(request, 'stories.html', context=context)
 
