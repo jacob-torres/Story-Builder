@@ -6,30 +6,6 @@ html, body {
   margin: 0;
 }
 
-h1, h2, h3, h4, h5, h6, p {
-  display: block;
-}
-
-
-div.top-section {
-  display: flex;
-  justify-content: center;
-}
-div.welcome {
-  padding: 1rem;
-}
-
-div#welcome-heading {
-  display: block;
-  margin: 0 auto;
-  text-align: center;
-}
-
-div#welcome-paragraph {
-  display: block;
-  margin: 0 auto;
-}
-
 /* Banner */
 section.banner {
   margin: 0 auto;
@@ -76,16 +52,26 @@ nav li a:hover {
 
 
 /* Home Page */
+
+/* Top section */
+section.top-section {
+  background-color: #808080;
+  color: #fff;
+}
+
+section.top-section h1 {
+  font-size: 1.75rem;
+  margin-bottom: 1.25rem;
+}
+
+section.top-section a:hover {
+  background-color: #191970;
+}
+
+/* Intro section with 2 columns */
 section.intro-section {
   display: flex;
   justify-content: space-around;
-}
-
-div.top-section {
-  display: flex;
-  justify-content: center;
-  background-color: #808080;  /* Medium Gray */
-  color: #fff;  /* Pure White */
 }
 
 div.home-container {

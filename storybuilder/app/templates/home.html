@@ -3,44 +3,38 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<section>
-        <div class="top-section">
-            <div class="welcome" id="welcome-heading">
-                <h1>Welcome to the Story Builder</h1>
-            </div>
-            <div class="welcome" id="welcome-paragraph">
-                <p>This is the beginning of your story. <a href="stories/new/">Start crafting new worlds today!</a></p>
+<section class="top-section">
+<h1>Welcome to The Story Builder</h1>
+<p>This is the beginning of your story. <a href="stories/new/">Get started now!</a></p>
+</section>
+<hr>
+
+<section class="intro-section">
+    <div class="home-container">
+        <div class="home-column" id="home-left-column">
+            <h2>Coming Soon: Your Digital Canvas for Creative Storytelling</h2>
+            <p>Story Builder is a powerful and intuitive tool designed to help writers and other creative minds bring their stories to life. Whether you're crafting a novel, scripting a game, or worldbuilding a fantasy realm, Story Builder provides a comprehensive suite of features to organize and develop your narrative.</p>
+            <p>Key features include:</p>
+            <ul>
+                <li>Character Creation: Design detailed characters with unique personalities, backstories, and relationships.</li>
+                <li>Plot Development: Outline your story's arc and create intricate plot lines to keep your audience on their toes.</li>
+                <li>World Building: Construct immersive worlds with rich histories, cultures, and geographies.</li>
+                <li>Scene Writing: Break down your story into scenes, easily revising and reorganizing as you go.</li>
+                <li>Collaboration Tools: Share your projects with fellow writers, collaborate on ideas, and receive feedback from your audience.</li>
+            </ul>
+            <p>With Story Builder, you can streamline your creative process, enhance your storytelling abilities, and bring your imaginative visions to life.</p>
+            <div class="big-btn">
+                <button class="big-btn" id="home-create-story"  onclick="window.location.href='stories/new/'">Create Story!</button>
             </div>
         </div>
-    </section>
-    <hr>
 
-    <section class="intro-section">
-        <div class="home-container">
-            <div class="home-column" id="home-left-column">
-                <h2>Coming Soon: Your Digital Canvas for Creative Storytelling</h2>
-                <p>Story Builder is a powerful and intuitive tool designed to help writers and other creative minds bring their stories to life. Whether you're crafting a novel, scripting a game, or worldbuilding a fantasy realm, Story Builder provides a comprehensive suite of features to organize and develop your narrative.</p>
-                <p>Key features include:</p>
-                <ul>
-                    <li>Character Creation: Design detailed characters with unique personalities, backstories, and relationships.</li>
-                    <li>Plot Development: Outline your story's arc and create intricate plot lines to keep your audience on their toes.</li>
-                    <li>World Building: Construct immersive worlds with rich histories, cultures, and geographies.</li>
-                    <li>Scene Writing: Break down your story into scenes, easily revising and reorganizing as you go.</li>
-                    <li>Collaboration Tools: Share your projects with fellow writers, collaborate on ideas, and receive feedback from your audience.</li>
-                </ul>
-                <p>With Story Builder, you can streamline your creative process, enhance your storytelling abilities, and bring your imaginative visions to life.</p>
-                <div class="big-btn">
-                    <button class="big-btn" id="home-create-story"  onclick="window.location.href='stories/new/'">Create Story!</button>
-                </div>
-            </div>
-
-            <div class="home-column" id="home-right-column">
-                <aside id="contribution-aside">
-                    <h2>Contribute</h2>
-                    <p>Please feel free to submit a pull request <a href="https://github.com/jacob-torres/story-builder/pull/">here</a> to contribute to the project on GitHub.</p>
-                </aside>
-            </div>
+        <div class="home-column" id="home-right-column">
+            <aside id="contribution-aside">
+                <h2>Contribute</h2>
+                <p>Please feel free to submit a pull request <a href="https://github.com/jacob-torres/story-builder/pull/">here</a> to contribute to the project on GitHub.</p>
+            </aside>
         </div>
-    </section>
-    <hr>
+    </div>
+</section>
+<hr>
 {% endblock %}
