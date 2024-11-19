@@ -1,13 +1,19 @@
 /* HTML and body */
 html, body {
-  color: #191970;  /* Midnight Blue */
   font-family: Arial, sans-serif;
   padding: 0;
   margin: 0;
 }
 
+body {
+  background-color: #f5f5f5;  /* Light Gray */
+  color: #333;  /* Mineshaft Gray */
+  padding: 1.25rem;
+}
+
 /* Banner */
 section.banner {
+  background-color: #F0E68C;  /* Light Yellow */
   margin: 0 auto;
   padding: 1rem;
   border: hidden;
@@ -25,7 +31,6 @@ nav {
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem;
-  background-color: #333;  /* Mineshaft Gray */
 }
 
 nav ul {
@@ -40,23 +45,19 @@ nav li {
 }
 
 nav li a {
-  color: #fff;  /* Pure White */
   text-align: center;
   text-decoration: none;
   padding: 0.75rem 1rem;
 }
 
 nav li a:hover {
-  background-color: #111;  /* Cod Gray */
+  background-color: #111;
 }
 
 
 /* Home Page */
-
-/* Top section */
-section.top-section {
-  background-color: #808080;
-  color: #fff;
+main {
+  background-color: #87CEFA;  /* Sky Blue */
 }
 
 section.top-section h1 {
@@ -65,7 +66,7 @@ section.top-section h1 {
 }
 
 section.top-section a:hover {
-  background-color: #191970;
+  background-color: #333;
 }
 
 /* Intro section with 2 columns */
@@ -80,14 +81,12 @@ div.home-container {
 }
   
 div.home-column {
-  border: 1px solid black;
+  border: 1px solid #333;
   padding: 1.25rem;
 }
 
 div#home-left-column {
   flex: 0 0 60%; /* Fixed width of 60% */
-  background-color: #191970; /* Midnight Blue */
-  color: #fff;
 }
   
 div#home-right-column {
@@ -98,30 +97,27 @@ div#home-right-column {
 div.big-btn {
   display: block;
   padding: 0.5rem;
-  margin: 0.5rem auto;
+  margin: 0 auto;
 }
 
 div.big-btn button {
+  background-color: #ff69b4;  /* Hot Pink */
+  color: #111;
   text-align: center;
   text-decoration: none;
   font-size: 1.2rem;
-  border: 2px solid black;
+  border: 2px solid #111;
   border-radius: 25%;
 }
 
 /* Create story button and contribution aside */
-button#home-create-story, aside#contribution-aside {
-  background-color: #bdbbd7; /* Lavender Gray */
-  color: #191970; /* Midnight Blue */
+aside#contribution-aside {
+  background-color: #f0e68c;  /* Light Yellow */
+  color: #333;
 }
 
 
 /* Stories Page */
-section.stories-section {
-  background-color: #bdbbd7;  /* Lavender gray */
-  color: #191970;  /* Midnight Blue */
-}
-
 ul#stories-list {
   display: flex;
   flex-wrap: wrap;
@@ -129,9 +125,17 @@ ul#stories-list {
 }
 
 ul#stories-list li {
-  background-color: #191970;
-  color: #fff;
   list-style-type: none;
   margin: 0.5rem;
-  border: 2px solid #bdbbd7;
+  border: 2px solid #333;
+}
+
+ul#stories-list li a:hover {
+  background-color: #333;
+}
+
+
+/* Footer */
+footer {
+  background-color: #F0E68C;  /* Light Yellow */
 }
