@@ -157,3 +157,24 @@ th {
   font-size: 1.2rem;
   font-weight: bold;
 }
+
+nav.tab-container {
+  display: flex;
+  justify-content: space-around;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+h3.tab {
+  cursor: pointer;
+  padding: 0.5rem;
+  border-bottom: 2px solid transparent;
+}
+
+h3.tab:hover {
+  border-bottom-color: #ff69b4;
+}
+
+h3.tab.active {
+  border-bottom-color: #ff69b4;
+}

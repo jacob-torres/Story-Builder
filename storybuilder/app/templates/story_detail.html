@@ -5,12 +5,13 @@
 {% block content %}
 <section class="story-detail-section">
   <h1>Story Details</h1>
-  <table class="story-detail-table">
+  <table>
     <thead>
       <tr>
         <th>Title</th>
         <th>Genres</th>
         <th>Premise</th>
+        <th>Actions</th>
       </tr>
     </thead>
 
@@ -19,6 +20,8 @@
         <td>{{ story.title }}</td>
         <td>{{ story.genres }}</td>
         <td>{{ story.premise }}</td>
+        <td><a href="edit/">Edit</a> | <a href="delete/">Delete</a>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -28,10 +31,14 @@
 </section>
 <hr>
 
+<nav class="tab-container">
+  <h3 class="tab">Scene View</h3>
+  <h3 class="tab">Plot View</h3>
+  <h3 class="tab">Character View</h3>
+</nav>
+
 <section class="story-view-section">
-
+  <h2>Scene View</h2>
+  <p>This is the scene view.</p>
 </section>
-
-
-  <button type="submit" onclick="window.location.href='delete/'">Delete Story</button>
 {% endblock %}
