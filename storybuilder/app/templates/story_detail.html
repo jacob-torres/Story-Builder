@@ -3,17 +3,35 @@
 {% block title %}{{ story.title }}{% endblock %}
 
 {% block content %}
-<a href="/stories/">Back to Stories</a>
-<h1>Story Details</h1>
-<!-- Display details of the story passed from the story_detail view function.-->
-<ul>
-    <li>Title: {{ story.title }}</li>
-    <li>Genres: {{ story.genres }}</li>
-</ul>
+<section class="story-detail-section">
+  <h1>Story Details</h1>
+  <table class="story-detail-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Genres</th>
+        <th>Premise</th>
+      </tr>
+    </thead>
 
-    <h2>Description</h2>
-    <p>{{ story.description }}</p>
-    <hr>
+    <tbody>
+      <tr>
+        <td>{{ story.title }}</td>
+        <td>{{ story.genres }}</td>
+        <td>{{ story.premise }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Description</h2>
+  <p>{{ story.description }}</p>
+  <hr>
+  </section>
+
+<section class="story-view-section">
+  
+</section>
+
 
   <button type="submit" onclick="window.location.href='delete/'">Delete Story</button>
 {% endblock %}
