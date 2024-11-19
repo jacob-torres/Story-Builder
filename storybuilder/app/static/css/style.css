@@ -55,6 +55,12 @@ nav li a:hover {
 }
 
 
+/* Footer */
+footer {
+  background-color: #F0E68C;  /* Light Yellow */
+}
+
+
 /* Home Page */
 main {
   background-color: #87CEFA;  /* Sky Blue */
@@ -135,7 +141,19 @@ ul#stories-list li a:hover {
 }
 
 
-/* Footer */
-footer {
-  background-color: #F0E68C;  /* Light Yellow */
+/* Story detail page */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  border: 1px solid#333;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+th {
+  font-size: 1.2rem;
+  font-weight: bold;
 }
