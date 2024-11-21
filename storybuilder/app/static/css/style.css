@@ -160,28 +160,29 @@ th {
 }
 
 /* Action buttons */
-div.story-detail-container {
+div.story-action-container {
   display: flex;
   justify-content: space-around;
   width: 100%;
   padding: 0.5rem;
 }
 
-div.story-detail-btn {
+div.story-action-btn {
   flex-grow: 1;
 }
 
-button.story-detail-btn {
+button.story-action-btn {
   text-align: center;
   text-decoration: none;
-  background-color: #87CEFA;
+  background-color: #ff69b4;  /* Hot Pink */
   font-size: 1.2rem;
   border: 2px solid #333;
-  border-radius: 50%;
+  border-radius: 22%;
 }
 
 /* Tab navigation headers */
 nav.tab-container {
+  background-color: #87CEFA;  /* Sky Blue */
   display: flex;
   justify-content: space-around;
   padding: 0.5rem;
@@ -201,3 +202,4 @@ h3.tab:hover {
 h3.tab.active {
   border-bottom-color: #ff69b4;
 }
+
