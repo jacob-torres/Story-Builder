@@ -11,7 +11,6 @@
         <th>Title</th>
         <th>Genres</th>
         <th>Premise</th>
-        <th>Actions</th>
       </tr>
     </thead>
 
@@ -20,7 +19,6 @@
         <td>{{ story.title }}</td>
         <td>{{ story.genres }}</td>
         <td>{{ story.premise }}</td>
-        <td><a href="edit/">Edit</a> | <a href="delete/">Delete</a>
         </td>
       </tr>
     </tbody>
@@ -30,33 +28,37 @@
   <p>{{ story.description }}</p>
 </section>
 
-<div class="story-action-container">
-  <div class="story-action-btn">
-    <button class="story-action-btn">Update Story</button>
+<section aria-label="story actions">
+  <div class="story-action-container">
+    <div class="story-action-btn">
+      <button class="story-action-btn">Update Story</button>
+    </div>
+    <div class="story-action-btn">
+      <button class="story-action-btn">Add Scene</button>
+    </div>
+    <div class="story-action-btn">
+      <button class="story-action-btn">Add Character</button>
+    </div>
+    <div class="story-action-btn">
+      <button class="story-action-btn">Add Plot Point</button>
+    </div>
+    <div class="story-action-btn">
+      <button class="story-action-btn" onclick="window.location.href='delete/'">Delete Story</button>
+    </div>
   </div>
-  <div class="story-action-btn">
-    <button class="story-action-btn">Add Scene</button>
-  </div>
-  <div class="story-action-btn">
-    <button class="story-action-btn">Add Character</button>
-  </div>
-  <div class="story-action-btn">
-    <button class="story-action-btn">Add Plot Point</button>
-  </div>
-  <div class="story-action-btn">
-    <button class="story-action-btn">Delete Story</button>
-  </div>
-</div>
+  </section>
 <hr>
 
-<nav class="tab-container">
-  <h3 class="tab">Scene View</h3>
-  <h3 class="tab">Plot View</h3>
-  <h3 class="tab">Character View</h3>
-</nav>
-
-<section class="story-view-section">
-  <h2>Scene View</h2>
-  <p>This is the scene view.</p>
+<section aria-label="story view">
+  <nav class="tab-container">
+    <h3 class="tab">Scene View</h3>
+    <h3 class="tab">Plot View</h3>
+    <h3 class="tab">Character View</h3>
+  </nav>
+  
+  <div class="story-view">
+    <h2>Scene View</h2>
+    <p>This is the scene view.</p>
+  </div>
 </section>
 {% endblock %}

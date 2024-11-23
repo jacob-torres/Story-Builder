@@ -36,6 +36,16 @@ def new_story(request):
     return render(request, 'new_story.html', context=context)
 
 
+def update_story(request, story_id):
+    """View function for updating a story."""
+
+    story = get_object_or_404(Story, pk=story_id)
+    # if request.method == 'POST':
+        # Update logic
+
+    return render(request, 'update_story.html')
+
+
 def delete_story(request, story_id):
     """View function for deleting a story."""
 
