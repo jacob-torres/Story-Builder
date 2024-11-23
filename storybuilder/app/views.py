@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.http import HttpResponse
-from .forms import NewStoryForm
+from .forms import NewStoryForm, UpdateStoryForm
 from .models import Story
 
 # Create your views here.
@@ -40,10 +40,16 @@ def update_story(request, story_id):
     """View function for updating a story."""
 
     story = get_object_or_404(Story, pk=story_id)
-    # if request.method == 'POST':
-        # Update logic
+    if request.method == 'POST':
+        form = UpdateStoryForm(request.POST)
+        if form.is_valid():
+            updated_story = form.save()
+            return redirect('story_detail', story_id=updated_story.id)
+    else:
+        form = NewStoryForm(instance=story)
 
-    return render(request, 'update_story.html')
+    context = {'form': form, 'story': story}
+    return render(request, 'update_story.html', context=context)
 
 
 def delete_story(request, story_id):

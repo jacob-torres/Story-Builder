@@ -1,4 +1,8 @@
+from typing import Any, Mapping
 from django import forms
+from django.core.files.base import File
+from django.db.models.base import Model
+from django.forms.utils import ErrorList
 from .models import Story
 
 
@@ -9,12 +13,12 @@ class NewStoryForm(forms.ModelForm):
         model = Story
         fields = ('title', 'description', 'genres')
 
-    premise = forms.CharField(max_length=250, required=False)
     genres = forms.MultipleChoiceField(
         choices=Story.genre_choices,
         widget=forms.CheckboxSelectMultiple
     )
     other_choice = forms.CharField(required=False)
+    premise = forms.CharField(max_length=250, required=False)
 
     def clean(self):
         """Data cleaning function."""
@@ -38,4 +42,14 @@ class UpdateStoryForm(forms.ModelForm):
         model = Story
         fields = ('title', 'description', 'genres')
 
-    
+    # Define optional fields
+    premise = forms.CharField(max_length=250, required=False)
+
+    def __init__(self, *args, **kwargs):
+        instance = kwargs.pop('instance', None)
+        super().__init__(*args, **kwargs)
+
+        if instance:
+            self.initial['title'] = instance.title
+            self.initial['description'] = instance.description
+            self.initial['genres'] = instance.genres.all().value_list('id', flat=True)

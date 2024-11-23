@@ -3,5 +3,10 @@
 {% block title %}Update {{ story.title }}{% endblock %}
 
 {% block content %}
-
+<h1>Update Story</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Update</button>
+</form>
 {% endblock %}

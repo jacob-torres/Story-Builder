@@ -35,8 +35,7 @@ class Story(models.Model):
     date_last_saved = models.DateField(auto_now=True)
     date_finished = models.DateField(null=True)
 
-    # Relationships: One plot, one or more characters and scenes
-    plot = models.OneToOneField('Plot', on_delete=models.CASCADE)
+    # Relationships: One or more characters and scenes
     characters = models.ManyToManyField('Character')
 
 
@@ -117,7 +116,7 @@ class Plot(models.Model):
     description = models.TextField(null=True)
 
     # Relationships: One story
-    story = models.OneToOneField(Story, on_delete=models.CASCADE, default=None)
+    story = models.OneToOneField(Story, on_delete=models.CASCADE, default=None, related_name='plot')
 
 
 class PlotPoint(models.Model):
