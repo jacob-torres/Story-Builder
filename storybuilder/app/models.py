@@ -4,6 +4,42 @@ from django.db import models
 max_length = 250
 
 
+class Story(models.Model):
+    """The story data structure, with characters, plots, worlds, and scenes."""
+
+    # Story details
+    title = models.CharField(max_length=max_length, null=False)
+    description = models.TextField(null=True)
+    premise = models.CharField(max_length=max_length, null=True)
+
+    # Genre field definition
+    genre_choices = [
+        ('Contemporary Fiction', 'Contemporary Fiction'),
+        ('Literary Fiction', 'Literary Fiction'),
+        ('Science Fiction', 'Science Fiction'),
+        ('Fantasy', 'Fantasy'),
+        ('Romance', 'Romance'),
+        ('Horror', 'Horror'),
+        ('Historical Fiction', 'Historical Fiction'),
+        ('Young Adult', 'Young Adult'),
+        ('Children\'s', 'Children\'s'),
+        ('Flash Fiction', 'Flash Fiction'),
+        ('Experimental', 'Experimental'),
+        ('Game', 'Game'),
+        ('Other', 'Other (Use a comma-separated list to include more than one genre.)')
+    ]
+
+    genres = models.CharField(choices=genre_choices, null=True)
+    word_count = models.PositiveIntegerField(default=0)
+    date_started = models.DateField(auto_now_add=True)
+    date_last_saved = models.DateField(auto_now=True)
+    date_finished = models.DateField(null=True)
+
+    # Relationships: One plot, one or more characters and scenes
+    plot = models.OneToOneField('Plot', on_delete=models.CASCADE)
+    characters = models.ManyToManyField('Character')
+
+
 class Character(models.Model):
     """Story character."""
 
@@ -62,31 +98,15 @@ class Character(models.Model):
     description = models.TextField(null=True)
 
 
-class Story(models.Model):
-    """The story data structure, with characters, plots, worlds, and scenes."""
-
-    # Story details
-    title = models.CharField(max_length=max_length, null=False)
-    description = models.TextField(null=True)
-    premise = models.CharField(max_length=max_length, null=True)
-    genres = models.CharField(max_length=max_length, null=True)
-    word_count = models.PositiveIntegerField(default=0)
-    date_started = models.DateField(auto_now_add=True)
-    date_last_saved = models.DateField(auto_now=True)
-    date_finished = models.DateField(null=True)
-
-    # Relationships: One or more characters
-    characters = models.ManyToManyField(Character)
-
-
 class Scene(models.Model):
     """A single unit or building block of a story."""
 
     title = models.CharField(max_length=max_length, null=False)
     description = models.TextField(null=True)
 
-    # Relationships: One story, one or more characters
+    # Relationships: One story and one possible plot point, one or more characters
     story = models.ForeignKey(Story, on_delete=models.CASCADE, default=None)
+    plot_point = models.ForeignKey('PlotPoint', on_delete=models.SET_DEFAULT, default=None)
     characters = models.ManyToManyField(Character)
 
 
@@ -97,7 +117,7 @@ class Plot(models.Model):
     description = models.TextField(null=True)
 
     # Relationships: One story
-    story = models.ForeignKey(Story, on_delete=models.CASCADE, default=None)
+    story = models.OneToOneField(Story, on_delete=models.CASCADE, default=None)
 
 
 class PlotPoint(models.Model):
@@ -106,9 +126,8 @@ class PlotPoint(models.Model):
     name = models.CharField(max_length=max_length, null=False)
     description = models.TextField(null=True)
 
-    # Relationships: One plot, one or more scenes per plot point
+    # Relationships: One plot
     plot = models.ForeignKey(Plot, on_delete=models.CASCADE, default=None)
-    scenes = models.ManyToManyField(Scene)
 
 
 class World(models.Model):
