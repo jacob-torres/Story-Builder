@@ -12,24 +12,7 @@ class Story(models.Model):
     description = models.TextField(null=True)
     premise = models.CharField(max_length=max_length, null=True)
 
-    # Genre field definition
-    genre_choices = [
-        ('Contemporary Fiction', 'Contemporary Fiction'),
-        ('Literary Fiction', 'Literary Fiction'),
-        ('Science Fiction', 'Science Fiction'),
-        ('Fantasy', 'Fantasy'),
-        ('Romance', 'Romance'),
-        ('Horror', 'Horror'),
-        ('Historical Fiction', 'Historical Fiction'),
-        ('Young Adult', 'Young Adult'),
-        ('Children\'s', 'Children\'s'),
-        ('Flash Fiction', 'Flash Fiction'),
-        ('Experimental', 'Experimental'),
-        ('Game', 'Game'),
-        ('Other', 'Other (Use a comma-separated list to include more than one genre.)')
-    ]
-
-    genres = models.CharField(choices=genre_choices, null=True)
+    genres = models.CharField(null=True)
     word_count = models.PositiveIntegerField(default=0)
     date_started = models.DateField(auto_now_add=True)
     date_last_saved = models.DateField(auto_now=True)

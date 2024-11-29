@@ -5,6 +5,25 @@ from django.db.models.base import Model
 from django.forms.utils import ErrorList
 from .models import Story
 
+max_length  = 250
+
+# Genre field definition
+genre_choices = [
+    ('Contemporary Fiction', 'Contemporary Fiction'),
+    ('Literary Fiction', 'Literary Fiction'),
+    ('Science Fiction', 'Science Fiction'),
+    ('Fantasy', 'Fantasy'),
+    ('Romance', 'Romance'),
+    ('Horror', 'Horror'),
+    ('Historical Fiction', 'Historical Fiction'),
+    ('Young Adult', 'Young Adult'),
+    ('Children\'s', 'Children\'s'),
+    ('Flash Fiction', 'Flash Fiction'),
+    ('Experimental', 'Experimental'),
+    ('Game', 'Game'),
+    ('Other', 'Other (Use a comma-separated list to include more than one genre.)')
+]
+
 
 class NewStoryForm(forms.ModelForm):
     """Form for creating a new story."""
@@ -14,7 +33,7 @@ class NewStoryForm(forms.ModelForm):
         fields = ('title', 'description', 'genres')
 
     genres = forms.MultipleChoiceField(
-        choices=Story.genre_choices,
+        choices=genre_choices,
         widget=forms.CheckboxSelectMultiple
     )
     other_choice = forms.CharField(required=False)
@@ -43,7 +62,7 @@ class UpdateStoryForm(forms.ModelForm):
         fields = ('title', 'description', 'genres')
 
     # Define optional fields
-    premise = forms.CharField(max_length=250, required=False)
+    premise = forms.CharField(max_length=max_length, required=False)
 
     def __init__(self, *args, **kwargs):
         instance = kwargs.pop('instance', None)
