@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Create a New Scene in {{ story.title }}{% endblock %}
+
+{% block content %}
+<h1>Create a New Scene in {{ story.title }}</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create</button>
+</form>
+{% endblock %}

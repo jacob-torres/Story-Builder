@@ -1,5 +1,5 @@
 from django import forms
-from .models import Story
+from .models import Story, Scene
 
 # Global variables
 max_length  = 250
@@ -68,3 +68,11 @@ class UpdateStoryForm(forms.ModelForm):
 
     # Define optional fields
     premise = forms.CharField(max_length=max_length, required=False)
+
+
+class NewSceneForm(forms.ModelForm):
+    """Form for creating a new scene in a story."""
+
+    class Meta:
+        model = Scene
+        fields = '__all__'
