@@ -64,7 +64,7 @@ class UpdateStoryForm(forms.ModelForm):
 
     class Meta:
         model = Story
-        fields = ('title', 'description', 'genres')
+        fields = ('title', 'description', 'genres', 'premise')
 
     # Define optional fields
     premise = forms.CharField(max_length=max_length, required=False)
