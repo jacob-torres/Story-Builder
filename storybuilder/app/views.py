@@ -41,12 +41,12 @@ def update_story(request, story_id):
 
     story = get_object_or_404(Story, pk=story_id)
     if request.method == 'POST':
-        form = UpdateStoryForm(request.POST)
+        form = UpdateStoryForm(request.POST, instance=story)
         if form.is_valid():
-            updated_story = form.save()
-            return redirect('story_detail', story_id=updated_story.id)
+            story = form.save()
+            return redirect('story_detail', story_id=story_id)
     else:
-        form = NewStoryForm(instance=story)
+        form = UpdateStoryForm(instance=story)
 
     context = {'form': form, 'story': story}
     return render(request, 'update_story.html', context=context)

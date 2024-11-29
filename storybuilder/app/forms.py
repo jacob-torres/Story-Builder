@@ -1,24 +1,29 @@
-from typing import Any, Mapping
 from django import forms
-from django.core.files.base import File
-from django.db.models.base import Model
-from django.forms.utils import ErrorList
 from .models import Story
 
+# Global variables
 max_length  = 250
 
 # Genre field definition
 genre_choices = [
     ('Contemporary Fiction', 'Contemporary Fiction'),
     ('Literary Fiction', 'Literary Fiction'),
+    ('Mystery', 'Mystery'),
+    ('Thriller', 'Thriller'),
     ('Science Fiction', 'Science Fiction'),
     ('Fantasy', 'Fantasy'),
     ('Romance', 'Romance'),
     ('Horror', 'Horror'),
+    ('Crime', 'Crime'),
     ('Historical Fiction', 'Historical Fiction'),
     ('Young Adult', 'Young Adult'),
     ('Children\'s', 'Children\'s'),
+    ('Memoir', 'Memoir'),
+    ('Biography', 'Biography'),
+    ('History', 'History'),
+    ('True Crime', 'True Crime'),
     ('Flash Fiction', 'Flash Fiction'),
+    ('Erotica', 'Erotica'),
     ('Experimental', 'Experimental'),
     ('Game', 'Game'),
     ('Other', 'Other (Use a comma-separated list to include more than one genre.)')
@@ -63,12 +68,3 @@ class UpdateStoryForm(forms.ModelForm):
 
     # Define optional fields
     premise = forms.CharField(max_length=max_length, required=False)
-
-    def __init__(self, *args, **kwargs):
-        instance = kwargs.pop('instance', None)
-        super().__init__(*args, **kwargs)
-
-        if instance:
-            self.initial['title'] = instance.title
-            self.initial['description'] = instance.description
-            self.initial['genres'] = instance.genres.all().value_list('id', flat=True)
