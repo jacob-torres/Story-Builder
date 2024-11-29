@@ -21,6 +21,18 @@ def stories(request):
     return render(request, 'stories.html', context=context)
 
 
+def story_detail(request, story_id):
+    """View function for displaying story details."""
+
+    try:
+        story = get_object_or_404(Story, pk=story_id)
+    except:
+        return render(request, '404_story_not_found.html', status=404)
+
+    context = {'story': story}
+    return render(request, 'story_detail.html', context=context)
+
+
 def new_story(request):
     """View function for creating a new story."""
 
@@ -39,7 +51,11 @@ def new_story(request):
 def update_story(request, story_id):
     """View function for updating a story."""
 
-    story = get_object_or_404(Story, pk=story_id)
+    try:
+        story = get_object_or_404(Story, pk=story_id)
+    except:
+        return render(request, '404_story_not_found.html', status=404)
+
     if request.method == 'POST':
         form = UpdateStoryForm(request.POST, instance=story)
         if form.is_valid():
@@ -55,14 +71,10 @@ def update_story(request, story_id):
 def delete_story(request, story_id):
     """View function for deleting a story."""
 
-    story = get_object_or_404(Story, pk=story_id)
-    story.delete()
+    try:
+        story = get_object_or_404(Story, pk=story_id)
+        story.delete()
+    except:
+        return render(request, '404_story_not_found.html', status=404)
+
     return redirect('stories')
-
-
-def story_detail(request, story_id):
-    """View function for displaying story details."""
-
-    story = get_object_or_404(Story, pk=story_id)
-    context = {'story': story}
-    return render(request, 'story_detail.html', context=context)
