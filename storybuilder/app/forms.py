@@ -1,5 +1,8 @@
 from django import forms
-from .models import Story, Scene
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse, Http404
+
+from .models import Story, Scene, Character
 
 # Global variables
 max_length  = 250
@@ -29,6 +32,11 @@ genre_choices = [
     ('Other', 'Other (Use a comma-separated list to include more than one genre.)')
 ]
 
+# Character field definition
+character_choices = [
+    (character.full_name, character.full_name) for character in Character.objects.all()
+]
+
 
 class NewStoryForm(forms.ModelForm):
     """Form for creating a new story."""
@@ -42,7 +50,7 @@ class NewStoryForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple
     )
     other_choice = forms.CharField(required=False)
-    premise = forms.CharField(max_length=250, required=False)
+    premise = forms.CharField(max_length=max_length, required=False)
 
     def clean(self):
         """Data cleaning function."""
@@ -75,4 +83,14 @@ class NewSceneForm(forms.ModelForm):
 
     class Meta:
         model = Scene
-        fields = '__all__'
+        fields = ('title', 'description')
+
+    def __init__(self, *args, **kwargs):
+        story_id = kwargs.pop('story_id', None)
+        super().__init__(*args, **kwargs)
+
+        if story_id:
+            try:
+                self.instance.story = Story.objects.get(pk=story_id)
+            except Story.DoesNotExist:
+                raise ValueError(f"Invalid story ID: Story {story_id} does not exist.")

@@ -117,18 +117,16 @@ def new_scene(request, story_id):
 
     try:
         story = get_object_or_404(Story, pk=story_id)
-    except Http404:
+    except ValueError:
         return render(request, '404_story_not_found.html', status=404)
 
     if request.method == 'POST':
-        form = NewSceneForm(request.POST)
+        form = NewSceneForm(request.POST, story_id=story_id)
         if form.is_valid():
             new_scene = form.save()
-            new_scene.story = story
-            new_scene.save()
             return redirect('scene_detail', story_id=story_id, scene_id=new_scene.id)
     else:
-        form = NewSceneForm()
+        form = NewSceneForm(story_id=story_id)
 
     context = {'form': form, 'story': story}
     return render(request, 'new_scene.html', context=context)
