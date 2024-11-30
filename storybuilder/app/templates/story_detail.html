@@ -31,12 +31,12 @@
   <hr>
 
   <nav class="tab-container">
-    <h3 class="story-tab"><a href="#scenes">Scene View</a></h3>
-    <h3 class="story-tab"><a href="#characters">Character View</a></h3>
-    <h3 class="story-tab"><a href="#plot">Plot View</a></h3>
+    <h3 class="view-tab"><a href="#scenes">Scene View</a></h3>
+    <h3 class="view-tab"><a href="#characters">Character View</a></h3>
+    <h3 class="view-tab"><a href="#plot">Plot View</a></h3>
   </nav>
   
-  <div class="scene-view" id="scenes">
+  <div class="content-view" id="scenes">
     <h2>Scene View</h2>
     {% if story.scene_set.count == 0 %}
     <p>There are no scenes in this story yet. When you add some, they will be listed here.</p>
@@ -52,12 +52,12 @@
     {% endif %}
   </div>
 
-  <div class="character-view" id="characters" style="display: none;">
+  <div class="content-view" id="characters" style="display: none;">
     <h2>Character View</h2>
     <p>This is the character view.</p>
   </div>
 
-  <div class="plot-view" id="plot" style="display: none;">
+  <div class="content-view" id="plot" style="display: none;">
     <h2>Plot View</h2>
     <p>This is the plot view.</p>
   </div>

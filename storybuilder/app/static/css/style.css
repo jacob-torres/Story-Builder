@@ -189,16 +189,21 @@ nav.tab-container {
   margin-bottom: 1rem;
 }
 
-h3.tab {
+h3.view-tab {
   cursor: pointer;
   padding: 0.5rem;
   border-bottom: 2px solid transparent;
 }
 
-h3.tab:hover {
+h3.view-tab.active {
+  font-weight: bold;
   border-bottom-color: #ff69b4;
 }
 
-h3.tab.active {
-  border-bottom-color: #ff69b4;
+
+/* Content views */
+div.content-view {
+  width: 100%;
+  padding: 0.5rem;
+  border: 2px solid #333;
 }
