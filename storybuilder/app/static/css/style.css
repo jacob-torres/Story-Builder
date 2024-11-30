@@ -158,6 +158,30 @@ th {
   font-weight: bold;
 }
 
+
+/* Action Buttons */
+div.action-container {
+  width: 98%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+div.action-btn {
+  flex: 1;
+}
+
+button.action-btn {
+  background-color: #ff69b4;
+  color: #111;
+  font-size: 1.2rem;
+  text-align: center;
+  border: 1px solid #111;
+  border-radius: 22%;
+}
+
+
+/* Story view tabs */
 nav.tab-container {
   display: flex;
   justify-content: space-around;
