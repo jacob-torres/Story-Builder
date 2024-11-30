@@ -2,7 +2,7 @@ from django import forms
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, Http404
 
-from .models import Story, Scene, Character
+from .models import Story, Scene, Character, Plot, PlotPoint
 
 # Global variables
 max_length  = 250
@@ -94,3 +94,27 @@ class NewSceneForm(forms.ModelForm):
                 self.instance.story = Story.objects.get(pk=story_id)
             except Story.DoesNotExist:
                 raise ValueError(f"Invalid story ID: Story {story_id} does not exist.")
+
+
+class NewCharacterForm(forms.ModelForm):
+    """Form for creating a new character."""
+
+    class Meta:
+        model = Character
+        fields = '__all__'
+
+
+class NewPlotForm(forms.ModelForm):
+    """Form for create a new plot."""
+
+    class Meta:
+        model = Plot
+        fields = '__all__'
+
+
+class NewPlotPointForm(forms.ModelForm):
+    """Form for creating a new plot point."""
+
+    class Meta:
+        model = PlotPoint
+        fields = '__all__'

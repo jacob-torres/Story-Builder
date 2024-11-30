@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.http import HttpResponse, Http404
 
-from .forms import NewStoryForm, UpdateStoryForm, NewSceneForm
-from .models import Story, Scene
+from .forms import NewStoryForm, UpdateStoryForm, NewSceneForm, NewCharacterForm, NewPlotForm, NewPlotPointForm
+from .models import Story, Scene, Character, Plot, PlotPoint
 
 # Create your views here.
 def home(request):
@@ -82,21 +82,17 @@ def delete_story(request, story_id):
     return redirect('stories')
 
 
-def scenes(request, story_id):
-    """View function for listing all scenes in a story."""
+# Scene view functions
+# def scenes(request, story_id):
+#     """View function for scenes URL, redirects to the story detail template."""
 
-    try:
-        story = get_object_or_404(Story, pk=story_id)
-    except Http404:
-        return render(request, '404_story_not_found.html', status=404)
+#     try:
+#         story = get_object_or_404(Story, pk=story_id)
+#     except Http404:
+#         return render(request, '404_story_not_found.html', status=404)
 
-    try:
-        scenes = get_list_or_404(Scene)
-    except Http404:
-        scenes = []
-
-    context = {'story': story, 'scenes': scenes}
-    return render(request, 'scenes.html', context=context)
+    # context = {'story': story}
+    # return render(request, 'story_detail.html', context=context)
 
 
 def scene_detail(request, story_id, scene_id):
@@ -163,4 +159,22 @@ def delete_scene(request, story_id, scene_id):
     except Http404:
         return render(request, '404.html', status=404)
 
-    return redirect('scenes', story_id=story_id)
+    return redirect('story_detail', story_id=story_id)
+
+
+# Character view functions
+def character_detail(request, story_id, character_id):
+    """View function for displaying character details."""
+
+
+def new_character(request, story_id):
+    """View function for creating a new character."""
+
+
+def update_character(request, story_id, character_id):
+    """View function for updating a character."""
+
+
+def delete_character(request, story_id, character_id):
+    """View function for deleting a character."""
+
