@@ -1,0 +1,25 @@
+                     List of relations
+ Schema |            Name            | Type  |    Owner    
+--------+----------------------------+-------+-------------
+ public | app_character              | table | jacobtorres
+ public | app_plot                   | table | jacobtorres
+ public | app_plotpoint              | table | jacobtorres
+ public | app_scene                  | table | jacobtorres
+ public | app_scene_characters       | table | jacobtorres
+ public | app_story                  | table | jacobtorres
+ public | app_story_characters       | table | jacobtorres
+ public | app_world                  | table | jacobtorres
+ public | app_world_characters       | table | jacobtorres
+ public | app_world_stories          | table | jacobtorres
+ public | auth_group                 | table | jacobtorres
+ public | auth_group_permissions     | table | jacobtorres
+ public | auth_permission            | table | jacobtorres
+ public | auth_user                  | table | jacobtorres
+ public | auth_user_groups           | table | jacobtorres
+ public | auth_user_user_permissions | table | jacobtorres
+ public | django_admin_log           | table | jacobtorres
+ public | django_content_type        | table | jacobtorres
+ public | django_migrations          | table | jacobtorres
+ public | django_session             | table | jacobtorres
+(20 rows)
+

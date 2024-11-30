@@ -5,3 +5,9 @@
 <h1>{{ scene.title }}</h1>
 <p>{{ scene.description }}</p>
 {% endblock %}
+
+{% block action_buttons %}
+<div class="action-btn">
+    <button class="action-btn" onclick="window.location.href='characters/new/'">Add Character</button>
+  </div>
+{% endblock %}
