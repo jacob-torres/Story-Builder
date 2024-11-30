@@ -1,55 +1,35 @@
-{% extends 'base.html' %}
-
+{% extends 'detail_layout.html' %}
 {% block title %}{{ story.title }}{% endblock %}
 
-{% block content %}
-<section class="story-detail-section">
-  <h1>Story Details</h1>
-  <table>
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Genres</th>
-        <th>Premise</th>
-      </tr>
-    </thead>
+{% block detail_content %}
+<h1>Story Details</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Genres</th>
+      <th>Scenes</th>
+      <th>Characters</th>
+    </tr>
+  </thead>
 
-    <tbody>
-      <tr>
-        <td>{{ story.title }}</td>
-        <td>{{ story.genres }}</td>
-        <td>{{ story.premise }}</td>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <tbody>
+    <tr>
+      <td>{{ story.title }}</td>
+      <td>{{ story.genres }}</td>
+      <td><a href="scenes/">{{ story.scene_set.count }}</a></td>
+        <td><a href="characters/">{{ story.characters.count }}</a></td>
+    </tr>
+  </tbody>
+</table>
 
+<section class="story-view-section" aria-label="story">
+  <h2>Premise</h2>
+  <p>{{ story.premise }}</p>
   <h2>Description</h2>
   <p>{{ story.description }}</p>
-</section>
+  <hr>
 
-<section aria-label="actions">
-  <div class="action-container">
-    <div class="action-btn">
-      <button class="action-btn" onclick="window.location.href='update/'">Update Story</button>
-    </div>
-    <div class="action-btn">
-      <button class="action-btn" onclick="window.location.href='scenes/new/'">Add Scene</button>
-    </div>
-    <div class="action-btn">
-      <button class="action-btn" onclick="window.location.href='characters/new/'">Add Character</button>
-    </div>
-    <div class="action-btn">
-      <button class="action-btn" onclick="window.location.href='plot/new/'">Add Plot Point</button>
-    </div>
-    <div class="action-btn">
-      <button class="action-btn" onclick="window.location.href='delete/'">Delete Story</button>
-    </div>
-  </div>
-  </section>
-<hr>
-
-<section aria-label="story view">
   <nav class="tab-container">
     <h3 class="tab">Scene View</h3>
     <h3 class="tab">Plot View</h3>
@@ -61,4 +41,16 @@
     <p>This is the scene view.</p>
   </div>
 </section>
+{% endblock %}
+
+{% block action_buttons %}
+<div class="action-btn">
+  <button class="action-btn" onclick="window.location.href='scenes/new/'">Add Scene</button>
+</div>
+<div class="action-btn">
+  <button class="action-btn" onclick="window.location.href='characters/new/'">Add Character</button>
+</div>
+<div class="action-btn">
+  <button class="action-btn" onclick="window.location.href='plot/new/'">Add Plot Point</button>
+</div>
 {% endblock %}
