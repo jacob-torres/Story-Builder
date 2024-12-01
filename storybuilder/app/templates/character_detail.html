@@ -1,13 +1,13 @@
 {% extends 'detail_layout.html' %}
-{% block title %}{{ scene.title }}, from {{ story.title }}{% endblock %}
+{% block title %}{{ character.full_name }}, from {{ story.title }}{% endblock %}
 
 {% block detail_content %}
-<h1>{{ scene.title }}</h1>
-<p>{{ scene.description }}</p>
+<h1>Character Details for {{ character.full_name }}</h1>
+<p>{{ character.description }}</p>
 {% endblock %}
 
 {% block action_buttons %}
 <div class="action-btn">
-    <button class="action-btn" onclick="window.location.href='characters/new/'">Add Character</button>
-  </div>
+  <button class="action-btn" onclick="window.location.href='new-note/'">Add Note</button>
+</div>
 {% endblock %}
