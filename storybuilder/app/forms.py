@@ -30,9 +30,19 @@ genre_choices = [
     ('Other', 'Other (Use a comma-separated list to include more than one genre.)')
 ]
 
+# Story choices
+story_choices = [
+    (story.title, story.title) for story in Story.objects.all()
+]
+
 # Character field definition
 character_choices = [
     (character.full_name, character.full_name) for character in Character.objects.all()
+]
+
+# Plot point choices
+plot_point_choices = [
+    (plot_point.name, plot_point.name) for plot_point in PlotPoint.objects.all()
 ]
 
 # MBTI personality types
@@ -112,7 +122,22 @@ class NewSceneForm(forms.ModelForm):
 
     class Meta:
         model = Scene
-        fields = ('title', 'description')
+
+        # Define fields
+        if not character_choices and not plot_point_choices:
+            exclude = ('story', 'plot_point', 'characters')
+        elif not character_choices:
+            exclude = ('story', 'characters')
+        elif not plot_point_choices:
+            exclude = ('story', 'plot_point')
+        else:
+            exclude = ('story',)
+
+        characters = forms.MultipleChoiceField(
+            choices=character_choices,
+            widget=forms.CheckboxSelectMultiple,
+            required=False
+        )
 
     def __init__(self, *args, **kwargs):
         story_id = kwargs.pop('story_id', None)
