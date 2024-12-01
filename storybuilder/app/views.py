@@ -166,6 +166,15 @@ def delete_scene(request, story_id, scene_id):
 def character_detail(request, story_id, character_id):
     """View function for displaying character details."""
 
+    try:
+        story = get_object_or_404(Story, pk=story_id)
+        character = get_object_or_404(Character, pk=character_id)
+    except Http404:
+        return render(request, '404.html', status=404)
+
+    context = {'story': story, 'character': character}
+    return render(request, 'character_detail.html', context=context)
+
 
 def new_character(request, story_id):
     """View function for creating a new character."""

@@ -1,5 +1,7 @@
 from django.db import models
 
+from .constants import genre_choices, mbti_choices, enneagram_choices
+
 # Create your models here.
 tiny_length = 30
 short_length = 100
@@ -47,8 +49,8 @@ class Character(models.Model):
     body_type = models.CharField(max_length=short_length, blank=True, null=True)
 
 # Personality types
-    mbti_personality = models.CharField(blank=True, null=True)
-    enneagram_personality = models.CharField(blank=True, null=True)
+    mbti_personality = models.CharField(choices=mbti_choices, blank=True, null=True)
+    enneagram_personality = models.CharField(choices=enneagram_choices, blank=True, null=True)
 
     # Long character description
     description = models.TextField(max_length=long_length, null=True)
@@ -58,8 +60,15 @@ class Character(models.Model):
         super().clean()
 
         # Construct full name
-        self.full_name = f"{self.first_name} {self.middle_name} {self.last_name}"
-        self.full_name = ' '.join(filter(None, self.full_name.split()))
+        names = [self.first_name, self.middle_name, self.last_name]
+        for name in names:
+            if not name:
+                names.remove(name)
+
+        if len(names) == 1:
+            self.full_name = self.first_name
+        else:
+            self.full_name = ' '.join(filter(None, names))
 
 
 class Scene(models.Model):

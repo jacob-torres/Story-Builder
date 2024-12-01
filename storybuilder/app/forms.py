@@ -1,34 +1,7 @@
 from django import forms
 
 from .models import Story, Scene, Character, Plot, PlotPoint
-
-# Global variables
-max_length  = 250
-
-# Genre field definition
-genre_choices = [
-    ('Contemporary Fiction', 'Contemporary Fiction'),
-    ('Literary Fiction', 'Literary Fiction'),
-    ('Mystery', 'Mystery'),
-    ('Thriller', 'Thriller'),
-    ('Science Fiction', 'Science Fiction'),
-    ('Fantasy', 'Fantasy'),
-    ('Romance', 'Romance'),
-    ('Horror', 'Horror'),
-    ('Crime', 'Crime'),
-    ('Historical Fiction', 'Historical Fiction'),
-    ('Young Adult', 'Young Adult'),
-    ('Children\'s', 'Children\'s'),
-    ('Memoir', 'Memoir'),
-    ('Biography', 'Biography'),
-    ('History', 'History'),
-    ('True Crime', 'True Crime'),
-    ('Flash Fiction', 'Flash Fiction'),
-    ('Erotica', 'Erotica'),
-    ('Experimental', 'Experimental'),
-    ('Game', 'Game'),
-    ('Other', 'Other (Use a comma-separated list to include more than one genre.)')
-]
+from .constants import genre_choices, mbti_choices, enneagram_choices
 
 # Story choices
 story_choices = [
@@ -45,37 +18,6 @@ plot_point_choices = [
     (plot_point.name, plot_point.name) for plot_point in PlotPoint.objects.all()
 ]
 
-# MBTI personality types
-mbti_choices = [
-    ('INTJ: The Architect', 'INTJ: The Architect'),
-    ('INTP: The Logician', 'INTP: The Logician'),
-    ('ENTJ: The Commander', 'ENTJ: The Commander'),
-    ('ENTP: The Visionary', 'ENTP: The Visionary'),
-    ('INFJ: The Advocate', 'INFJ: The Advocate'),
-    ('INFP: The Idealist', 'INFP: The Idealist'),
-    ('ENFJ: The Giver', 'ENFJ: The Giver'),
-    ('ENFP: The Enthusiast', 'ENFP: The Enthusiast'),
-    ('ISTJ: The Duty Fulfiller', 'ISTJ: The Duty Fulfiller'),
-    ('ISFJ: The Protector', 'ISFJ: The Protector'),
-    ('ESTJ: The Executive', 'ESTJ: The Executive'),
-    ('ESFJ: The Caregiver', 'ESFJ: The Caregiver'),
-    ('ISTP: The Craftsman', 'ISTP: The Craftsman'),
-    ('ISFP: The Artist', 'ISFP: The Artist')
-]
-
-# Enneagram personality types
-enneagram_choices = [
-    ('1: The Reformer', '1: The Reformer'),
-    ('2: The Helper', '2: The Helper'),
-    ('3: The Achiever', '3: The Achiever'),
-    ('4: The Romantic', '4: The Romantic'),
-    ('5: The Investigator', '5: The Investigator'),
-    ('6: The Skeptic', '6: The Skeptic'),
-    ('7: The Enthusiast', '7: The Enthusiast'),
-    ('8: The Challenger', '8: The Challenger'),
-    ('9: The Peacemaker', '9: The Peacemaker')
-]
-
 
 class NewStoryForm(forms.ModelForm):
     """Form for creating a new story."""
@@ -89,7 +31,7 @@ class NewStoryForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple
     )
     other_choice = forms.CharField(required=False)
-    premise = forms.CharField(max_length=max_length, required=False)
+    premise = forms.CharField(required=False)
 
     def clean(self):
         """Data cleaning function."""
@@ -114,7 +56,7 @@ class UpdateStoryForm(forms.ModelForm):
         fields = ('title', 'description', 'genres', 'premise')
 
     # Define optional fields
-    premise = forms.CharField(max_length=max_length, required=False)
+    premise = forms.CharField(required=False)
 
 
 class NewSceneForm(forms.ModelForm):
@@ -122,22 +64,23 @@ class NewSceneForm(forms.ModelForm):
 
     class Meta:
         model = Scene
+        exclude = ('story',)
 
         # Define fields
-        if not character_choices and not plot_point_choices:
-            exclude = ('story', 'plot_point', 'characters')
-        elif not character_choices:
-            exclude = ('story', 'characters')
-        elif not plot_point_choices:
-            exclude = ('story', 'plot_point')
-        else:
-            exclude = ('story',)
+        # if not character_choices and not plot_point_choices:
+        #     exclude = ('story', 'plot_point', 'characters')
+        # elif not character_choices:
+        #     exclude = ('story', 'characters')
+        # elif not plot_point_choices:
+        #     exclude = ('story', 'plot_point')
+        # else:
+        #     exclude = ('story',)
 
-        characters = forms.MultipleChoiceField(
-            choices=character_choices,
-            widget=forms.CheckboxSelectMultiple,
-            required=False
-        )
+        # characters = forms.MultipleChoiceField(
+        #     choices=character_choices,
+        #     widget=forms.CheckboxSelectMultiple,
+        #     required=False
+        # )
 
     def __init__(self, *args, **kwargs):
         story_id = kwargs.pop('story_id', None)
@@ -152,7 +95,11 @@ class NewCharacterForm(forms.ModelForm):
 
     class Meta:
         model = Character
-        fields = '__all__'
+        exclude = ('full_name',)
+
+        # Define personality type fields
+        mbti_personality = forms.ChoiceField(choices=mbti_choices)
+        enneagram_personality = forms.ChoiceField(choices=enneagram_choices)
 
     def __init__(self, *args, **kwargs):
         story_id = kwargs.pop('story_id', None)
