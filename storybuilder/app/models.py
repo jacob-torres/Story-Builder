@@ -26,8 +26,8 @@ class Character(models.Model):
     """Story character."""
 
     first_name = models.CharField(max_length=max_length, null=False)
-    middle_name = models.CharField(max_length=max_length, null=True)
-    last_name = models.CharField(max_length=max_length, null=True)
+    middle_name = models.CharField(max_length=max_length, blank=True, null=True)
+    last_name = models.CharField(max_length=max_length, blank=True, null=True)
 
     # Demographic details
     gender = models.CharField(max_length=max_length, null=True)
@@ -42,42 +42,20 @@ class Character(models.Model):
     height = models.CharField(max_length=max_length, null=True)
     body_type = models.CharField(max_length=max_length, null=True)
 
-    # MBTI personality types
-    mbti_choices = [
-        ('INTJ', 'INTJ: The Architect'),
-        ('INTP', 'INTP: The Logician'),
-        ('ENTJ', 'ENTJ: The Commander'),
-        ('ENTP', 'ENTP: The Visionary'),
-        ('INFJ', 'INFJ: The Advocate'),
-        ('INFP', 'INFP: The Idealist'),
-        ('ENFJ', 'ENFJ: The Giver'),
-        ('ENFP', 'ENFP: The Enthusiast'),
-        ('ISTJ', 'ISTJ: The Duty Fulfiller'),
-        ('ISFJ', 'ISFJ: The Protector'),
-        ('ESTJ', 'ESTJ: The Executive'),
-        ('ESFJ', 'ESFJ: The Caregiver'),
-        ('ISTP', 'ISTP: The Craftsman'),
-        ('ISFP', 'ISFP: The Artist')
-    ]
-
-    # Enneagram personality types
-    enneagram_choices = [
-        ('1', '1: The Reformer'),
-        ('2', '2: The Helper'),
-        ('3', '3: The Achiever'),
-        ('4', '4: The Romantic'),
-        ('5', '5: The Investigator'),
-        ('6', '6: The Skeptic'),
-        ('7', '7: The Enthusiast'),
-        ('8', '8: The Challenger'),
-        ('9', '9: The Peacemaker')
-    ]
-
-    mbti_personality = models.CharField(choices=mbti_choices, null=True)
-    enneagram_personality = models.CharField(choices=enneagram_choices, null=True)
+# Personality types
+    mbti_personality = models.CharField(null=True)
+    enneagram_personality = models.CharField(null=True)
 
     # Long character description
     description = models.TextField(null=True)
+
+    # def clean(self):
+    #     """Data cleaning method for the Character object."""
+    #     super().clean()
+
+    #     # Construct full name
+    #     self.full_name = f"{self.first_name} {self.middle_name} {self.last_name}"
+    #     self.full_name = ' '.join(filter(None, self.full_name.split()))
 
 
 class Scene(models.Model):

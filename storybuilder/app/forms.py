@@ -1,6 +1,4 @@
 from django import forms
-from django.shortcuts import get_object_or_404
-from django.http import HttpResponse, Http404
 
 from .models import Story, Scene, Character, Plot, PlotPoint
 
@@ -35,6 +33,37 @@ genre_choices = [
 # Character field definition
 character_choices = [
     (character.full_name, character.full_name) for character in Character.objects.all()
+]
+
+# MBTI personality types
+mbti_choices = [
+    ('INTJ: The Architect', 'INTJ: The Architect'),
+    ('INTP: The Logician', 'INTP: The Logician'),
+    ('ENTJ: The Commander', 'ENTJ: The Commander'),
+    ('ENTP: The Visionary', 'ENTP: The Visionary'),
+    ('INFJ: The Advocate', 'INFJ: The Advocate'),
+    ('INFP: The Idealist', 'INFP: The Idealist'),
+    ('ENFJ: The Giver', 'ENFJ: The Giver'),
+    ('ENFP: The Enthusiast', 'ENFP: The Enthusiast'),
+    ('ISTJ: The Duty Fulfiller', 'ISTJ: The Duty Fulfiller'),
+    ('ISFJ: The Protector', 'ISFJ: The Protector'),
+    ('ESTJ: The Executive', 'ESTJ: The Executive'),
+    ('ESFJ: The Caregiver', 'ESFJ: The Caregiver'),
+    ('ISTP: The Craftsman', 'ISTP: The Craftsman'),
+    ('ISFP: The Artist', 'ISFP: The Artist')
+]
+
+# Enneagram personality types
+enneagram_choices = [
+    ('1: The Reformer', '1: The Reformer'),
+    ('2: The Helper', '2: The Helper'),
+    ('3: The Achiever', '3: The Achiever'),
+    ('4: The Romantic', '4: The Romantic'),
+    ('5: The Investigator', '5: The Investigator'),
+    ('6: The Skeptic', '6: The Skeptic'),
+    ('7: The Enthusiast', '7: The Enthusiast'),
+    ('8: The Challenger', '8: The Challenger'),
+    ('9: The Peacemaker', '9: The Peacemaker')
 ]
 
 
@@ -90,10 +119,7 @@ class NewSceneForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         if story_id:
-            try:
-                self.instance.story = Story.objects.get(pk=story_id)
-            except Story.DoesNotExist:
-                raise ValueError(f"Invalid story ID: Story {story_id} does not exist.")
+            self.instance.story = Story.objects.get(pk=story_id)
 
 
 class NewCharacterForm(forms.ModelForm):
@@ -103,13 +129,27 @@ class NewCharacterForm(forms.ModelForm):
         model = Character
         fields = '__all__'
 
+    def __init__(self, *args, **kwargs):
+        story_id = kwargs.pop('story_id', None)
+        super().__init__(*args, **kwargs)
+
+        if story_id:
+            self.instance.story = Story.objects.get(pk=story_id)
+
 
 class NewPlotForm(forms.ModelForm):
-    """Form for create a new plot."""
+    """Form for creating a new plot."""
 
     class Meta:
         model = Plot
         fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        story_id = kwargs.pop('story_id', None)
+        super().__init__(*args, **kwargs)
+
+        if story_id:
+            self.instance.story = Story.objects.get(pk=story_id)
 
 
 class NewPlotPointForm(forms.ModelForm):
@@ -118,3 +158,13 @@ class NewPlotPointForm(forms.ModelForm):
     class Meta:
         model = PlotPoint
         fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        story_id = kwargs.pop('story_id', None)
+        plot_id = kwargs.pop('plot_id', None)
+        super().__init__(*args, **kwargs)
+
+        if story_id:
+            self.instance.story = Story.objects.get(pk=story_id)
+        if plot_id:
+            self.instance.plot = Plot.objects.get(pk=plot_id)

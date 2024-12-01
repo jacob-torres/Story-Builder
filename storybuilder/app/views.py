@@ -113,7 +113,7 @@ def new_scene(request, story_id):
 
     try:
         story = get_object_or_404(Story, pk=story_id)
-    except ValueError:
+    except Http404:
         return render(request, '404_story_not_found.html', status=404)
 
     if request.method == 'POST':
@@ -124,7 +124,7 @@ def new_scene(request, story_id):
     else:
         form = NewSceneForm(story_id=story_id)
 
-    context = {'form': form, 'story': story}
+    context = {'form': form, 'story_title': story.title}
     return render(request, 'new_scene.html', context=context)
 
 
@@ -169,6 +169,22 @@ def character_detail(request, story_id, character_id):
 
 def new_character(request, story_id):
     """View function for creating a new character."""
+
+    try:
+        story = get_object_or_404(Story, pk=story_id)
+    except Http404:
+        return render(request, '404_story_not_found.html', status=404)
+
+    if request.method == 'POST':
+        form = NewCharacterForm(request.POST, story_id=story_id)
+        if form.is_valid():
+            new_character = form.save()
+            return redirect('character_detail', story_id=story_id, character_id=new_character.id)
+    else:
+        form = NewCharacterForm(story_id=story_id)
+
+    context = {'form': form, 'story_title': story.title}
+    return render(request, 'new_character.html', context=context)
 
 
 def update_character(request, story_id, character_id):
