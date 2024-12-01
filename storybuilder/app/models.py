@@ -28,6 +28,7 @@ class Character(models.Model):
     first_name = models.CharField(max_length=max_length, null=False)
     middle_name = models.CharField(max_length=max_length, blank=True, null=True)
     last_name = models.CharField(max_length=max_length, blank=True, null=True)
+    full_name = models.CharField(null=True)
 
     # Demographic details
     gender = models.CharField(max_length=max_length, null=True)
@@ -49,13 +50,13 @@ class Character(models.Model):
     # Long character description
     description = models.TextField(null=True)
 
-    # def clean(self):
-    #     """Data cleaning method for the Character object."""
-    #     super().clean()
+    def clean(self):
+        """Data cleaning method for the Character object."""
+        super().clean()
 
-    #     # Construct full name
-    #     self.full_name = f"{self.first_name} {self.middle_name} {self.last_name}"
-    #     self.full_name = ' '.join(filter(None, self.full_name.split()))
+        # Construct full name
+        self.full_name = f"{self.first_name} {self.middle_name} {self.last_name}"
+        self.full_name = ' '.join(filter(None, self.full_name.split()))
 
 
 class Scene(models.Model):
