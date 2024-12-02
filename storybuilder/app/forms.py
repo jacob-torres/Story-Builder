@@ -20,7 +20,7 @@ plot_point_choices = [
 
 
 class StoryForm(forms.ModelForm):
-    """Form for creating a new story."""
+    """Form for creating or updating a story."""
 
     class Meta:
         model = Story
@@ -61,38 +61,30 @@ class StoryForm(forms.ModelForm):
         return clean_data
 
 
-class NewSceneForm(forms.ModelForm):
+class SceneForm(forms.ModelForm):
     """Form for creating a new scene in a story."""
 
     class Meta:
         model = Scene
         exclude = ('story',)
 
-        # Define fields
-        # if not character_choices and not plot_point_choices:
-        #     exclude = ('story', 'plot_point', 'characters')
-        # elif not character_choices:
-        #     exclude = ('story', 'characters')
-        # elif not plot_point_choices:
-        #     exclude = ('story', 'plot_point')
-        # else:
-        #     exclude = ('story',)
-
-        # characters = forms.MultipleChoiceField(
-        #     choices=character_choices,
-        #     widget=forms.CheckboxSelectMultiple,
-        #     required=False
-        # )
-
     def __init__(self, *args, **kwargs):
         story_id = kwargs.pop('story_id', None)
         super().__init__(*args, **kwargs)
 
+        # Define the story that the object is associated with
         if story_id:
             self.instance.story = Story.objects.get(pk=story_id)
 
+        # Pre-populate fields if an instance of the object exists
+        if self.instance:
+            self.fields['title'].initial = self.instance.title
+            self.fields['description'].initial = self.instance.description
+            self.fields['characters'].initial = self.instance.characters
+            self.fields['plot_point'].initial = self.instance.plot_point
 
-class NewCharacterForm(forms.ModelForm):
+
+class CharacterForm(forms.ModelForm):
     """Form for creating a new character."""
 
     class Meta:
@@ -107,11 +99,30 @@ class NewCharacterForm(forms.ModelForm):
         story_id = kwargs.pop('story_id', None)
         super().__init__(*args, **kwargs)
 
+        # Define the story that the object is associated with
         if story_id:
             self.instance.story = Story.objects.get(pk=story_id)
 
+        # Pre-populate fields if an instance of the object exists
+        if self.instance:
+            self.fields['first_name'].initial = self.instance.first_name
+            self.fields['middle_name'].initial = self.instance.middle_name
+            self.fields['last_name'].initial = self.instance.last_name
+            self.fields['gender'].initial = self.instance.gender
+            self.fields['age'].initial = self.instance.age
+            self.fields['ethnicity'].initial = self.instance.ethnicity
+            self.fields['occupation'].initial = self.instance.occupation
+            self.fields['location'].initial = self.instance.location
+            self.fields['hair_color'].initial = self.instance.hair_color
+            self.fields['eye_color'].initial = self.instance.eye_color
+            self.fields['height'].initial = self.instance.height
+            self.fields['body_type'].initial = self.instance.body_type
+            self.fields['mbti_personality'].initial = self.instance.mbti_personality
+            self.fields['enneagram_personality'].initial = self.instance.enneagram_personality
+            self.fields['description'].initial = self.instance.description
 
-class NewPlotForm(forms.ModelForm):
+
+class PlotForm(forms.ModelForm):
     """Form for creating a new plot."""
 
     class Meta:
@@ -122,11 +133,18 @@ class NewPlotForm(forms.ModelForm):
         story_id = kwargs.pop('story_id', None)
         super().__init__(*args, **kwargs)
 
+        # Define the story that the object is associated with
         if story_id:
             self.instance.story = Story.objects.get(pk=story_id)
 
+        # Pre-populate fields if an instance of the object exists
+        if self.instance:
+            self.fields['name'].initial = self.instance.name
+            self.fields['description'].initial = self.instance.description
+            self.fields['plot_points'].initial = self.instance.plot_points
 
-class NewPlotPointForm(forms.ModelForm):
+
+class PlotPointForm(forms.ModelForm):
     """Form for creating a new plot point."""
 
     class Meta:
@@ -138,7 +156,13 @@ class NewPlotPointForm(forms.ModelForm):
         plot_id = kwargs.pop('plot_id', None)
         super().__init__(*args, **kwargs)
 
+        # Define the story and the plot that the object is associated with
         if story_id:
             self.instance.story = Story.objects.get(pk=story_id)
         if plot_id:
             self.instance.plot = Plot.objects.get(pk=plot_id)
+
+        # Pre-populate fields if an instance of the object exists
+        if self.instance:
+            self.fields['name'].initial = self.instance.name
+            self.fields['description'].initial = self.instance.description
