@@ -10,7 +10,8 @@ def home(request):
     return render(request, 'home.html')
 
 
-# Story view functions
+### Story view functions
+
 def stories(request):
     """View function for listing stories."""
 
@@ -31,19 +32,49 @@ def story_detail(request, story_id):
     return render(request, 'story_detail.html', context=context)
 
 
-def new_story(request):
+def create_or_update_story(request, story_id=None):
     """View function for creating a new story."""
 
-    if request.method == 'POST':
-        form = StoryForm(request.POST)
-        if form.is_valid():
-            new_story = form.save()
-            return redirect('story_detail', story_id=new_story.id)
-    else:
-        form = StoryForm()
+    template_name = ''
+    context= {}
 
-    context = {'form': form}
-    return render(request, 'new_story.html', context=context)
+    try:
+        # Update story if story ID is passed
+        if story_id:
+            try:
+                story = get_object_or_404(Story, pk=story_id)
+            except Http404:
+                return render(request, '404_story_not_found.html', status=404)
+
+            if request.method == 'POST':
+                form = StoryForm(request.POST, instance=story)
+                if form.is_valid():
+                    story = form.save()
+                    return redirect('story_detail', story_id=story.id)
+            else:
+                form = StoryForm(instance=story)
+                template_name = 'update_story.html'
+                context = {'form': form, 'story_title': story.title}
+
+        # Create story when no story ID is passed
+        else:
+            if request.method == 'POST':
+                form = StoryForm(request.POST)
+                if form.is_valid():
+                    new_story = form.save()
+                    return redirect('story_detail', story_id=new_story.id)
+            else:
+                form = StoryForm()
+                template_name = 'new_story.html'
+                context = {'form': form}
+
+    except Exception as error:
+        print("****** Error while creating or updating story ******")
+        print(error)
+        template_name = '500.html'
+        context = {'error': error}
+
+    return render(request=request, template_name=template_name, context=context)
 
 
 def update_story(request, story_id):
