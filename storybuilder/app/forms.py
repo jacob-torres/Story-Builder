@@ -19,44 +19,46 @@ plot_point_choices = [
 ]
 
 
-class NewStoryForm(forms.ModelForm):
+class StoryForm(forms.ModelForm):
     """Form for creating a new story."""
-
-    class Meta:
-        model = Story
-        fields = ('title', 'description', 'genres')
-
-    genres = forms.MultipleChoiceField(
-        choices=genre_choices,
-        widget=forms.CheckboxSelectMultiple
-    )
-    other_choice = forms.CharField(required=False)
-    premise = forms.CharField(required=False)
-
-    def clean(self):
-        """Data cleaning function."""
-
-        clean_data = super().clean()
-        genre_choices = list(clean_data['genres'])
-        if 'Other' in genre_choices:
-            if not clean_data['other_choice']:
-                raise forms.ValidationError('Please specify your other choice.')
-            genre_choices.remove('Other')
-            genre_choices.append(clean_data['other_choice'])
-
-        clean_data['genres'] = ', '.join(genre_choices)
-        return clean_data
-
-
-class UpdateStoryForm(forms.ModelForm):
-    """Form for updating a story."""
 
     class Meta:
         model = Story
         fields = ('title', 'description', 'genres', 'premise')
 
-    # Define optional fields
+    genres = forms.MultipleChoiceField(
+        choices=genre_choices,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    other_choice = forms.CharField(required=False)
     premise = forms.CharField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Pre-populate fields if an instance of the object exists
+        if self.instance:
+            self.fields['title'].initial = self.instance.title
+            self.fields['description'].initial = self.instance.description
+            self.fields['premise'].initial = self.instance.premise
+            self.fields['genres'].initial = self.instance.genres
+
+    def clean(self):
+        """Data cleaning function."""
+        clean_data = super().clean()
+
+        # Process other genre choice
+        if 'genres' in clean_data:
+            genre_choices = list(clean_data['genres'])
+            if 'Other' in genre_choices:
+                if not clean_data['other_choice']:
+                    raise forms.ValidationError('Please specify your other choice.')
+                genre_choices.remove('Other')
+                genre_choices.append(clean_data['other_choice'])
+            clean_data['genres'] = ', '.join(genre_choices)
+
+        return clean_data
 
 
 class NewSceneForm(forms.ModelForm):

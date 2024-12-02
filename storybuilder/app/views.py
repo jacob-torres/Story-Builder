@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.http import HttpResponse, Http404
 
-from .forms import NewStoryForm, UpdateStoryForm, NewSceneForm, NewCharacterForm, NewPlotForm, NewPlotPointForm
+from .forms import StoryForm, UpdateStoryForm, NewSceneForm, NewCharacterForm, NewPlotForm, NewPlotPointForm
 from .models import Story, Scene, Character, Plot, PlotPoint
 
 # Create your views here.
@@ -14,11 +14,7 @@ def home(request):
 def stories(request):
     """View function for listing stories."""
 
-    try:
-        stories = get_list_or_404(Story)
-    except Http404:
-        stories = []
-
+    stories = Story.objects.all()
     context = {'stories': stories}
     return render(request, 'stories.html', context=context)
 
@@ -39,12 +35,12 @@ def new_story(request):
     """View function for creating a new story."""
 
     if request.method == 'POST':
-        form = NewStoryForm(request.POST)
+        form = StoryForm(request.POST)
         if form.is_valid():
             new_story = form.save()
             return redirect('story_detail', story_id=new_story.id)
     else:
-        form = NewStoryForm()
+        form = StoryForm()
 
     context = {'form': form}
     return render(request, 'new_story.html', context=context)
@@ -59,12 +55,12 @@ def update_story(request, story_id):
         return render(request, '404_story_not_found.html', status=404)
 
     if request.method == 'POST':
-        form = UpdateStoryForm(request.POST, instance=story)
+        form = StoryForm(request.POST, instance=story)
         if form.is_valid():
             story = form.save()
             return redirect('story_detail', story_id=story_id)
     else:
-        form = UpdateStoryForm(instance=story)
+        form = StoryForm(instance=story)
 
     context = {'form': form, 'story': story}
     return render(request, 'update_story.html', context=context)
@@ -202,4 +198,24 @@ def update_character(request, story_id, character_id):
 
 def delete_character(request, story_id, character_id):
     """View function for deleting a character."""
+
+
+# View factory function
+def view_factory(request, model_name, view_type, **kwargs):
+    """A generic factory function for resolving view functions based on model."""
+
+    model = None
+    match model_name:
+        case 'STORY':
+            model = Story
+        case 'CHARACTER':
+            model = Character
+        case 'SCENE':
+            model = Scene
+        case 'PLOT':
+            model = Plot
+        case 'PLOT_POINT':
+            model = PlotPoint
+        case _:
+            raise ValueError(f"Invalid model name: {model_name}.")
 

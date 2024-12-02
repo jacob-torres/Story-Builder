@@ -10,6 +10,7 @@ genre_choices = [
     ('Fantasy', 'Fantasy'),
     ('Romance', 'Romance'),
     ('Horror', 'Horror'),
+    ('LGBTQI+', 'LGBTQI+'),
     ('Crime', 'Crime'),
     ('Historical Fiction', 'Historical Fiction'),
     ('Young Adult', 'Young Adult'),
