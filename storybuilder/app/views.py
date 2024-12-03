@@ -22,13 +22,20 @@ def stories(request):
 
 def story_detail(request, story_id):
     """View function for displaying story details."""
+    print("**************************************************")
+    print("Create or Update Story View")
 
     try:
         story = get_object_or_404(Story, pk=story_id)
     except Http404:
         return render(request, '404_story_not_found.html', status=404)
 
+    # Manipulate genre values for proper template rendering
+    # genres = story.genres.strip('[]').replace("'", "").replace("Childrens", "Children's")
     genres = story.genres
+    print(f"story.genres: {story.genres}")
+    print(type(story.genres))
+
     context = {'story': story, 'genres': genres}
     return render(request, 'story_detail.html', context=context)
 
