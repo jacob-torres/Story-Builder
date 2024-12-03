@@ -28,7 +28,8 @@ def story_detail(request, story_id):
     except Http404:
         return render(request, '404_story_not_found.html', status=404)
 
-    context = {'story': story}
+    genres = story.genres
+    context = {'story': story, 'genres': genres}
     return render(request, 'story_detail.html', context=context)
 
 

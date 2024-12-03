@@ -56,7 +56,7 @@ class StoryForm(forms.ModelForm):
                     raise forms.ValidationError('Please specify your other choice.')
                 genre_choices.remove('Other')
                 genre_choices.append(clean_data['other_choice'])
-            clean_data['genres'] = ', '.join(genre_choices)
+            clean_data['genres'] = genre_choices
 
         return clean_data
 
