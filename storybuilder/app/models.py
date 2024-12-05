@@ -32,6 +32,10 @@ class Story(models.Model):
     # Relationships: One or more characters and scenes
     # characters = models.ManyToManyField('Character', blank=True)
 
+    def __str__(self):
+        """Override string method for the Story object."""
+        return self.title
+
 
 class Character(models.Model):
     """Story character."""
@@ -95,6 +99,10 @@ class Scene(models.Model):
     plot_point = models.ForeignKey('PlotPoint', on_delete=models.SET_DEFAULT, default=None, blank=True, null=True)
     characters = models.ManyToManyField(Character, blank=True)
 
+    def __str__(self):
+        """Override the string method for the Scene object."""
+        return self.title
+
 
 class Plot(models.Model):
     """Plots and their plot points, characters, and progressions."""
@@ -104,6 +112,10 @@ class Plot(models.Model):
 
     # Relationships: One story
     story = models.OneToOneField(Story, on_delete=models.CASCADE, default=None, related_name='plot')
+
+    def __str__(self):
+        """Override the string method for the Plot object."""
+        return self.name
 
 
 class PlotPoint(models.Model):
@@ -115,6 +127,10 @@ class PlotPoint(models.Model):
     # Relationships: One plot
     plot = models.ForeignKey(Plot, on_delete=models.CASCADE, default=None)
 
+    def __str__(self):
+        """Override the string method for the PlotPoint object."""
+        return self.name
+
 
 class World(models.Model):
     """Worlds and their details."""
@@ -125,3 +141,7 @@ class World(models.Model):
     # Relationships: One or more stories and characters
     stories = models.ManyToManyField(Story, blank=True)
     characters = models.ManyToManyField(Character, blank=True)
+
+    def __str__(self):
+        """Override the string method for the World object."""
+        return self.name
