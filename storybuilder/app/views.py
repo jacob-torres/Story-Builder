@@ -1,10 +1,30 @@
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.http import HttpResponse, Http404
+from django.views.generic.edit import UpdateView
 
-from .forms import StoryForm, SceneForm, CharacterForm, PlotForm, PlotPointForm
+from .forms import StoryForm, SceneForm, CharacterForm, PlotForm, PlotPointForm, WordCountForm
 from .models import Story, Scene, Character, Plot, PlotPoint
 
 # Create your views here.
+class StoryUpdateView(UpdateView):
+    """Update view for the Story model."""
+
+    model = Story
+    form_class = WordCountForm
+    template_name = 'story_detail.html'
+
+    def get_context_data(self, **kwargs)    :
+        context = super().get_context_data(**kwargs)
+        context['story'] = self.object
+        return context
+
+    def form_valid(self, form):
+        self.object.word_count = form.cleaned_data['word_count']
+        self.object.save()
+        # return redirect('story_detail.html')
+        return super().form_valid(form)
+
+
 def home(request):
     """Home page."""
     return render(request, 'home.html')

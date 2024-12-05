@@ -34,20 +34,20 @@ class StoryForm(forms.ModelForm):
 
         print("**********************************")
         print("Story Form Clean Method")
-        clean_data = super().clean()
+        cleaned_data = super().clean()
 
         # Process other genre choice
-        if 'genres' in clean_data:
-            genre_choices = list(clean_data['genres'])
+        if 'genres' in cleaned_data:
+            genre_choices = list(cleaned_data['genres'])
             if 'Other' in genre_choices:
-                if not clean_data['other_choice']:
+                if not cleaned_data['other_choice']:
                     raise forms.ValidationError('Please specify your other choice.')
                 genre_choices.remove('Other')
-                genre_choices.append(clean_data['other_choice'])
-            clean_data['genres'] = genre_choices
+                genre_choices.append(cleaned_data['other_choice'])
+            cleaned_data['genres'] = genre_choices
 
-        print(f"clean_data: {clean_data}")
-        return clean_data
+        print(f"cleaned_data: {cleaned_data}")
+        return cleaned_data
     
 
 class SceneForm(forms.ModelForm):
@@ -153,3 +153,13 @@ class PlotPointForm(forms.ModelForm):
         if self.instance:
             self.fields['name'].initial = self.instance.name
             self.fields['description'].initial = self.instance.description
+
+
+class WordCountForm(forms.ModelForm):
+    """Form for updating the story word count."""
+
+    word_count = forms.IntegerField(min_value=0, label='New Word Count')
+
+    class Meta:
+        model = Story
+        fields = ('word_count',)

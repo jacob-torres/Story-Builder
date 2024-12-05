@@ -20,7 +20,7 @@
       <td>{{ story.date_started }}</td>
       <td>{{ story.word_count }}</td>
       <td><a class="view-link" href="#scenes">{{ story.scene_set.count }}</a></td>
-        <td><a class="view-link" href="#characters">{{ story.characters.count }}</a></td>
+        <td><a class="view-link" href="#characters">{{ story.character_set.count }}</a></td>
     </tr>
   </tbody>
 </table>
@@ -60,28 +60,52 @@
         {% endfor %}
     </ul>
     {% endif %}
+
+    <div class="big-btn">
+      <button class="big-btn" onclick="window.location.href='new-scene/'">Add Scene</button>
+    </div>
   </div>
 
   <div class="content-view" id="characters" style="display: none;">
     <h2>Character View</h2>
-    <p>This is the character view.</p>
+    {% if story.character_set.count == 0 %}
+    <p>There are no characters in this story yet. When you add some, they will be listed here.</p>
+
+    {% else %}
+    <ul>
+        {% for character in story.character_set.all %}
+        <li>
+            <a href={{ character.id }}>{{ character.full_name }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <div class="action-btn">
+      <button class="action-btn" onclick="window.location.href='new-character/'">Add Character</button>
+    </div>
   </div>
 
   <div class="content-view" id="plot" style="display: none;">
     <h2>Plot View</h2>
     <p>This is the plot view.</p>
+    <div class="action-btn">
+      <button class="action-btn" onclick="window.location.href='new-plot-point/'">Add Plot Point</button>
+    </div>
   </div>
+
+  <form id="word-count-form" style="display: none;" method="post">
+    <h2>Update Word Count</h2>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Update</button>
+    <button type="button" onclick="toggleWordCountForm()">Cancel</button>
+  </form>
 </section>
 {% endblock %}
 
 {% block action_buttons %}
 <div class="action-btn">
-  <button class="action-btn" onclick="window.location.href='new-scene/'">Add Scene</button>
-</div>
-<div class="action-btn">
-  <button class="action-btn" onclick="window.location.href='new-character/'">Add Character</button>
-</div>
-<div class="action-btn">
-  <button class="action-btn" onclick="window.location.href='new-plot-point/'">Add Plot Point</button>
+  <button class="action-btn" onclick="toggleWordCountForm()">Update Word Count</button>
 </div>
 {% endblock %}
