@@ -22,26 +22,28 @@ def stories(request):
 
 def story_detail(request, story_id):
     """View function for displaying story details."""
+
     print("**************************************************")
-    print("Create or Update Story View")
+    print("Story Detail View")
 
     try:
         story = get_object_or_404(Story, pk=story_id)
-    except Http404:
+    except Http404 as error:
+        print(f"HTTP404 Error while getting Story object {story_id}.")
+        print(error)
         return render(request, '404_story_not_found.html', status=404)
 
-    # Manipulate genre values for proper template rendering
-    # genres = story.genres.strip('[]').replace("'", "").replace("Childrens", "Children's")
-    genres = story.genres
-    print(f"story.genres: {story.genres}")
-    print(type(story.genres))
+    context = {'story': story}
+    print(f"context: {context}")
 
-    context = {'story': story, 'genres': genres}
     return render(request, 'story_detail.html', context=context)
 
 
 def create_or_update_story(request, story_id=None):
     """View function for creating a new story."""
+
+    print("**************************************************")
+    print("Create or Update Story View")
 
     template_name = ''
     context= {}
@@ -52,6 +54,8 @@ def create_or_update_story(request, story_id=None):
             try:
                 story = get_object_or_404(Story, pk=story_id)
             except Http404:
+                print(f"HTTP404 Error while getting Story object {story_id}.")
+                print(error)
                 return render(request, '404_story_not_found.html', status=404)
 
             if request.method == 'POST':
@@ -82,27 +86,8 @@ def create_or_update_story(request, story_id=None):
         template_name = '500.html'
         context = {'error': error}
 
+    print(f"context: {context}")
     return render(request=request, template_name=template_name, context=context)
-
-
-def update_story(request, story_id):
-    """View function for updating a story."""
-
-    try:
-        story = get_object_or_404(Story, pk=story_id)
-    except Http404:
-        return render(request, '404_story_not_found.html', status=404)
-
-    if request.method == 'POST':
-        form = StoryForm(request.POST, instance=story)
-        if form.is_valid():
-            story = form.save()
-            return redirect('story_detail', story_id=story_id)
-    else:
-        form = StoryForm(instance=story)
-
-    context = {'form': form, 'story': story}
-    return render(request, 'update_story.html', context=context)
 
 
 def delete_story(request, story_id):

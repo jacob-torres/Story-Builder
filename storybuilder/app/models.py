@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 from .constants import genre_choices, mbti_choices, enneagram_choices
 
@@ -17,13 +18,18 @@ class Story(models.Model):
     description = models.TextField(max_length=long_length, null=True)
     premise = models.CharField(max_length=mid_length, null=True)
 
-    genres = models.CharField(blank=True, null=True)
+    genres = ArrayField(
+        models.CharField(max_length=tiny_length),
+        blank=True,
+        null=True
+    )
+
     word_count = models.PositiveIntegerField(default=0)
     date_started = models.DateField(auto_now_add=True)
     date_last_saved = models.DateField(auto_now=True)
     date_finished = models.DateField(null=True)
 
-    # Relationships: One or more characters and scenes
+    # Relationships: One or more characters, genres,  and scenes
     characters = models.ManyToManyField('Character', blank=True)
 
 

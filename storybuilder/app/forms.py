@@ -3,21 +3,6 @@ from django import forms
 from .models import Story, Scene, Character, Plot, PlotPoint
 from .constants import genre_choices, mbti_choices, enneagram_choices
 
-# Story choices
-story_choices = [
-    (story.title, story.title) for story in Story.objects.all()
-]
-
-# Character field definition
-character_choices = [
-    (character.full_name, character.full_name) for character in Character.objects.all()
-]
-
-# Plot point choices
-plot_point_choices = [
-    (plot_point.name, plot_point.name) for plot_point in PlotPoint.objects.all()
-]
-
 
 class StoryForm(forms.ModelForm):
     """Form for creating or updating a story."""
@@ -45,7 +30,10 @@ class StoryForm(forms.ModelForm):
             self.fields['genres'].initial = self.instance.genres
 
     def clean(self):
-        """Data cleaning function."""
+        """Data cleaning function for story form."""
+
+        print("**********************************")
+        print("Story Form Clean Method")
         clean_data = super().clean()
 
         # Process other genre choice
@@ -58,8 +46,9 @@ class StoryForm(forms.ModelForm):
                 genre_choices.append(clean_data['other_choice'])
             clean_data['genres'] = genre_choices
 
+        print(f"clean_data: {clean_data}")
         return clean_data
-
+    
 
 class SceneForm(forms.ModelForm):
     """Form for creating a new scene in a story."""
