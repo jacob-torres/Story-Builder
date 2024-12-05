@@ -1,122 +1,120 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
+
+from .constants import genre_choices, mbti_choices, enneagram_choices
 
 # Create your models here.
-max_length = 250
-
-
-class Character(models.Model):
-    """Story character."""
-
-    first_name = models.CharField(max_length=max_length, null=False)
-    middle_name = models.CharField(max_length=max_length, null=True)
-    last_name = models.CharField(max_length=max_length, null=True)
-
-    # Demographic details
-    gender = models.CharField(max_length=max_length, null=True)
-    age = models.PositiveSmallIntegerField(null=True)
-    ethnicity = models.CharField(max_length=max_length, null=True)
-    occupation = models.CharField(max_length=max_length, null=True)
-    location = models.CharField(max_length=max_length, null=True)
-
-    # Physical details
-    hair_color = models.CharField(max_length=max_length, null=True)
-    eye_color = models.CharField(max_length=max_length, null=True)
-    height = models.CharField(max_length=max_length, null=True)
-    body_type = models.CharField(max_length=max_length, null=True)
-
-    # MBTI personality types
-    mbti_choices = [
-        ('INTJ', 'INTJ: The Architect'),
-        ('INTP', 'INTP: The Logician'),
-        ('ENTJ', 'ENTJ: The Commander'),
-        ('ENTP', 'ENTP: The Visionary'),
-        ('INFJ', 'INFJ: The Advocate'),
-        ('INFP', 'INFP: The Idealist'),
-        ('ENFJ', 'ENFJ: The Giver'),
-        ('ENFP', 'ENFP: The Enthusiast'),
-        ('ISTJ', 'ISTJ: The Duty Fulfiller'),
-        ('ISFJ', 'ISFJ: The Protector'),
-        ('ESTJ', 'ESTJ: The Executive'),
-        ('ESFJ', 'ESFJ: The Caregiver'),
-        ('ISTP', 'ISTP: The Craftsman'),
-        ('ISFP', 'ISFP: The Artist')
-    ]
-
-    # Enneagram personality types
-    enneagram_choices = [
-        ('1', '1: The Reformer'),
-        ('2', '2: The Helper'),
-        ('3', '3: The Achiever'),
-        ('4', '4: The Romantic'),
-        ('5', '5: The Investigator'),
-        ('6', '6: The Skeptic'),
-        ('7', '7: The Enthusiast'),
-        ('8', '8: The Challenger'),
-        ('9', '9: The Peacemaker')
-    ]
-
-    mbti_personality = models.CharField(choices=mbti_choices, null=True)
-    enneagram_personality = models.CharField(choices=enneagram_choices, null=True)
-
-    # Long character description
-    description = models.TextField(null=True)
+tiny_length = 30
+short_length = 100
+mid_length = 250
+long_length = 500
 
 
 class Story(models.Model):
     """The story data structure, with characters, plots, worlds, and scenes."""
 
     # Story details
-    title = models.CharField(max_length=max_length, null=False)
-    description = models.TextField(null=True)
-    premise = models.CharField(max_length=max_length, null=True)
-    genres = models.CharField(max_length=max_length, null=True)
+    title = models.CharField(max_length=short_length, null=False)
+    description = models.TextField(max_length=long_length, null=True)
+    premise = models.CharField(max_length=mid_length, null=True)
+
+    genres = ArrayField(
+        models.CharField(max_length=tiny_length),
+        blank=True,
+        null=True
+    )
+
     word_count = models.PositiveIntegerField(default=0)
     date_started = models.DateField(auto_now_add=True)
     date_last_saved = models.DateField(auto_now=True)
     date_finished = models.DateField(null=True)
 
-    # Relationships: One or more characters
-    characters = models.ManyToManyField(Character)
+    # Relationships: One or more characters, genres,  and scenes
+    characters = models.ManyToManyField('Character', blank=True)
+
+
+class Character(models.Model):
+    """Story character."""
+
+    first_name = models.CharField(max_length=tiny_length, null=False)
+    middle_name = models.CharField(max_length=tiny_length, blank=True, null=True)
+    last_name = models.CharField(max_length=tiny_length, blank=True, null=True)
+    full_name = models.CharField(max_length=short_length, null=True)
+
+    # Demographic details
+    gender = models.CharField(max_length=short_length, blank=True, null=True)
+    age = models.PositiveSmallIntegerField(blank=True, null=True)
+    ethnicity = models.CharField(max_length=short_length, blank=True, null=True)
+    occupation = models.CharField(max_length=short_length, blank=True, null=True)
+    location = models.CharField(max_length=short_length, blank=True, null=True)
+
+    # Physical details
+    hair_color = models.CharField(max_length=short_length, blank=True, null=True)
+    eye_color = models.CharField(max_length=short_length, blank=True, null=True)
+    height = models.CharField(max_length=short_length, blank=True, null=True)
+    body_type = models.CharField(max_length=short_length, blank=True, null=True)
+
+# Personality types
+    mbti_personality = models.CharField(choices=mbti_choices, blank=True, null=True)
+    enneagram_personality = models.CharField(choices=enneagram_choices, blank=True, null=True)
+
+    # Long character description
+    description = models.TextField(max_length=long_length, null=True)
+
+    def clean(self):
+        """Data cleaning method for the Character object."""
+        super().clean()
+
+        # Construct full name
+        names = [self.first_name, self.middle_name, self.last_name]
+        for name in names:
+            if not name:
+                names.remove(name)
+
+        if len(names) == 1:
+            self.full_name = self.first_name
+        else:
+            self.full_name = ' '.join(filter(None, names))
 
 
 class Scene(models.Model):
     """A single unit or building block of a story."""
 
-    title = models.CharField(max_length=max_length, null=False)
-    description = models.TextField(null=True)
+    title = models.CharField(max_length=short_length, null=False)
+    description = models.TextField(max_length=long_length, null=True)
 
-    # Relationships: One story, one or more characters
+    # Relationships: One story and one possible plot point, one or more characters
     story = models.ForeignKey(Story, on_delete=models.CASCADE, default=None)
-    characters = models.ManyToManyField(Character)
+    plot_point = models.ForeignKey('PlotPoint', on_delete=models.SET_DEFAULT, default=None, blank=True, null=True)
+    characters = models.ManyToManyField(Character, blank=True)
 
 
 class Plot(models.Model):
     """Plots and their plot points, characters, and progressions."""
 
-    name = models.CharField(max_length=max_length, null=False)
-    description = models.TextField(null=True)
+    name = models.CharField(max_length=short_length, null=False)
+    description = models.TextField(max_length=long_length, null=True)
 
     # Relationships: One story
-    story = models.ForeignKey(Story, on_delete=models.CASCADE, default=None)
+    story = models.OneToOneField(Story, on_delete=models.CASCADE, default=None, related_name='plot')
 
 
 class PlotPoint(models.Model):
     """A single point of a story's plot."""
 
-    name = models.CharField(max_length=max_length, null=False)
-    description = models.TextField(null=True)
+    name = models.CharField(max_length=short_length, null=False)
+    description = models.TextField(max_length=long_length, null=True)
 
-    # Relationships: One plot, one or more scenes per plot point
+    # Relationships: One plot
     plot = models.ForeignKey(Plot, on_delete=models.CASCADE, default=None)
-    scenes = models.ManyToManyField(Scene)
 
 
 class World(models.Model):
     """Worlds and their details."""
 
-    name = models.CharField(max_length=max_length, null=False)
-    description = models.TextField(null=True)
+    name = models.CharField(max_length=short_length, null=False)
+    description = models.TextField(max_length=long_length, null=True)
 
     # Relationships: One or more stories and characters
-    stories = models.ManyToManyField(Story)
-    characters = models.ManyToManyField(Character)
+    stories = models.ManyToManyField(Story, blank=True)
+    characters = models.ManyToManyField(Character, blank=True)

@@ -1,12 +1,6 @@
-{% extends 'base.html' %}
-
+{% extends 'creation_form.html' %}
 {% block title %}Create a New Story{% endblock %}
 
-{% block content %}
+{% block form_heading %}
 <h1>Create a New Story</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create</button>
-</form>
 {% endblock %}

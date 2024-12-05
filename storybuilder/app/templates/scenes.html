@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Scenes in {{ story.title }}{% endblock %}
+
+{% block content %}
+<section class="scenes-section">
+    <h1>Scenes in {{ story.title }}</h1>
+    <!-- Loop through the list of stories passed from the new_story view function.-->
+    {% if not scenes %}
+    <p>There are no scenes in this story yet. When you add some, they will be listed here.</p>
+
+    {% else %}
+    <ul id="scenes-list">
+        {% for scene in scenes %}
+        <li>
+            <a href={{ scene.id }}>{{ scene.title }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <hr>
+
+    <div class="big-btn">
+        <button class="big-btn" onclick="window.location.href='new/'">New Scene</button></section>
+    </div>
+</section>
+{% endblock %}

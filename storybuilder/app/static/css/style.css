@@ -13,13 +13,13 @@ body {
 
 /* Banner */
 section.banner {
+  background-color: #F0E68C;  /* Light Yellow */
   margin: 0 auto;
   padding: 1rem;
   border: hidden;
 }
 
 header {
-  background-color: #F0E68C;  /* Light Yellow */
   text-align: center;
   font-size: 1.2rem;
   margin-bottom: 1.5rem;
@@ -28,7 +28,6 @@ header {
 /* Navigation bar */
 nav {
   display: flex;
-  background-color: #ff69b4;  /* Hot Pink */
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem;
@@ -53,7 +52,6 @@ nav li a {
 
 nav li a:hover {
   background-color: #111;
-  color: #fff;
 }
 
 
@@ -127,14 +125,15 @@ aside#contribution-aside {
 
 /* Stories Page */
 ul#stories-list {
-  justify-content: left;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 ul#stories-list li {
   list-style-type: none;
   margin: 0.5rem;
   border: 2px solid #333;
-  text-align: center;
 }
 
 ul#stories-list li a:hover {
@@ -159,47 +158,52 @@ th {
   font-weight: bold;
 }
 
-/* Action buttons */
-div.story-action-container {
+
+/* Action Buttons */
+div.action-container {
+  width: 98%;
   display: flex;
   justify-content: space-around;
-  width: 100%;
-  padding: 0.5rem;
+  align-items: center;
 }
 
-div.story-action-btn {
-  flex-grow: 1;
+div.action-btn {
+  flex: 1;
 }
 
-button.story-action-btn {
-  text-align: center;
-  text-decoration: none;
-  background-color: #ff69b4;  /* Hot Pink */
+button.action-btn {
+  background-color: #ff69b4;
+  color: #111;
   font-size: 1.2rem;
-  border: 2px solid #333;
+  text-align: center;
+  border: 1px solid #111;
   border-radius: 22%;
 }
 
-/* Tab navigation headers */
+
+/* Story view tabs */
 nav.tab-container {
-  background-color: #87CEFA;  /* Sky Blue */
   display: flex;
   justify-content: space-around;
   padding: 0.5rem;
   margin-bottom: 1rem;
 }
 
-h3.tab {
+h3.view-tab {
   cursor: pointer;
   padding: 0.5rem;
   border-bottom: 2px solid transparent;
 }
 
-h3.tab:hover {
+h3.view-tab.active {
+  font-weight: bold;
   border-bottom-color: #ff69b4;
 }
 
-h3.tab.active {
-  border-bottom-color: #ff69b4;
-}
 
+/* Content views */
+div.content-view {
+  width: 100%;
+  padding: 0.5rem;
+  border: 2px solid #333;
+}

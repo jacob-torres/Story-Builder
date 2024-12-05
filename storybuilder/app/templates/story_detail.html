@@ -1,62 +1,87 @@
-{% extends 'base.html' %}
-
+{% extends 'detail_layout.html' %}
 {% block title %}{{ story.title }}{% endblock %}
 
-{% block content %}
-<section class="story-detail-section">
-  <h1>Story Details</h1>
-  <table>
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Genres</th>
-        <th>Premise</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
+{% block detail_content %}
+<h1>Story Details</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Start Date</th>
+      <th>Word Count</th>
+      <th>Scenes</th>
+      <th>Characters</th>
+    </tr>
+  </thead>
 
-    <tbody>
-      <tr>
-        <td>{{ story.title }}</td>
-        <td>{{ story.genres }}</td>
-        <td>{{ story.premise }}</td>
-        <td><a href="edit/">Edit</a> | <a href="delete/">Delete</a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <tbody>
+    <tr>
+      <td>{{ story.title }}</td>
+      <td>{{ story.date_started }}</td>
+      <td>{{ story.word_count }}</td>
+      <td><a class="view-link" href="#scenes">{{ story.scene_set.count }}</a></td>
+        <td><a class="view-link" href="#characters">{{ story.characters.count }}</a></td>
+    </tr>
+  </tbody>
+</table>
 
+<section class="story-view-section" aria-label="story">
+  {% if story.premise %}
+  <h2>Premise</h2>
+  <p>{{ story.premise }}</p>
+  {% endif %}
   <h2>Description</h2>
   <p>{{ story.description }}</p>
-</section>
-
-<div class="story-action-container">
-  <div class="story-action-btn">
-    <button class="story-action-btn">Update Story</button>
-  </div>
-  <div class="story-action-btn">
-    <button class="story-action-btn">Add Scene</button>
-  </div>
-  <div class="story-action-btn">
-    <button class="story-action-btn">Add Character</button>
-  </div>
-  <div class="story-action-btn">
-    <button class="story-action-btn">Add Plot Point</button>
-  </div>
-  <div class="story-action-btn">
-    <button class="story-action-btn">Delete Story</button>
-  </div>
-</div>
+  <h2>Genres</h2>
+  <ul>
+    {% for genre in story.genres %}
+    <li>{{ genre }}</li>
+    {% endfor %}
+  </ul>
 <hr>
 
-<nav class="tab-container">
-  <h3 class="tab">Scene View</h3>
-  <h3 class="tab">Plot View</h3>
-  <h3 class="tab">Character View</h3>
-</nav>
+  <nav class="tab-container">
+    <h3 class="view-tab"><a href="#scenes">Scene View</a></h3>
+    <h3 class="view-tab"><a href="#characters">Character View</a></h3>
+    <h3 class="view-tab"><a href="#plot">Plot View</a></h3>
+  </nav>
+  
+  <div class="content-view" id="scenes">
+    <h2>Scene View</h2>
+    {% if story.scene_set.count == 0 %}
+    <p>There are no scenes in this story yet. When you add some, they will be listed here.</p>
 
-<section class="story-view-section">
-  <h2>Scene View</h2>
-  <p>This is the scene view.</p>
+    {% else %}
+    <ul id="scenes-list">
+        {% for scene in story.scene_set.all %}
+        <li>
+            <a href={{ scene.id }}>{{ scene.title }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+
+  <div class="content-view" id="characters" style="display: none;">
+    <h2>Character View</h2>
+    <p>This is the character view.</p>
+  </div>
+
+  <div class="content-view" id="plot" style="display: none;">
+    <h2>Plot View</h2>
+    <p>This is the plot view.</p>
+  </div>
 </section>
+{% endblock %}
+
+{% block action_buttons %}
+<div class="action-btn">
+  <button class="action-btn" onclick="window.location.href='new-scene/'">Add Scene</button>
+</div>
+<div class="action-btn">
+  <button class="action-btn" onclick="window.location.href='new-character/'">Add Character</button>
+</div>
+<div class="action-btn">
+  <button class="action-btn" onclick="window.location.href='new-plot-point/'">Add Plot Point</button>
+</div>
 {% endblock %}
