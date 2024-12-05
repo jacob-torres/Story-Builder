@@ -7,7 +7,8 @@
   <thead>
     <tr>
       <th>Title</th>
-      <th>Genres</th>
+      <th>Start Date</th>
+      <th>Word Count</th>
       <th>Scenes</th>
       <th>Characters</th>
     </tr>
@@ -16,14 +17,8 @@
   <tbody>
     <tr>
       <td>{{ story.title }}</td>
-      <!-- <td>{{ genres }}</td> -->
-      <td>
-        <ul>
-          {% for genre in story.genres %}
-          <li>{{ genre }}</li>
-          {% endfor %}
-        </ul>
-      </td>
+      <td>{{ story.date_started }}</td>
+      <td>{{ story.word_count }}</td>
       <td><a class="view-link" href="#scenes">{{ story.scene_set.count }}</a></td>
         <td><a class="view-link" href="#characters">{{ story.characters.count }}</a></td>
     </tr>
@@ -31,11 +26,19 @@
 </table>
 
 <section class="story-view-section" aria-label="story">
+  {% if story.premise %}
   <h2>Premise</h2>
   <p>{{ story.premise }}</p>
+  {% endif %}
   <h2>Description</h2>
   <p>{{ story.description }}</p>
-  <hr>
+  <h2>Genres</h2>
+  <ul>
+    {% for genre in story.genres %}
+    <li>{{ genre }}</li>
+    {% endfor %}
+  </ul>
+<hr>
 
   <nav class="tab-container">
     <h3 class="view-tab"><a href="#scenes">Scene View</a></h3>
