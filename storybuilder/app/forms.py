@@ -69,8 +69,6 @@ class SceneForm(forms.ModelForm):
         if self.instance:
             self.fields['title'].initial = self.instance.title
             self.fields['description'].initial = self.instance.description
-            self.fields['characters'].initial = self.instance.characters
-            self.fields['plot_point'].initial = self.instance.plot_point
 
 
 class CharacterForm(forms.ModelForm):

@@ -29,8 +29,8 @@ class Story(models.Model):
     date_last_saved = models.DateField(auto_now=True)
     date_finished = models.DateField(null=True)
 
-    # Relationships: One or more characters, genres,  and scenes
-    characters = models.ManyToManyField('Character', blank=True)
+    # Relationships: One or more characters and scenes
+    # characters = models.ManyToManyField('Character', blank=True)
 
 
 class Character(models.Model):
@@ -60,6 +60,13 @@ class Character(models.Model):
 
     # Long character description
     description = models.TextField(max_length=long_length, null=True)
+
+    # Relationships: 1 story
+    story = models.ForeignKey(Story, on_delete=models.CASCADE)
+
+    def __str__(self):
+        """Override string method to display character name."""
+        return self.full_name
 
     def clean(self):
         """Data cleaning method for the Character object."""

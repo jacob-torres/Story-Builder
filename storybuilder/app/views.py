@@ -51,6 +51,8 @@ def create_or_update_story(request, story_id=None):
     try:
         # Update story if story ID is passed
         if story_id:
+            print(f"Updating Story object {story_id}")
+
             try:
                 story = get_object_or_404(Story, pk=story_id)
             except Http404:
@@ -70,6 +72,8 @@ def create_or_update_story(request, story_id=None):
 
         # Create story when no story ID is passed
         else:
+            print("Creating a new Story object ...")
+
             if request.method == 'POST':
                 form = StoryForm(request.POST)
                 if form.is_valid():
@@ -128,45 +132,58 @@ def scene_detail(request, story_id, scene_id):
     return render(request, 'scene_detail.html', context=context)
 
 
-def new_scene(request, story_id):
+def create_or_update_scene(request, story_id, scene_id=None):
     """View function for creating a new scene in a story."""
 
+    print("******************************************")
+    print("Create or Update Scene")
+
+    template_name = ''
+    context= {}
+
     try:
         story = get_object_or_404(Story, pk=story_id)
-    except Http404:
+    except Http404 as error:
+        print(f"HTTP404 Error while getting Story object {story_id}.")
+        print(error)
         return render(request, '404_story_not_found.html', status=404)
 
-    if request.method == 'POST':
-        form = SceneForm(request.POST, story_id=story_id)
-        if form.is_valid():
-            new_scene = form.save()
-            return redirect('scene_detail', story_id=story_id, scene_id=new_scene.id)
-    else:
-        form = SceneForm(story_id=story_id)
-
-    context = {'form': form, 'story_title': story.title}
-    return render(request, 'new_scene.html', context=context)
-
-
-def update_scene(request, story_id, scene_id):
-    """View function for updating an existing scene in a story."""
-
     try:
-        story = get_object_or_404(Story, pk=story_id)
-        scene = get_object_or_404(Scene, pk=scene_id)
-    except Http404:
-        return render(request, '404.html', status=404)
+        # Update scene
+        if scene_id:
+            print(f"Updating Scene object {scene_id}")
 
-    # if request.method == 'POST':
-    #     form = UpdateStoryForm(request.POST, instance=story)
-    #     if form.is_valid():
-    #         story = form.save()
-    #         return redirect('story_detail', story_id=story_id)
-    # else:
-    #     form = UpdateStoryForm(instance=story)
+            if request.method == 'POST':
+                form = SceneForm(request.POST, story_id=story_id, scene_id=scene_id)
+                if form.is_valid():
+                    scene = form.save()
+                    return redirect('scene_detail', story_id=story_id, scene_id=scene_id)
+            else:
+                form = SceneForm(story_id=story_id, scene_id=scene_id)
+                template_name = 'update_scene.html'
+                context = {'form': form, 'story_title': story.title}
 
-    # context = {'form': form, 'story': story}
-    # return render(request, 'update_story.html', context=context)
+        # Create new scene
+        else:
+            print("Creating a new Scene object ...")
+
+            if request.method == 'POST':
+                form = SceneForm(request.POST, story_id=story_id)
+                if form.is_valid():
+                    new_scene = form.save()
+                    return redirect('scene_detail', story_id=story_id, scene_id=new_scene.id)
+            else:
+                form = SceneForm(story_id=story_id)
+                template_name = 'new_scene.html'
+                context = {'form': form, 'story_title': story.title}
+
+    except Exception as error:
+        print("****** Error while creating or updating scene ******")
+        print(error)
+        template_name = '500.html'
+        context = {'error': error}
+
+    return render(request=request, template_name=template_name, context=context)
 
 
 def delete_scene(request, story_id, scene_id):
@@ -196,30 +213,68 @@ def character_detail(request, story_id, character_id):
     return render(request, 'character_detail.html', context=context)
 
 
-def new_character(request, story_id):
+def create_or_update_character(request, story_id=None, character_id=None):
     """View function for creating a new character."""
+
+    print("******************************************")
+    print("Create or Update Character")
+
+    template_name = ''
+    context = {}
 
     try:
         story = get_object_or_404(Story, pk=story_id)
-    except Http404:
+    except Http404 as error:
+        print(f"HTTP404 Error while getting Story object {story_id}.")
+        print(error)
         return render(request, '404_story_not_found.html', status=404)
 
-    if request.method == 'POST':
-        form = CharacterForm(request.POST, story_id=story_id)
-        if form.is_valid():
-            new_character = form.save()
-            return redirect('character_detail', story_id=story_id, character_id=new_character.id)
-    else:
-        form = CharacterForm(story_id=story_id)
+    try:
+        # Update character
+        if character_id:
+            print(f"Updating Character object {character_id}")
 
-    context = {'form': form, 'story_title': story.title}
-    return render(request, 'new_character.html', context=context)
+            if request.method == 'POST':
+                form = CharacterForm(request.POST, story_id=story_id, character_id=character_id)
+                if form.is_valid():
+                    character = form.save()
+                    return redirect('character_detail', story_id=story_id, character_id=character_id)
+            else:
+                form = CharacterForm(story_id=story_id, character_id=character_id)
+                template_name = 'update_character.html'
+            context = {'form': form, 'story_title': story.title}
 
+        # Create new character
+        else:
+            print("Creating a new Character object ...")
 
-def update_character(request, story_id, character_id):
-    """View function for updating a character."""
+            if request.method == 'POST':
+                form = CharacterForm(request.POST, story_id=story_id)
+                if form.is_valid():
+                    new_character = form.save()
+                    return redirect('character_detail', story_id=story_id, character_id=new_character.id)
+            else:
+                form = CharacterForm(story_id=story_id)
+                template_name = 'new_character.html'
+            context = {'form': form, 'story_title': story.title}
+
+    except Exception as error:
+        print("****** Error while creating or updating character ******")
+        print(error)
+        template_name = '500.html'
+        context = {'error': error}
+
+    return render(request=request, template_name=template_name, context=context)
 
 
 def delete_character(request, story_id, character_id):
     """View function for deleting a character."""
 
+    try:
+        story = get_object_or_404(Story, pk=story_id)
+        character = get_object_or_404(Character, pk=character_id)
+        character.delete()
+    except Http404:
+        return render(request, '404.html', status=404)
+
+    return redirect('story_detail', story_id=story_id)
