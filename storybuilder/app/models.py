@@ -62,7 +62,7 @@ class Character(models.Model):
     description = models.TextField(max_length=long_length, null=True)
 
     # Relationships: 1 story
-    story = models.ForeignKey(Story, on_delete=models.CASCADE)
+    story = models.ForeignKey(Story, on_delete=models.CASCADE, default=None)
 
     def __str__(self):
         """Override string method to display character name."""
