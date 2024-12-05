@@ -10,18 +10,32 @@ class StoryUpdateView(UpdateView):
     """Update view for the Story model."""
 
     model = Story
+    fields = ['word_count']
     form_class = WordCountForm
     template_name = 'story_detail.html'
 
     def get_context_data(self, **kwargs)    :
+        """Override get_context_data method for StoryUpdateView."""
+
+        print("**************************")
+        print("get_context_data in Story Update View")
+
         context = super().get_context_data(**kwargs)
         context['story'] = self.object
+        print(f"context: {context}")
+
         return context
 
     def form_valid(self, form):
+        """Override the form_valid method for the story update view."""
+
+        print("*********************************")
+        print("form_valid in story update view.")
+
         self.object.word_count = form.cleaned_data['word_count']
         self.object.save()
-        # return redirect('story_detail.html')
+        print(f"self.object: {self.object}")
+
         return super().form_valid(form)
 
 
@@ -53,7 +67,17 @@ def story_detail(request, story_id):
         print(error)
         return render(request, '404_story_not_found.html', status=404)
 
-    context = {'story': story}
+    # Instantiate word count update form
+    if request.method == 'POST':
+        form = WordCountForm(request.POST)
+        if form.is_valid():
+            story.word_count = form.cleaned_data['word_count']
+            print(f"story.word_count: {story.word_count}")
+            story.save()
+    else:
+        form = WordCountForm()
+
+    context = {'story': story, 'form': form}
     print(f"context: {context}")
 
     return render(request, 'story_detail.html', context=context)

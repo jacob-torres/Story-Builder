@@ -162,4 +162,4 @@ class WordCountForm(forms.ModelForm):
 
     class Meta:
         model = Story
-        fields = ('word_count',)
+        fields = ['word_count']
