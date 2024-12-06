@@ -164,24 +164,39 @@ def delete_story(request, story_id):
 
 
 def scene_detail(request, story_id, scene_id):
-    """View function for viewing scene details."""
+    """View function for rendering scene details."""
+
+    print("*************************************")
+    print("Scene Detail View")
 
     try:
         story = get_object_or_404(Story, pk=story_id)
+    except Http404 as error:
+        print(f"HTTP404 Error while getting Story object {story_id}.")
+        print(error)
+        return render(request, '404_story_not_found.html', status=404)
+
+    try:
         scene = get_object_or_404(Scene, pk=scene_id)
-    except Http404:
+    except Http404 as error:
+        print(f"HTTP404 Error while getting Scene object {scene_id}.")
+        print(error)
         return render(request, '404.html', status=404)
 
     # Add scene note form
     if request.method == 'POST':
         form = SceneNoteForm(request.POST)
-        if form.is_valid():
+        if form.is_valid() and form.cleaned_data['note'] not in scene.notes:
+            print("Adding new scene note ...")
+            print(form.cleaned_data['note'])
             scene.notes.append(form.cleaned_data['note'])
             scene.save()
     else:
         form = SceneNoteForm()
 
     context = {'story': story, 'scene': scene, 'form': form}
+    print(f"context: {context}")
+
     return render(request, 'scene_detail.html', context=context)
 
 
