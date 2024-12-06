@@ -2,8 +2,27 @@
 {% block title %}{{ scene.title }}, from {{ story.title }}{% endblock %}
 
 {% block detail_content %}
-<h1>{{ scene.title }}</h1>
-<p>{{ scene.description }}</p>
+<div class="scene-section">
+  <h1>{{ scene.title }}</h1>
+  <p>{{ scene.description }}</p>
+</div>
+
+<form id="scene-note-form" style="display: none;" method="post">
+  <h2>Add a Note</h2>
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Add</button>
+  <button type="button" onclick="toggleSceneNoteForm()">Cancel</button>
+</form>
+
+{% if scene.notes %}
+<h2>Notes</h2>
+<ul>
+  {% for note in scene.notes %}
+  <li>{{ note }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
 {% endblock %}
 
 {% block action_buttons %}
@@ -11,6 +30,6 @@
   <button class="action-btn" onclick="window.location.href='new-character/'">Add Character</button>
 </div>
 <div class="action-btn">
-  <button class="action-btn" onclick="window.location.href='new-note/'">Add Note</button>
+  <button class="action-btn" onclick="toggleSceneNoteForm()">Add Note</button>
 </div>
 {% endblock %}

@@ -93,6 +93,11 @@ class Scene(models.Model):
 
     title = models.CharField(max_length=short_length, null=False)
     description = models.TextField(max_length=long_length, null=True)
+    notes = ArrayField(
+        models.CharField(max_length=long_length),
+        blank=True,
+        default=list
+    )
 
     # Relationships: One story and one possible plot point, one or more characters
     story = models.ForeignKey(Story, on_delete=models.CASCADE, default=None)

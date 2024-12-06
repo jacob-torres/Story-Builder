@@ -163,3 +163,13 @@ class WordCountForm(forms.ModelForm):
     class Meta:
         model = Story
         fields = ['word_count']
+
+
+class SceneNoteForm(forms.ModelForm):
+    """Form for adding a new note to a scene."""
+
+    note = forms.CharField(max_length=500, label='New Scene Note')
+
+    class Meta:
+        model = Scene
+        fields = ['note']

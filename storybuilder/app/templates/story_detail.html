@@ -55,7 +55,7 @@
     <ul id="scenes-list">
         {% for scene in story.scene_set.all %}
         <li>
-            <a href={{ scene.id }}>{{ scene.title }}</a>
+            <a href="scene-{{ scene.id }}">{{ scene.title }}</a>
         </li>
         {% endfor %}
     </ul>

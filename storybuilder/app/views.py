@@ -1,42 +1,42 @@
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.http import HttpResponse, Http404
-from django.views.generic.edit import UpdateView
+# from django.views.generic.edit import UpdateView
 
-from .forms import StoryForm, SceneForm, CharacterForm, PlotForm, PlotPointForm, WordCountForm
+from .forms import StoryForm, SceneForm, CharacterForm, PlotForm, PlotPointForm, WordCountForm, SceneNoteForm
 from .models import Story, Scene, Character, Plot, PlotPoint
 
 # Create your views here.
-class StoryUpdateView(UpdateView):
-    """Update view for the Story model."""
+# class StoryWordCountUpdateView(UpdateView):
+#     """Update view for the Story model."""
 
-    model = Story
-    fields = ['word_count']
-    form_class = WordCountForm
-    template_name = 'story_detail.html'
+#     model = Story
+#     fields = ['word_count']
+#     form_class = WordCountForm
+#     template_name = 'story_detail.html'
 
-    def get_context_data(self, **kwargs)    :
-        """Override get_context_data method for StoryUpdateView."""
+#     def get_context_data(self, **kwargs)    :
+#         """Override get_context_data method for StoryUpdateView."""
 
-        print("**************************")
-        print("get_context_data in Story Update View")
+#         print("**************************")
+#         print("get_context_data in Story Update View")
 
-        context = super().get_context_data(**kwargs)
-        context['story'] = self.object
-        print(f"context: {context}")
+#         context = super().get_context_data(**kwargs)
+#         context['story'] = self.object
+#         print(f"context: {context}")
 
-        return context
+#         return context
 
-    def form_valid(self, form):
-        """Override the form_valid method for the story update view."""
+#     def form_valid(self, form):
+#         """Override the form_valid method for the story update view."""
 
-        print("*********************************")
-        print("form_valid in story update view.")
+#         print("*********************************")
+#         print("form_valid in story update view.")
 
-        self.object.word_count = form.cleaned_data['word_count']
-        self.object.save()
-        print(f"self.object: {self.object}")
+#         self.object.word_count = form.cleaned_data['word_count']
+#         self.object.save()
+#         print(f"self.object: {self.object}")
 
-        return super().form_valid(form)
+#         return super().form_valid(form)
 
 
 def home(request):
@@ -172,7 +172,16 @@ def scene_detail(request, story_id, scene_id):
     except Http404:
         return render(request, '404.html', status=404)
 
-    context = {'story': story, 'scene': scene}
+    # Add scene note form
+    if request.method == 'POST':
+        form = SceneNoteForm(request.POST)
+        if form.is_valid():
+            scene.notes.append(form.cleaned_data['note'])
+            scene.save()
+    else:
+        form = SceneNoteForm()
+
+    context = {'story': story, 'scene': scene, 'form': form}
     return render(request, 'scene_detail.html', context=context)
 
 
