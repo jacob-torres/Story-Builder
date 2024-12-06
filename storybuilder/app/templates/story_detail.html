@@ -18,7 +18,7 @@
     <tr>
       <td>{{ story.title }}</td>
       <td>{{ story.date_started }}</td>
-      <td>{{ story.word_count }}</td>
+      <td><a href="#word-count-form" id="word-count-link">{{ story.word_count }}</a></td>
       <td><a class="view-link" href="#scenes">{{ story.scene_set.count }}</a></td>
         <td><a class="view-link" href="#characters">{{ story.character_set.count }}</a></td>
     </tr>
