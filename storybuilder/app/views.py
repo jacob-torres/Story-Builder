@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.http import HttpResponse, Http404
-# from django.views.generic.edit import UpdateView
+from django.forms import ValidationError
 
 from .forms import StoryForm, SceneForm, CharacterForm, PlotForm, PlotPointForm, WordCountForm, SceneNoteForm
 from .models import Story, Scene, Character, Plot, PlotPoint
@@ -74,6 +74,7 @@ def story_detail(request, story_id):
             story.word_count = form.cleaned_data['word_count']
             print(f"story.word_count: {story.word_count}")
             story.save()
+            return redirect('story_detail', story_id=story_id)
     else:
         form = WordCountForm()
 
@@ -95,7 +96,6 @@ def create_or_update_story(request, story_id=None):
     try:
         # Update story if story ID is passed
         if story_id:
-            print(f"Updating Story object {story_id}")
 
             try:
                 story = get_object_or_404(Story, pk=story_id)
@@ -105,6 +105,7 @@ def create_or_update_story(request, story_id=None):
                 return render(request, '404_story_not_found.html', status=404)
 
             if request.method == 'POST':
+                print(f"Updating Story object {story_id}")
                 form = StoryForm(request.POST, instance=story)
                 if form.is_valid():
                     story = form.save()
@@ -116,9 +117,8 @@ def create_or_update_story(request, story_id=None):
 
         # Create story when no story ID is passed
         else:
-            print("Creating a new Story object ...")
-
             if request.method == 'POST':
+                print("Creating a new Story object ...")
                 form = StoryForm(request.POST)
                 if form.is_valid():
                     new_story = form.save()
@@ -141,27 +141,21 @@ def create_or_update_story(request, story_id=None):
 def delete_story(request, story_id):
     """View function for deleting a story."""
 
+    print("*********************")
+    print("Delete Story View")
+
     try:
         story = get_object_or_404(Story, pk=story_id)
         story.delete()
-    except Http404:
+    except Http404 as error:
+        print(f"HTTP404 Error while deleting Story object {story_id}.")
+        print(error)
         return render(request, '404_story_not_found.html', status=404)
 
     return redirect('stories')
 
 
-# Scene view functions
-# def scenes(request, story_id):
-#     """View function for scenes URL, redirects to the story detail template."""
-
-#     try:
-#         story = get_object_or_404(Story, pk=story_id)
-#     except Http404:
-#         return render(request, '404_story_not_found.html', status=404)
-
-    # context = {'story': story}
-    # return render(request, 'story_detail.html', context=context)
-
+### Scene view functions
 
 def scene_detail(request, story_id, scene_id):
     """View function for rendering scene details."""
@@ -186,11 +180,12 @@ def scene_detail(request, story_id, scene_id):
     # Add scene note form
     if request.method == 'POST':
         form = SceneNoteForm(request.POST)
-        if form.is_valid() and form.cleaned_data['note'] not in scene.notes:
+        if form.is_valid():
             print("Adding new scene note ...")
             print(form.cleaned_data['note'])
             scene.notes.append(form.cleaned_data['note'])
             scene.save()
+            return redirect('scene_detail', story_id=story_id, scene_id=scene_id)
     else:
         form = SceneNoteForm()
 
@@ -219,9 +214,8 @@ def create_or_update_scene(request, story_id, scene_id=None):
     try:
         # Update scene
         if scene_id:
-            print(f"Updating Scene object {scene_id}")
-
             if request.method == 'POST':
+                print(f"Updating Scene object {scene_id}")
                 form = SceneForm(request.POST, story_id=story_id, scene_id=scene_id)
                 if form.is_valid():
                     scene = form.save()
@@ -233,9 +227,8 @@ def create_or_update_scene(request, story_id, scene_id=None):
 
         # Create new scene
         else:
-            print("Creating a new Scene object ...")
-
             if request.method == 'POST':
+                print("Creating a new Scene object ...")
                 form = SceneForm(request.POST, story_id=story_id)
                 if form.is_valid():
                     new_scene = form.save()
@@ -257,27 +250,42 @@ def create_or_update_scene(request, story_id, scene_id=None):
 def delete_scene(request, story_id, scene_id):
     """View function for deleting an existing scene in a story."""
 
+    print("******************************")
+    print("Delete Scene")
+
     try:
         story = get_object_or_404(Story, pk=story_id)
         scene = get_object_or_404(Scene, pk=scene_id)
         scene.delete()
-    except Http404:
+    except Http404 as error:
+        print(f"HTTP404 Error while deleteing Scene object {scene_id}.")
+        print(error)
         return render(request, '404.html', status=404)
 
     return redirect('story_detail', story_id=story_id)
 
 
-# Character view functions
+### Character view functions
+
 def character_detail(request, story_id, character_id):
     """View function for displaying character details."""
 
     try:
         story = get_object_or_404(Story, pk=story_id)
+    except Http404 as error:
+        print(f"HTTP404 Error while getting Story object {story_id}.")
+        print(error)
+        return render(request, '404_story_not_found.html', status=404)
+    try:
         character = get_object_or_404(Character, pk=character_id)
-    except Http404:
+    except Http404 as error:
+        print(f"HTTP404 Error while getting Character object {character_id}.")
+        print(error)
         return render(request, '404.html', status=404)
 
     context = {'story': story, 'character': character}
+    print(f"context: {context}")
+
     return render(request, 'character_detail.html', context=context)
 
 
@@ -300,9 +308,8 @@ def create_or_update_character(request, story_id=None, character_id=None):
     try:
         # Update character
         if character_id:
-            print(f"Updating Character object {character_id}")
-
             if request.method == 'POST':
+                print(f"Updating Character object {character_id}")
                 form = CharacterForm(request.POST, story_id=story_id, character_id=character_id)
                 if form.is_valid():
                     character = form.save()
@@ -314,9 +321,8 @@ def create_or_update_character(request, story_id=None, character_id=None):
 
         # Create new character
         else:
-            print("Creating a new Character object ...")
-
             if request.method == 'POST':
+                print("Creating a new Character object ...")
                 form = CharacterForm(request.POST, story_id=story_id)
                 if form.is_valid():
                     new_character = form.save()
@@ -338,11 +344,16 @@ def create_or_update_character(request, story_id=None, character_id=None):
 def delete_character(request, story_id, character_id):
     """View function for deleting a character."""
 
+    print("**************************")
+    print("Delete Character")
+
     try:
         story = get_object_or_404(Story, pk=story_id)
         character = get_object_or_404(Character, pk=character_id)
         character.delete()
-    except Http404:
+    except Http404 as error:
+        print(f"HTTP404 Error while deleting Character object {character_id}")
+        print(error)
         return render(request, '404.html', status=404)
 
     return redirect('story_detail', story_id=story_id)
