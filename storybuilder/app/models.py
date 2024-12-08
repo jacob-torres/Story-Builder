@@ -30,7 +30,7 @@ class Story(models.Model):
     date_finished = models.DateField(null=True)
 
     # Relationships: One plot
-    plot = models.OneToOneField('Plot', on_delete=models.CASCADE, null=True, default=None, related_name='story')
+    # plot = models.OneToOneField('Plot', on_delete=models.CASCADE, null=True, default=None, related_name='story')
 
     def __str__(self):
         """Override string method for the Story object."""
@@ -42,11 +42,19 @@ class Story(models.Model):
         print("***********************")
         print("Save Method for the Story Model")
 
-        if not self.id:
-            print("Creating Plot object ...")
-            self.plot = Plot.objects.create()
-            print(f"Story plot ID = {self.plot_id}")
-            super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
+        print("Creating Plot object ...")
+        self.plot = Plot.objects.create(
+            name=f"Plot for {self.title}",
+            description=f"This is the plot summary for {self.title}.",
+            story_id=self.id
+        )
+        print(f"Story plot: {self.plot}")
+
+        # self.plot.story_id = self.id
+        # self.plot.name = f"Plot for {self.title}"
+        # self.plot.description = f"This is the plot summary for {self.title}."
+        # self.plot.save()
 
 
 class Character(models.Model):
@@ -126,7 +134,7 @@ class Plot(models.Model):
 
     name = models.CharField(max_length=short_length, null=False)
     description = models.TextField(max_length=long_length, null=True)
-    # story = models.OneToOneField(Story, on_delete=models.CASCADE, default=None, related_name='plot')
+    story = models.OneToOneField(Story, on_delete=models.CASCADE, null=True, default=None, related_name='plot')
 
     def __str__(self):
         """Override the string method for the Plot object."""
