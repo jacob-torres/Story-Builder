@@ -37,11 +37,15 @@ class Story(models.Model):
         return self.title
     
     def save(self, *args, **kwargs):
-        """Override swave method for Story model."""
+        """Override the save method for the Story model."""
+
+        print("***********************")
+        print("Save Method for the Story Model")
 
         if not self.id:
             print("Creating Plot object ...")
             self.plot = Plot.objects.create()
+            print(f"Story plot ID = {self.plot_id}")
             super().save(*args, **kwargs)
 
 

@@ -32,12 +32,14 @@
   {% endif %}
   <h2>Description</h2>
   <p>{{ story.description }}</p>
+  {% if story.genres %}
   <h2>Genres</h2>
   <ul>
     {% for genre in story.genres %}
     <li>{{ genre }}</li>
     {% endfor %}
   </ul>
+  {% endif %}
 <hr>
 
   <nav class="tab-container">
