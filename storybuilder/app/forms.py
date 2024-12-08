@@ -30,21 +30,22 @@ class StoryForm(forms.ModelForm):
             self.fields['genres'].initial = self.instance.genres
 
     def clean(self):
-        """Data cleaning function for story form."""
+        """Override the clean method for the story form."""
 
         print("**********************************")
         print("Story Form Clean Method")
+
         cleaned_data = super().clean()
+        print(f"Data before genre cleaning: {cleaned_data}")
 
         # Process other genre choice
-        if 'genres' in cleaned_data:
-            genre_choices = list(cleaned_data['genres'])
-            if 'Other' in genre_choices:
-                if not cleaned_data['other_choice']:
-                    raise forms.ValidationError('Please specify your other choice.')
-                genre_choices.remove('Other')
-                genre_choices.append(cleaned_data['other_choice'])
-            cleaned_data['genres'] = genre_choices
+        genre_choices = list(cleaned_data['genres'])
+        if 'Other' in genre_choices:
+            if not cleaned_data['other_choice']:
+                raise forms.ValidationError('Please specify your other choice.')
+            genre_choices.remove('Other')
+            genre_choices.append(cleaned_data['other_choice'])
+        cleaned_data['genres'] = genre_choices
 
         print(f"cleaned_data: {cleaned_data}")
         return cleaned_data
