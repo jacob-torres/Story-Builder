@@ -9,7 +9,7 @@ class StoryForm(forms.ModelForm):
 
     class Meta:
         model = Story
-        fields = ('title', 'description', 'genres', 'premise')
+        fields = ('title', 'description', 'premise', 'genres')
 
     genres = forms.MultipleChoiceField(
         choices=genre_choices,
@@ -55,7 +55,7 @@ class SceneForm(forms.ModelForm):
 
     class Meta:
         model = Scene
-        exclude = ('story',)
+        exclude = ('story', 'notes')
 
     def __init__(self, *args, **kwargs):
         story_id = kwargs.pop('story_id', None)
@@ -76,7 +76,7 @@ class CharacterForm(forms.ModelForm):
 
     class Meta:
         model = Character
-        exclude = ('full_name',)
+        exclude = ['full_name']
 
         # Define personality type fields
         mbti_personality = forms.ChoiceField(choices=mbti_choices)

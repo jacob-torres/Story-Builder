@@ -161,7 +161,7 @@ def scene_detail(request, story_id, scene_id):
     """View function for rendering scene details."""
 
     print("*************************************")
-    print("Scene Detail View")
+    print("Scene Detail")
 
     try:
         story = get_object_or_404(Story, pk=story_id)

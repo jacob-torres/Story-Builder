@@ -29,12 +29,20 @@ class Story(models.Model):
     date_last_saved = models.DateField(auto_now=True)
     date_finished = models.DateField(null=True)
 
-    # Relationships: One or more characters and scenes
-    # characters = models.ManyToManyField('Character', blank=True)
+    # Relationships: One plot
+    plot = models.OneToOneField('Plot', on_delete=models.CASCADE, null=True, default=None, related_name='story')
 
     def __str__(self):
         """Override string method for the Story object."""
         return self.title
+    
+    def save(self, *args, **kwargs):
+        """Override swave method for Story model."""
+
+        if not self.id:
+            print("Creating Plot object ...")
+            self.plot = Plot.objects.create()
+            super().save(*args, **kwargs)
 
 
 class Character(models.Model):
@@ -114,9 +122,7 @@ class Plot(models.Model):
 
     name = models.CharField(max_length=short_length, null=False)
     description = models.TextField(max_length=long_length, null=True)
-
-    # Relationships: One story
-    story = models.OneToOneField(Story, on_delete=models.CASCADE, default=None, related_name='plot')
+    # story = models.OneToOneField(Story, on_delete=models.CASCADE, default=None, related_name='plot')
 
     def __str__(self):
         """Override the string method for the Plot object."""
