@@ -28,6 +28,8 @@ class StoryForm(forms.ModelForm):
             self.fields['description'].initial = self.instance.description
             self.fields['premise'].initial = self.instance.premise
             self.fields['genres'].initial = self.instance.genres
+            print(f"self.instance: {self.instance}")
+            print(f"genres: {self.instance.genres}")
 
     def clean(self):
         """Override the clean method for the story form."""
