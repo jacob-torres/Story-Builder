@@ -11,31 +11,26 @@
 
     {% else %}
     <table id="story-table">
+        <tr>
+            <th>Title</th>
+            <th>Actions</th>
+        </tr>
         {% for story in stories %}
         <tr>
             <td>
                 <a href={{ story.id }}>{{ story.title }}</a>
             </td>
             <td>
-                <button>Move Up</button>
-            </td>
-            <td>
-                <button>Move Down</button>
-            </td>
-            <td>
-                <button onclick="window.location.href='{{ story.id }}/update/'">Edit Details</button>
-            </td>
-            <td>
-                <button onclick="window.location.href='{{ story.id }}/delete/'">Delete Story</button>
+                <a class="action-lnk" href="{{ story.id }}/update/">Update</a> | <a class="action-lnk" href="{{ story.id }}/delete/">Delete</a>
             </td>
         </tr>
         {% endfor %}
     </table>
     {% endif %}
-    <hr>
 
     <div class="big-btn">
         <button class="big-btn" onclick="window.location.href='new/'">New Story</button></section>
     </div>
 </section>
+<hr>
 {% endblock %}

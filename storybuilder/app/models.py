@@ -36,24 +36,6 @@ class Story(models.Model):
         """Override the string method for the Story object."""
         return self.title
     
-    def save(self, *args, **kwargs):
-        """Override the save method for the Story model."""
-        super().save(*args, **kwargs)
-
-        if not self.plot:
-            print("Creating a Plot object for the new story object ...")
-            self.plot = Plot.objects.create(
-                name=f"Plot for {self.title}",
-                description=f"This is the plot summary for {self.title}.",
-                story_id=self.id
-            )
-            print(f"New plot ID: {self.plot.id}")
-
-        # self.plot.story_id = self.id
-        # self.plot.name = f"Plot for {self.title}"
-        # self.plot.description = f"This is the plot summary for {self.title}."
-        # self.plot.save()
-
 
 class Character(models.Model):
     """Story character."""
@@ -122,6 +104,9 @@ class Scene(models.Model):
     plot_point = models.ForeignKey('PlotPoint', on_delete=models.SET_DEFAULT, default=None, blank=True, null=True)
     characters = models.ManyToManyField(Character, blank=True)
 
+    # Order in display list
+    order = models.SmallIntegerField(default=0)
+
     def __str__(self):
         """Override the string method for the Scene object."""
         return self.title
@@ -147,6 +132,9 @@ class PlotPoint(models.Model):
 
     # Relationships: One plot
     plot = models.ForeignKey(Plot, on_delete=models.CASCADE, default=None)
+
+    # Order in display list
+    order = models.SmallIntegerField(default=0)
 
     def __str__(self):
         """Override the string method for the PlotPoint object."""

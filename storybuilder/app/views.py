@@ -122,6 +122,12 @@ def create_or_update_story(request, story_id=None):
                 form = StoryForm(request.POST)
                 if form.is_valid():
                     new_story = form.save()
+                    new_plot = Plot.objects.create(
+                        name=f"Plot for {new_story.title}",
+                        description=f"Briefly summarize the plot of your story here.",
+                        story_id=new_story.id
+                    )
+                    print(f"Successfully created new story {new_story.id} and plot {new_plot.id}.")
                     return redirect('story_detail', story_id=new_story.id)
             else:
                 form = StoryForm()
@@ -357,3 +363,97 @@ def delete_character(request, story_id, character_id):
         return render(request, '404.html', status=404)
 
     return redirect('story_detail', story_id=story_id)
+
+
+### View functions shared by models
+
+def move_up(request, story_id, scene_id=None, plot_point_id=None):
+    """View function for moving scene or plot point objects up in a list."""
+
+    print("******************")
+    print("Move Up")
+
+    try:
+        story = get_object_or_404(Story, pk=story_id)
+    except Http404 as error:
+        print(f"HTTP404 Error while getting Story object {story_id}.")
+        print(error)
+        return render(request, '404_story_not_found.html', status=404)
+
+    if scene_id:
+        print(f"Reordering scene {scene_id}")
+        try:
+            scene = get_object_or_404(Scene, pk=scene_id)
+        except Http404 as error:
+            print(f"HTTP404 Error while getting Scene object {scene_id}.")
+            print(error)
+            return render(request, '404.html', status=404)
+        
+        prev_scene = Scene.objects.filter(order__lt=scene.order).order_by('-order').first()
+        if prev_scene:
+            prev_scene.order, scene.order = scene.order, prev_scene.order
+            prev_scene.save()
+            scene.save()
+        return redirect('story_detail', story_id=story_id, scene_id=scene_id)
+
+    elif plot_point_id:
+        print(f"Reordering plot point {plot_point_id}")
+        try:
+            plot_point = get_object_or_404(PlotPoint, pk=plot_point_id)
+        except Http404 as error:
+            print(f"HTTP404 Error while getting plot point object {plot_point_id}.")
+            print(error)
+            return render(request, '404.html', status=404)
+        
+        prev_plot_point = PlotPoint.objects.filter(order__lt=plot_point.order).order_by('-order').first()
+        if prev_plot_point:
+            prev_plot_point.order, plot_point.order = plot_point.order, prev_plot_point.order
+            prev_plot_point.save()
+            plot_point.save()
+        return redirect('plot_detail', story_id=story_id, plot_point_id=plot_point_id)
+
+
+def move_down(request, story_id, scene_id=None, plot_point_id=None):
+    """View function for moving scene or plot point objects down in a list."""
+
+    print("******************")
+    print("Move Down")
+
+    try:
+        story = get_object_or_404(Story, pk=story_id)
+    except Http404 as error:
+        print(f"HTTP404 Error while getting Story object {story_id}.")
+        print(error)
+        return render(request, '404_story_not_found.html', status=404)
+
+    if scene_id:
+        print(f"Reordering scene {scene_id}")
+        try:
+            scene = get_object_or_404(Scene, pk=scene_id)
+        except Http404 as error:
+            print(f"HTTP404 Error while getting Scene object {scene_id}.")
+            print(error)
+            return render(request, '404.html', status=404)
+        
+        next_scene = Scene.objects.filter(order__gt=scene.order).order_by('order').first()
+        if next_scene:
+            next_scene.order, scene.order = scene.order, next_scene.order
+            next_scene.save()
+            scene.save()
+        return redirect('story_detail', story_id=story_id, scene_id=scene_id)
+
+    elif plot_point_id:
+        print(f"Reordering plot point {plot_point_id}")
+        try:
+            plot_point = get_object_or_404(PlotPoint, pk=plot_point_id)
+        except Http404 as error:
+            print(f"HTTP404 Error while getting plot point object {plot_point_id}.")
+            print(error)
+            return render(request, '404.html', status=404)
+        
+        next_plot_point = PlotPoint.objects.filter(order__lt=plot_point.order).order_by('-order').first()
+        if next_plot_point:
+            next_plot_point.order, plot_point.order = plot_point.order, next_plot_point.order
+            next_plot_point.save()
+            plot_point.save()
+        return redirect('plot_detail', story_id=story_id, plot_point_id=plot_point_id)

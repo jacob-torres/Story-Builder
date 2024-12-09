@@ -28,7 +28,6 @@ class StoryForm(forms.ModelForm):
             self.fields['description'].initial = self.instance.description
             self.fields['premise'].initial = self.instance.premise
             self.fields['genres'].initial = self.instance.genres
-            print(f"genres: {self.instance.genres}")
 
     def clean(self):
         """Override the clean method for the story form."""
@@ -37,7 +36,7 @@ class StoryForm(forms.ModelForm):
         print("Story Form Clean Method")
 
         cleaned_data = super().clean()
-        print(f"Data before genre cleaning: {cleaned_data}")
+        # print(f"Data before genre cleaning: {cleaned_data}")
 
         # Process other genre choice
         genre_choices = list(cleaned_data['genres'])
