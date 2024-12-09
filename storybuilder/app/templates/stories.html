@@ -10,13 +10,27 @@
     <p>You have no stories yet. When you do, they will be listed here.</p>
 
     {% else %}
-    <ul id="stories-list">
+    <table id="story-table">
         {% for story in stories %}
-        <li>
-            <a href={{ story.id }}>{{ story.title }}</a>
-        </li>
+        <tr>
+            <td>
+                <a href={{ story.id }}>{{ story.title }}</a>
+            </td>
+            <td>
+                <button>Move Up</button>
+            </td>
+            <td>
+                <button>Move Down</button>
+            </td>
+            <td>
+                <button onclick="window.location.href='{{ story.id }}/update/'">Edit Details</button>
+            </td>
+            <td>
+                <button onclick="window.location.href='{{ story.id }}/delete/'">Delete Story</button>
+            </td>
+        </tr>
         {% endfor %}
-    </ul>
+    </table>
     {% endif %}
     <hr>
 
