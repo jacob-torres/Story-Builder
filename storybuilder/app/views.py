@@ -14,7 +14,7 @@ from .models import Story, Scene, Character, Plot, PlotPoint
 #     form_class = WordCountForm
 #     template_name = 'story_detail.html'
 
-#     def get_context_data(self, **kwargs)    :
+    # def get_context_data(self, **kwargs)    :
 #         """Override get_context_data method for StoryUpdateView."""
 
 #         print("**************************")
@@ -70,6 +70,15 @@ def story_detail(request, story_id):
     # Ordered scene list
     scenes = story.scene_set.all().order_by('order')
 
+    # Get story plot
+    try:
+        plot_id = story.plot.id
+        plot = get_object_or_404(Plot, pk=plot_id)
+    except Exception as error:
+        print("******* Error while getting story plot *******")
+        print(error)
+        return render(request, '404.html', status=404)
+    
     # Instantiate word count update form
     if request.method == 'POST':
         form = WordCountForm(request.POST)
@@ -81,8 +90,8 @@ def story_detail(request, story_id):
     else:
         form = WordCountForm()
 
-    context = {'story': story, 'scenes': scenes, 'form': form}
-    print(f"context: {context}")
+    context = {'story': story, 'scenes': scenes, 'plot': plot, 'form': form}
+    # print(f"context: {context}")
 
     return render(request, 'story_detail.html', context=context)
 
@@ -368,7 +377,71 @@ def delete_character(request, story_id, character_id):
     return redirect('story_detail', story_id=story_id)
 
 
-### View functions shared by models
+### Plot View Functions
+
+def plot_detail(request, story_id):
+    """View function for rendering story plot details."""
+
+    print("*************************************")
+    print("Plot Details")
+
+    try:
+        story = get_object_or_404(Story, pk=story_id)
+    except Http404 as error:
+        print(f"HTTP404 Error while getting Story object {story_id}.")
+        print(error)
+        return render(request, '404_story_not_found.html', status=404)
+    
+    # Get story plot
+    try:
+        plot_id = story.plot.id
+        plot = get_object_or_404(Plot, pk=plot_id)
+    except Exception as error:
+        print("******* Error while getting story plot *******")
+        print(error)
+        return render(request, '404.html', status=404)
+
+    context = {'story_title': story.title, 'plot': plot}
+    print(f"context: {context}")
+    return render(request, 'plot_detail.html', context=context)
+
+
+def update_plot(request, story_id):
+    """View function for updating story plot details."""
+
+    print("***********************************")
+    print("Update Plot Details")
+
+    try:
+        story = get_object_or_404(Story, pk=story_id)
+    except Http404 as error:
+        print(f"HTTP404 Error while getting Story object {story_id}.")
+        print(error)
+        return render(request, '404_story_not_found.html', status=404)
+    
+    # Get story plot
+    try:
+        plot_id = story.plot.id
+        plot = get_object_or_404(Plot, pk=plot_id)
+    except Exception as error:
+        print("******* Error while getting story plot *******")
+        print(error)
+        return render(request, '404.html', status=404)
+    
+    if request.method == 'POST':
+        form = PlotForm(request.POST, instance=plot)
+        if form.is_valid():
+            plot = form.save()
+            return redirect('plot_detail', story_id=story_id)
+    else:
+        form = PlotForm(instance=plot)
+    
+    context = {'plot': plot, 'form': form}
+    # print(f"context: {context}")
+    return render(request, 'update_plot.html', context=context)
+
+
+### Vview functions to move scenes and plot points up or down in a list
 
 def move_up(request, story_id, scene_id=None, plot_point_id=None):
     """View function for moving scene or plot point objects up in a list."""

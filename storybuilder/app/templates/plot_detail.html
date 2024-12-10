@@ -1,13 +1,13 @@
 {% extends 'detail_layout.html' %}
-{% block title %}{{ scene.title }}, from {{ story.title }}{% endblock %}
+{% block title %}{{ plot.name }}{% endblock %}
 
 {% block detail_content %}
-<h1>{{ scene.title }}</h1>
-<p>{{ scene.description }}</p>
+<h1>{{ plot.name }}</h1>
+<p>{{ plot.description }}</p>
 {% endblock %}
 
 {% block action_buttons %}
 <div class="action-btn">
-    <button class="action-btn" onclick="window.location.href='characters/new/'">Add Character</button>
+    <button class="action-btn" onclick="window.location.href='new-plot-point/'">Add Plot Point</button>
   </div>
 {% endblock %}

@@ -116,21 +116,20 @@ class PlotForm(forms.ModelForm):
 
     class Meta:
         model = Plot
-        fields = '__all__'
+        exclude = ['story']
 
     def __init__(self, *args, **kwargs):
         story_id = kwargs.pop('story_id', None)
         super().__init__(*args, **kwargs)
 
-        # Define the story that the object is associated with
-        if story_id:
-            self.instance.story = Story.objects.get(pk=story_id)
-
         # Pre-populate fields if an instance of the object exists
         if self.instance:
             self.fields['name'].initial = self.instance.name
             self.fields['description'].initial = self.instance.description
-            self.fields['plot_points'].initial = self.instance.plot_points
+
+            # Define the story that the object is associated with
+            if story_id:
+                self.instance.story = Story.objects.get(pk=story_id)
 
 
 class PlotPointForm(forms.ModelForm):

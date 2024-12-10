@@ -19,6 +19,12 @@ urlpatterns = [
     path('stories/<int:story_id>/character-<int:character_id>/delete/', views.delete_character, name='delete_character'),
     path('stories/<int:story_id>/scene-<int:scene_id>/up/', views.move_up, name='move_up'),
     path('stories/<int:story_id>/scene-<int:scene_id>/down/', views.move_down, name='move_down'),
+    path('stories/<int:story_id>/plot/', views.plot_detail, name='plot_detail'),
+    path('stories/<int:story_id>/plot/update/', views.update_plot, name='update_plot'),
+    # path('stories/<int:story_id>/plot/new-plot-point/', views.create_or_update_plot_point, name='new_plot_point'),
+    # path('stories/<int:story_id>/plot/plot-point-<int:plot_point_id>/', views.plot_point_detail, name='plot_point_detail'),
+    # path('stories/<int:story_id>/plot/plot-point-<int:plot_point_id>/update/', views.create_or_update_plot_point, name='update_plot_point'),
+    # path('stories/<int:story_id>/plot/plot-point-<int:plot_point_id>/delete/', views.delete_plot_point, name='delete_plot_point'),
     path('stories/<int:story_id>/plot/point-<int:plot_point_id>/up/', views.move_up, name='move_up'),
     path('stories/<int:story_id>/plot/point-<int:plot_point_id>/down/', views.move_down, name='move_down')
 ]
