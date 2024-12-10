@@ -56,20 +56,21 @@ class SceneForm(forms.ModelForm):
 
     class Meta:
         model = Scene
-        exclude = ('story', 'notes')
+        exclude = ['story', 'notes', 'order']
 
     def __init__(self, *args, **kwargs):
         story_id = kwargs.pop('story_id', None)
+        print(f"story_id: {story_id}")
         super().__init__(*args, **kwargs)
-
-        # Define the story that the object is associated with
-        if story_id:
-            self.instance.story = Story.objects.get(pk=story_id)
 
         # Pre-populate fields if an instance of the object exists
         if self.instance:
             self.fields['title'].initial = self.instance.title
             self.fields['description'].initial = self.instance.description
+
+            # Define the story that the object is associated with
+            if story_id:
+                self.instance.story = Story.objects.get(pk=story_id)
 
 
 class CharacterForm(forms.ModelForm):

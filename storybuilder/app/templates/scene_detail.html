@@ -7,6 +7,16 @@
   <p>{{ scene.description }}</p>
 </div>
 
+{% if scene.characters %}
+<div>
+  <h2>Characters in this Scene</h2>
+  <ul>
+    {% for character in scene.characters %}
+    <li>{{ character }}</li>
+    {% endfor %}
+  </ul>
+</div>
+
 <form id="scene-note-form" style="display: none;" method="post">
   <h2>Add a Note</h2>
   {% csrf_token %}

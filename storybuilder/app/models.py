@@ -105,7 +105,7 @@ class Scene(models.Model):
     characters = models.ManyToManyField(Character, blank=True)
 
     # Order in display list
-    order = models.SmallIntegerField(default=0)
+    order = models.SmallIntegerField(default=0, blank=True)
 
     def __str__(self):
         """Override the string method for the Scene object."""
@@ -134,7 +134,7 @@ class PlotPoint(models.Model):
     plot = models.ForeignKey(Plot, on_delete=models.CASCADE, default=None)
 
     # Order in display list
-    order = models.SmallIntegerField(default=0)
+    order = models.SmallIntegerField(default=0, blank=True)
 
     def __str__(self):
         """Override the string method for the PlotPoint object."""
