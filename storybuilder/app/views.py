@@ -66,6 +66,9 @@ def story_detail(request, story_id):
         print(f"HTTP404 Error while getting Story object {story_id}.")
         print(error)
         return render(request, '404_story_not_found.html', status=404)
+    
+    # Ordered scene list
+    scenes = story.scene_set.all().order_by('order')
 
     # Instantiate word count update form
     if request.method == 'POST':
@@ -78,7 +81,7 @@ def story_detail(request, story_id):
     else:
         form = WordCountForm()
 
-    context = {'story': story, 'form': form}
+    context = {'story': story, 'scenes': scenes, 'form': form}
     print(f"context: {context}")
 
     return render(request, 'story_detail.html', context=context)
@@ -394,7 +397,7 @@ def move_up(request, story_id, scene_id=None, plot_point_id=None):
             prev_scene.order, scene.order = scene.order, prev_scene.order
             prev_scene.save()
             scene.save()
-        return redirect('story_detail', story_id=story_id, scene_id=scene_id)
+        return redirect('story_detail', story_id=story_id)
 
     elif plot_point_id:
         print(f"Reordering plot point {plot_point_id}")
@@ -410,7 +413,7 @@ def move_up(request, story_id, scene_id=None, plot_point_id=None):
             prev_plot_point.order, plot_point.order = plot_point.order, prev_plot_point.order
             prev_plot_point.save()
             plot_point.save()
-        return redirect('plot_detail', story_id=story_id, plot_point_id=plot_point_id)
+        return redirect('plot_detail', story_id=story_id)
 
 
 def move_down(request, story_id, scene_id=None, plot_point_id=None):
@@ -440,7 +443,7 @@ def move_down(request, story_id, scene_id=None, plot_point_id=None):
             next_scene.order, scene.order = scene.order, next_scene.order
             next_scene.save()
             scene.save()
-        return redirect('story_detail', story_id=story_id, scene_id=scene_id)
+        return redirect('story_detail', story_id=story_id)
 
     elif plot_point_id:
         print(f"Reordering plot point {plot_point_id}")
@@ -456,4 +459,4 @@ def move_down(request, story_id, scene_id=None, plot_point_id=None):
             next_plot_point.order, plot_point.order = plot_point.order, next_plot_point.order
             next_plot_point.save()
             plot_point.save()
-        return redirect('plot_detail', story_id=story_id, plot_point_id=plot_point_id)
+        return redirect('plot_detail', story_id=story_id)

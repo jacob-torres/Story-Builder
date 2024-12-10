@@ -54,13 +54,28 @@
     <p>There are no scenes in this story yet. When you add some, they will be listed here.</p>
 
     {% else %}
-    <ul id="scenes-list">
-        {% for scene in story.scene_set.all %}
-        <li>
+    <table id="scene-table">
+      <tr>
+        <th>Title</th>
+        <th>Reorder</th>
+        <th>Actions</th>
+      </tr>
+
+      {% for scene in scenes %}
+        <tr>
+          <td>
             <a href="scene-{{ scene.id }}">{{ scene.title }}</a>
-        </li>
+          </td>
+          <td>
+            <button onclick="window.location.href='scene-{{ scene.id }}/up/'">Move Up</button>
+            <button onclick="window.location.href='scene-{{ scene.id }}/down/'">Move Down</button>
+          </td>
+          <td>
+            <a href="scene-{{ scene.id }}/update/">Update</a> | <a href="scene-{{ scene.id }}/delete/">Delete</a>
+          </td>
+        </tr>
         {% endfor %}
-    </ul>
+    </table>
     {% endif %}
 
     <div class="big-btn">
