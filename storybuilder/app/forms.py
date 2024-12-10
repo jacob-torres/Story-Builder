@@ -137,23 +137,23 @@ class PlotPointForm(forms.ModelForm):
 
     class Meta:
         model = PlotPoint
-        fields = '__all__'
+        exclude = ['plot']
 
     def __init__(self, *args, **kwargs):
         story_id = kwargs.pop('story_id', None)
         plot_id = kwargs.pop('plot_id', None)
         super().__init__(*args, **kwargs)
 
-        # Define the story and the plot that the object is associated with
-        if story_id:
-            self.instance.story = Story.objects.get(pk=story_id)
-        if plot_id:
-            self.instance.plot = Plot.objects.get(pk=plot_id)
-
         # Pre-populate fields if an instance of the object exists
         if self.instance:
             self.fields['name'].initial = self.instance.name
             self.fields['description'].initial = self.instance.description
+
+            # Define the story and the plot that the object is associated with
+            if story_id:
+                self.instance.story = Story.objects.get(pk=story_id)
+            if plot_id:
+                self.instance.plot = Plot.objects.get(pk=plot_id)
 
 
 class WordCountForm(forms.ModelForm):
