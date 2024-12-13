@@ -2,22 +2,15 @@
 {% block title %}{% endblock %}
 
 {% block content %}
+<section class="action-section" aria-label="actions">
+  {% block action_buttons %}
+  {% endblock %}
+</section>
+
 <section class="detail-section" aria-label="details">
   {% block detail_content %}
   {% endblock %}
 </section>
 
-<section class="action-section" aria-label="actions">
-  <div class="action-container">
-    <div class="action-btn">
-      <button class="action-btn" onclick="window.location.href='update/'">Edit Details</button>
-    </div>
-    {% block action_buttons %}
-    {% endblock %}
-    <div class="action-btn">
-      <button class="action-btn" onclick="window.location.href='delete/'">Delete</button>
-    </div>
-  </div>
-  </section>
 <hr>
 {% endblock %}
