@@ -25,7 +25,6 @@
 </form>
 
 <h1>Story Details</h1>
-
 <table>
   <thead>
     <tr>
@@ -78,26 +77,28 @@
 
     {% else %}
     <table id="scene-table">
-      <tr>
+      <thead>
         <th>Title</th>
         <th>Reorder</th>
         <th>Actions</th>
-      </tr>
+      </thead>
 
-      {% for scene in scenes %}
+      <tbody>
+        {% for scene in scenes %}
         <tr>
           <td>
-            <a href="scene-{{ scene.id }}">{{ scene.title }}</a>
+            <a href="scene-{{ scene.order }}">{{ scene.title }}</a>
           </td>
           <td>
-            <button onclick="window.location.href='scene-{{ scene.id }}/up/'">Move Up</button>
-            <button onclick="window.location.href='scene-{{ scene.id }}/down/'">Move Down</button>
+            <button onclick="window.location.href='scene-{{ scene.order }}/up/'">Move Up</button>
+            <button onclick="window.location.href='scene-{{ scene.order }}/down/'">Move Down</button>
           </td>
           <td>
-            <a href="scene-{{ scene.id }}/update/">Update</a> | <a href="scene-{{ scene.id }}/delete/">Delete</a>
+            <a href="scene-{{ scene.order }}/update/">Update</a> | <a href="scene-{{ scene.order }}/delete/">Delete</a>
           </td>
         </tr>
         {% endfor %}
+      </tbody>
     </table>
     {% endif %}
 
@@ -115,14 +116,14 @@
     <ul>
         {% for character in story.character_set.all %}
         <li>
-            <a href={{ character.id }}>{{ character.full_name }}</a>
+            <a href={{ character.slug }}>{{ character.full_name }}</a>
         </li>
         {% endfor %}
     </ul>
     {% endif %}
 
-    <div class="big-btn">
-      <button class="big-btn" onclick="window.location.href='new-character/'">Add Character</button>
+    <div class="action-btn">
+      <button class="action-btn" onclick="window.location.href='new-character/'">Add Character</button>
     </div>
   </div>
 
@@ -132,25 +133,28 @@
 
     {% if plot.plot_point_set.count %}
     <table>
-      <tr>
+      <thead>
         <th>Name</th>
-        <th>Redorder</th>
+        <th>Reorder</th>
         <th>Actions</th>
-      </tr>
-      {% for plot_point in plot.plot_point_set.all %}
-      <tr>
-        <td>
-          <a href="plot/plot-point-{{ plot_point.id }}/">{{ plot_point.name }}</a>
-        </td>
-        <td>
-          <button onclick="window.location.href='plot/plot-point-{{ plot_point.id }}/up/'">Move Up</button>
-          <button onclick="window.location.href='plot/plot-point-{{ plot_point.id }}/down/'">Move Down</button>
-        </td>
-        <td>
-          <a href="plot/plot-point-{{ plot_point.id }}/update/">Edit</a> | <a href="plot/plot-point-{{ plot_point.id }}/delete/">Delete</a>
-        </td>
-      </tr>
-      {% endfor %}
+      </thead>
+
+      <tbody>
+        {% for plot_point in plot.plot_point_set.all %}
+        <tr>
+          <td>
+            <a href="plot/point-{{ plot_point.order }}/">{{ plot_point.name }}</a>
+          </td>
+          <td>
+            <button onclick="window.location.href='plot/point-{{ plot_point.order }}/up/'">Move Up</button>
+            <button onclick="window.location.href='plot/point-{{ plot_point.order }}/down/'">Move Down</button>
+          </td>
+          <td>
+            <a href="plot/point-{{ plot_point.order }}/update/">Edit</a> | <a href="plot/point-{{ plot_point.order }}/delete/">Delete</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
     {% endif %}
     

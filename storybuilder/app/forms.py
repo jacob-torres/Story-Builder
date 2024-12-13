@@ -59,8 +59,8 @@ class SceneForm(forms.ModelForm):
         exclude = ['story', 'notes', 'order']
 
     def __init__(self, *args, **kwargs):
-        story_id = kwargs.pop('story_id', None)
-        print(f"story_id: {story_id}")
+        story_slug = kwargs.pop('story_slug', None)
+        print(f"story_slug: {story_slug}")
         super().__init__(*args, **kwargs)
 
         # Pre-populate fields if an instance of the object exists
@@ -69,8 +69,8 @@ class SceneForm(forms.ModelForm):
             self.fields['description'].initial = self.instance.description
 
             # Define the story that the object is associated with
-            if story_id:
-                self.instance.story = Story.objects.get(pk=story_id)
+            if story_slug:
+                self.instance.story = Story.objects.get(slug=story_slug)
 
 
 class CharacterForm(forms.ModelForm):
@@ -85,12 +85,12 @@ class CharacterForm(forms.ModelForm):
         enneagram_personality = forms.ChoiceField(choices=enneagram_choices)
 
     def __init__(self, *args, **kwargs):
-        story_id = kwargs.pop('story_id', None)
+        story_slug = kwargs.pop('story_slug', None)
         super().__init__(*args, **kwargs)
 
         # Define the story that the object is associated with
-        if story_id:
-            self.instance.story = Story.objects.get(pk=story_id)
+        if story_slug:
+            self.instance.story = Story.objects.get(slug=story_slug)
 
         # Pre-populate fields if an instance of the object exists
         if self.instance:
@@ -119,7 +119,7 @@ class PlotForm(forms.ModelForm):
         exclude = ['story']
 
     def __init__(self, *args, **kwargs):
-        story_id = kwargs.pop('story_id', None)
+        story_slug = kwargs.pop('story_slug', None)
         super().__init__(*args, **kwargs)
 
         # Pre-populate fields if an instance of the object exists
@@ -128,8 +128,8 @@ class PlotForm(forms.ModelForm):
             self.fields['description'].initial = self.instance.description
 
             # Define the story that the object is associated with
-            if story_id:
-                self.instance.story = Story.objects.get(pk=story_id)
+            if story_slug:
+                self.instance.story = Story.objects.get(slug=story_slug)
 
 
 class PlotPointForm(forms.ModelForm):
@@ -140,7 +140,7 @@ class PlotPointForm(forms.ModelForm):
         exclude = ['plot']
 
     def __init__(self, *args, **kwargs):
-        story_id = kwargs.pop('story_id', None)
+        story_slug = kwargs.pop('story_slug', None)
         plot_id = kwargs.pop('plot_id', None)
         super().__init__(*args, **kwargs)
 
@@ -150,8 +150,8 @@ class PlotPointForm(forms.ModelForm):
             self.fields['description'].initial = self.instance.description
 
             # Define the story and the plot that the object is associated with
-            if story_id:
-                self.instance.story = Story.objects.get(pk=story_id)
+            if story_slug:
+                self.instance.story = Story.objects.get(slug=story_slug)
             if plot_id:
                 self.instance.plot = Plot.objects.get(pk=plot_id)
 
