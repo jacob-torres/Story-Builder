@@ -36,7 +36,7 @@ class StoryForm(forms.ModelForm):
         print("Story Form Clean Method")
 
         cleaned_data = super().clean()
-        # print(f"Data before genre cleaning: {cleaned_data}")
+        print(f"Data before genre cleaning: {cleaned_data}")
 
         # Process other genre choice
         genre_choices = list(cleaned_data['genres'])

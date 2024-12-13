@@ -124,8 +124,8 @@ def create_or_update_story(request, story_id=None):
                     return redirect('story_detail', story_id=story.id)
             else:
                 form = StoryForm(instance=story)
-                template_name = 'update_story.html'
-                context = {'form': form, 'story_title': story.title}
+            template_name = 'update_story.html'
+            context = {'form': form, 'story_title': story.title}
 
         # Create story when no story ID is passed
         else:
@@ -143,8 +143,8 @@ def create_or_update_story(request, story_id=None):
                     return redirect('story_detail', story_id=new_story.id)
             else:
                 form = StoryForm()
-                template_name = 'new_story.html'
-                context = {'form': form}
+            template_name = 'new_story.html'
+            context = {'form': form}
 
     except Exception as error:
         print("****** Error while creating or updating story ******")
@@ -152,8 +152,13 @@ def create_or_update_story(request, story_id=None):
         template_name = '500.html'
         context = {'error': error}
 
-    print(f"context: {context}")
-    return render(request=request, template_name=template_name, context=context)
+    try:
+        print(f"context: {context}")
+        return render(request=request, template_name=template_name, context=context)
+    except Exception as error:
+        print("*************** Error while rendering template ***************")
+        print(error)
+        return render(request, '505.html', context={'error': error})
 
 
 def delete_story(request, story_id):
@@ -240,8 +245,8 @@ def create_or_update_scene(request, story_id, scene_id=None):
                     return redirect('scene_detail', story_id=story_id, scene_id=scene_id)
             else:
                 form = SceneForm(story_id=story_id, scene_id=scene_id)
-                template_name = 'update_scene.html'
-                context = {'form': form, 'story_title': story.title}
+            template_name = 'update_scene.html'
+            context = {'form': form, 'story_title': story.title}
 
         # Create new scene
         else:
@@ -253,8 +258,8 @@ def create_or_update_scene(request, story_id, scene_id=None):
                     return redirect('scene_detail', story_id=story_id, scene_id=new_scene.id)
             else:
                 form = SceneForm(story_id=story_id)
-                template_name = 'new_scene.html'
-                context = {'form': form, 'story_title': story.title}
+            template_name = 'new_scene.html'
+            context = {'form': form, 'story_title': story.title}
 
     except Exception as error:
         print("****** Error while creating or updating scene ******")
@@ -262,7 +267,13 @@ def create_or_update_scene(request, story_id, scene_id=None):
         template_name = '500.html'
         context = {'error': error}
 
-    return render(request=request, template_name=template_name, context=context)
+    try:
+        print(f"context: {context}")
+        return render(request=request, template_name=template_name, context=context)
+    except Exception as error:
+        print("*************** Error while rendering template ***************")
+        print(error)
+        return render(request, '505.html', context={'error': error})
 
 
 def delete_scene(request, story_id, scene_id):
@@ -334,7 +345,7 @@ def create_or_update_character(request, story_id=None, character_id=None):
                     return redirect('character_detail', story_id=story_id, character_id=character_id)
             else:
                 form = CharacterForm(story_id=story_id, character_id=character_id)
-                template_name = 'update_character.html'
+            template_name = 'update_character.html'
             context = {'form': form, 'story_title': story.title}
 
         # Create new character
@@ -347,7 +358,7 @@ def create_or_update_character(request, story_id=None, character_id=None):
                     return redirect('character_detail', story_id=story_id, character_id=new_character.id)
             else:
                 form = CharacterForm(story_id=story_id)
-                template_name = 'new_character.html'
+            template_name = 'new_character.html'
             context = {'form': form, 'story_title': story.title}
 
     except Exception as error:
@@ -356,7 +367,13 @@ def create_or_update_character(request, story_id=None, character_id=None):
         template_name = '500.html'
         context = {'error': error}
 
-    return render(request=request, template_name=template_name, context=context)
+    try:
+        print(f"context: {context}")
+        return render(request=request, template_name=template_name, context=context)
+    except Exception as error:
+        print("*************** Error while rendering template ***************")
+        print(error)
+        return render(request, '505.html', context={'error': error})
 
 
 def delete_character(request, story_id, character_id):
@@ -437,8 +454,22 @@ def update_plot(request, story_id):
         form = PlotForm(instance=plot)
     
     context = {'plot': plot, 'form': form}
-    # print(f"context: {context}")
+    print(f"context: {context}")
     return render(request, 'update_plot.html', context=context)
+
+
+### Plot point view functions
+
+def plot_point_detail(request, story_id, plot_point_id):
+    """View function for rendering plot point details."""
+
+
+def create_or_update_plot_point(request, story_id, plot_point_id=None):
+    """View function for creating or updating a plot point."""
+
+
+def delete_plot_point(request, story_id, plot_point_id):
+    """View function for deleting a plot point."""
 
 
 ### Vview functions to move scenes and plot points up or down in a list
