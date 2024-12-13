@@ -212,7 +212,7 @@ def scene_detail(request, story_id, scene_id):
     else:
         form = SceneNoteForm()
 
-    context = {'story': story, 'scene': scene, 'form': form}
+    context = {'story_title': story.title, 'scene': scene, 'form': form}
     print(f"context: {context}")
 
     return render(request, 'scene_detail.html', context=context)
