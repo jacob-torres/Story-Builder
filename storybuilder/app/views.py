@@ -237,14 +237,22 @@ def create_or_update_scene(request, story_id, scene_id=None):
     try:
         # Update scene
         if scene_id:
+
+            try:
+                scene = get_object_or_404(Scene, pk=scene_id)
+            except Http404 as error:
+                print(f"HTTP404 Error while getting Scene object {scene_id}.")
+                print(error)
+                return render(request, '404.html', status=404)
+
             if request.method == 'POST':
                 print(f"Updating Scene object {scene_id}")
-                form = SceneForm(request.POST, story_id=story_id, scene_id=scene_id)
+                form = SceneForm(request.POST, story_id=story_id, instance=scene)
                 if form.is_valid():
                     scene = form.save()
                     return redirect('scene_detail', story_id=story_id, scene_id=scene_id)
             else:
-                form = SceneForm(story_id=story_id, scene_id=scene_id)
+                form = SceneForm(story_id=story_id, instance=scene)
             template_name = 'update_scene.html'
             context = {'form': form, 'story_title': story.title}
 
