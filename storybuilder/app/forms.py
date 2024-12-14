@@ -112,7 +112,7 @@ class CharacterForm(forms.ModelForm):
 
 
 class PlotForm(forms.ModelForm):
-    """Form for creating a new plot."""
+    """Form for updating a story plot."""
 
     class Meta:
         model = Plot
@@ -137,7 +137,7 @@ class PlotPointForm(forms.ModelForm):
 
     class Meta:
         model = PlotPoint
-        exclude = ['plot']
+        exclude = ['plot', 'order']
 
     def __init__(self, *args, **kwargs):
         story_slug = kwargs.pop('story_slug', None)
@@ -150,8 +150,8 @@ class PlotPointForm(forms.ModelForm):
             self.fields['description'].initial = self.instance.description
 
             # Define the story and the plot that the object is associated with
-            if story_slug:
-                self.instance.story = Story.objects.get(slug=story_slug)
+            # if story_slug:
+            #     self.instance.story = Story.objects.get(slug=story_slug)
             if plot_id:
                 self.instance.plot = Plot.objects.get(pk=plot_id)
 

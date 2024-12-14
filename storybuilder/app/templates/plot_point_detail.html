@@ -1,9 +1,14 @@
 {% extends 'detail_layout.html' %}
-{% block title %}{{ scene.title }}, from {{ story.title }}{% endblock %}
+{% block title %}{{ plot_point.name }}, from {{ story_title }}{% endblock %}
 
 {% block detail_content %}
-<h1>{{ scene.title }}</h1>
-<p>{{ scene.description }}</p>
+<h1>{{ plot_point.name }}</h1>
+<h2>
+  Plot Point {{ plot_point.order }} in <a href="/stories/{{ story_slug }}/">
+    {{ story_title }}
+  </a>
+</h2>
+<p>{{ plot_point.description }}</p>
 {% endblock %}
 
 {% block action_buttons %}

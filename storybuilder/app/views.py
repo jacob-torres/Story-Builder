@@ -45,8 +45,9 @@ def story_detail(request, story_slug):
 
     # Get story plot
     try:
-        # plot_id = story.plot.id
         plot = get_object_or_404(Plot, story_id=story.id)
+        print(f"plot ID: {plot.id}")
+        print(f"plot points: {plot.plotpoint_set.all()}")
     except Exception as error:
         print("******* Error while getting story plot *******")
         print(error)
@@ -487,6 +488,9 @@ def plot_point_detail(request, story_slug, plot_point_order):
 def create_or_update_plot_point(request, story_slug, plot_point_order=None):
     """View function for creating or updating a plot point."""
 
+    template_name = ''
+    context = {}
+
     try:
         story = get_object_or_404(Story, slug=story_slug)
         plot_id = story.plot.id
@@ -509,10 +513,94 @@ def create_or_update_plot_point(request, story_slug, plot_point_order=None):
             return render(request, '404.html', status=404)
         
         # Form logic
+        if request.method == 'POST':
+            print(f"Updating plot point {plot_point_order} ...")
+            form = PlotPointForm(
+                request.POST,
+                story_slug=story_slug,
+                plot_id=plot_id,
+                instance=plot_point
+            )
+            if form.is_valid():
+                plot_point = form.save()
+                return redirect(
+                    'plot_point_detail',
+                    story_slug=story_slug,
+                    plot_point_order=plot_point_order
+                )
+
+        else:
+            form = PlotPointForm(
+                story_slug=story_slug,
+                plot_id=plot_id,
+                instance=plot_point
+            )
+
+        template_name = 'update_plot_point.html'
+        context = {
+            'story_title': story.title,
+            'plot_point_order': plot_point_order,
+            'form': form
+        }
+
+    # Create new plot point
+    else:
+        print("Creating new plot point ...")
+
+        if request.method == 'POST':
+            print(f"Creating new plot point ...")
+            form = PlotPointForm(
+                request.POST,
+                story_slug=story_slug,
+                plot_id=plot_id
+            )
+            if form.is_valid():
+                new_plot_point = form.save()
+                return redirect(
+                    'plot_point_detail',
+                    story_slug=story_slug,
+                    plot_point_order=new_plot_point.order
+                )
+
+        else:
+            form = PlotPointForm(
+                story_slug=story_slug,
+                plot_id=plot_id
+            )
+
+        template_name = 'new_plot_point.html'
+        context = {
+            'story_title': story.title,
+            'form': form
+        }
+
+    return render(request=request, template_name=template_name, context=context)
 
 
 def delete_plot_point(request, story_slug, plot_point_order):
     """View function for deleting a plot point."""
+
+    print("******************************")
+    print("Delete Plot Point")
+
+    try:
+        story = get_object_or_404(Story, slug=story_slug)
+        plot = story.plot
+        plot_point = get_object_or_404(PlotPoint, plot_id=plot.id, order=plot_point_order)
+        plot_point.delete()
+
+        # Update the order of the next plot points
+        PlotPoint.objects.filter(
+            plot=plot,
+            order__gt=plot_point_order
+        ).update(order=F('order') - 1)
+
+    except Http404 as error:
+        print(f"HTTP404 Error while deleteing plot point object {plot_point_order}.")
+        print(error)
+        return render(request, '404.html', status=404)
+
+    return redirect('plot_detail', story_slug=story_slug)
 
 
 ### Vview functions to move scenes and plot points up or down in a list

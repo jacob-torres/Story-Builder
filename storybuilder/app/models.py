@@ -135,7 +135,7 @@ class Scene(models.Model):
             ).order_by('-order').first()
             if prev_scene:
                 self.order = prev_scene.order + 1
-        super(Scene, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class Plot(models.Model):
@@ -171,11 +171,11 @@ class PlotPoint(models.Model):
 
         if not self.id:
             prev_point = PlotPoint.objects.filter(
-                story=self.story
+                plot=self.plot
             ).order_by('-order').first()
             if prev_point:
                 self.order = prev_point.order + 1
-        super(PlotPoint, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class World(models.Model):
