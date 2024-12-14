@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.http import HttpResponse, Http404
-from django.forms import ValidationError
+from django.db.models import F
 
 from .forms import StoryForm, SceneForm, CharacterForm, PlotForm, PlotPointForm, WordCountForm, SceneNoteForm
 from .models import Story, Scene, Character, Plot, PlotPoint
@@ -72,13 +72,13 @@ def story_detail(request, story_slug):
 
     # Get story plot
     try:
-        plot_id = story.plot.id
-        plot = get_object_or_404(Plot, pk=plot_id)
+        # plot_id = story.plot.id
+        plot = get_object_or_404(Plot, story_id=story.id)
     except Exception as error:
         print("******* Error while getting story plot *******")
         print(error)
         return render(request, '404.html', status=404)
-    
+
     # Instantiate word count update form
     if request.method == 'POST':
         form = WordCountForm(request.POST)
@@ -137,7 +137,7 @@ def create_or_update_story(request, story_slug=None):
                     new_plot = Plot.objects.create(
                         name=f"Plot for {new_story.title}",
                         description=f"Briefly summarize the plot of your story here.",
-                        story_slug=new_story.id
+                        story_id=new_story.id
                     )
                     print(f"Successfully created new story {new_story.id} and plot {new_plot.id}.")
                     return redirect('story_detail', story_slug=new_story.slug)
@@ -212,9 +212,14 @@ def scene_detail(request, story_slug, scene_order):
     else:
         form = SceneNoteForm()
 
-    context = {'story_title': story.title, 'scene': scene, 'form': form}
-    print(f"context: {context}")
+    context = {
+        'scene': scene,
+        'story_title': story.title,
+        'story_slug': story.slug,
+        'form': form
+    }
 
+    print(f"context: {context}")
     return render(request, 'scene_detail.html', context=context)
 
 
@@ -294,6 +299,13 @@ def delete_scene(request, story_slug, scene_order):
         story = get_object_or_404(Story, slug=story_slug)
         scene = get_object_or_404(Scene, story_id=story.id, order=scene_order)
         scene.delete()
+
+        # Update the order of the next scenes
+        Scene.objects.filter(
+            story=story,
+            order__gt=scene_order
+        ).update(order=F('order') - 1)
+
     except Http404 as error:
         print(f"HTTP404 Error while deleteing Scene object {scene_order}.")
         print(error)

@@ -160,7 +160,7 @@ class PlotPoint(models.Model):
     plot = models.ForeignKey(Plot, on_delete=models.CASCADE, default=None)
 
     # Order in display list
-    order = models.SmallIntegerField(default=0, blank=True)
+    order = models.SmallIntegerField(default=1, blank=True)
 
     def __str__(self):
         """Override the string method for the PlotPoint object."""
@@ -168,7 +168,13 @@ class PlotPoint(models.Model):
 
     def save(self, *args, **kwargs):
         """Override the save method for the plot point model."""
-        self.order += 1
+
+        if not self.id:
+            prev_point = PlotPoint.objects.filter(
+                story=self.story
+            ).order_by('-order').first()
+            if prev_point:
+                self.order = prev_point.order + 1
         super(PlotPoint, self).save(*args, **kwargs)
 
 
