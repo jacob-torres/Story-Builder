@@ -6,39 +6,6 @@ from .forms import StoryForm, SceneForm, CharacterForm, PlotForm, PlotPointForm,
 from .models import Story, Scene, Character, Plot, PlotPoint
 
 # Create your views here.
-# class StoryWordCountUpdateView(UpdateView):
-#     """Update view for the Story model."""
-
-#     model = Story
-#     fields = ['word_count']
-#     form_class = WordCountForm
-#     template_name = 'story_detail.html'
-
-    # def get_context_data(self, **kwargs)    :
-#         """Override get_context_data method for StoryUpdateView."""
-
-#         print("**************************")
-#         print("get_context_data in Story Update View")
-
-#         context = super().get_context_data(**kwargs)
-#         context['story'] = self.object
-#         print(f"context: {context}")
-
-#         return context
-
-#     def form_valid(self, form):
-#         """Override the form_valid method for the story update view."""
-
-#         print("*********************************")
-#         print("form_valid in story update view.")
-
-#         self.object.word_count = form.cleaned_data['word_count']
-#         self.object.save()
-#         print(f"self.object: {self.object}")
-
-#         return super().form_valid(form)
-
-
 def home(request):
     """Home page."""
     return render(request, 'home.html')
@@ -49,9 +16,15 @@ def home(request):
 def stories(request):
     """View function for listing stories."""
 
-    stories = Story.objects.all()
-    context = {'stories': stories}
-    return render(request, 'stories.html', context=context)
+    try:
+        stories = Story.objects.all()
+        context = {'stories': stories}
+        return render(request, 'stories.html', context=context)
+    except Exception as error:
+        print("*********** Error while rendering story list ***********")
+        print(error)
+        context = {'error': error}
+        return render(request, '500.html', context=context)
 
 
 def story_detail(request, story_slug):
@@ -483,9 +456,59 @@ def update_plot(request, story_slug):
 def plot_point_detail(request, story_slug, plot_point_order):
     """View function for rendering plot point details."""
 
+    try:
+        story = get_object_or_404(Story, slug=story_slug)
+        plot_id = story.plot.id
+    except Http404 as error:
+        print(f"HTTP404 Error while getting Story object {story_slug}.")
+        print(error)
+        return render(request, '404_story_not_found.html', status=404)
+
+    try:
+        plot_point = get_object_or_404(
+            PlotPoint,
+            plot_id=plot_id,
+            order=plot_point_order
+        )
+    except Http404 as error:
+        print(f"HTTP404 Error while getting Story object {story_slug}.")
+        print(error)
+        return render(request, '404.html', status=404)
+    
+    context = {
+        'story_slug': story.slug,
+        'story_title': story.title,
+        'plot_point': plot_point
+    }
+
+    return render(request, 'plot_point_detail.html', context=context)
+
 
 def create_or_update_plot_point(request, story_slug, plot_point_order=None):
     """View function for creating or updating a plot point."""
+
+    try:
+        story = get_object_or_404(Story, slug=story_slug)
+        plot_id = story.plot.id
+    except Http404 as error:
+        print(f"HTTP404 Error while getting Story object {story_slug}.")
+        print(error)
+        return render(request, '404_story_not_found.html', status=404)
+
+    # Update plot point
+    if plot_point_order:
+        try:
+            plot_point = get_object_or_404(
+                PlotPoint,
+                plot_id=plot_id,
+                order=plot_point_order
+            )
+        except Http404 as error:
+            print(f"HTTP404 Error while getting plot point object {plot_point_order}.")
+            print(error)
+            return render(request, '404.html', status=404)
+        
+        # Form logic
 
 
 def delete_plot_point(request, story_slug, plot_point_order):
