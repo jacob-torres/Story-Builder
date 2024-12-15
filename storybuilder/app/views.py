@@ -1,11 +1,40 @@
-from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404
+from django.apps import apps
 from django.db.models import F
+            from django.views.generic import DetailView
 
 from .forms import StoryForm, SceneForm, CharacterForm, PlotForm, PlotPointForm, WordCountForm, SceneNoteForm
 from .models import Story, Scene, Character, Plot, PlotPoint
 
 # Create your views here.
+class ObjectDetailView(DetailView):
+    """Class view for rendering object details."""
+
+    def dispatch(self, request, *args, **kwargs):
+        model_name = kwargs.get('model_name', '')
+        if model_name:
+            self.model = apps.get_model()
+            self.context_object_name = model_name.lower()
+            self.template_name = f"{self.context_object_name}_detail.html"
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset
+
+    def get_object(self, queryset =None):
+        return super().get_object(queryset)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Get other context values
+        return context
+
+
+
+
+
 def home(request):
     """Home page."""
     return render(request, 'home.html')
