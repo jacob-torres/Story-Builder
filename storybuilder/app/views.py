@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404
 from django.apps import apps
 from django.db.models import F
-            from django.views.generic import DetailView
+from django.views.generic import DetailView
 
 from .forms import StoryForm, SceneForm, CharacterForm, PlotForm, PlotPointForm, WordCountForm, SceneNoteForm
 from .models import Story, Scene, Character, Plot, PlotPoint
@@ -11,25 +11,67 @@ from .models import Story, Scene, Character, Plot, PlotPoint
 class ObjectDetailView(DetailView):
     """Class view for rendering object details."""
 
+    model_name = ''
+
     def dispatch(self, request, *args, **kwargs):
-        model_name = kwargs.get('model_name', '')
-        if model_name:
+        self.model_name = kwargs.get('model_name', '')
+        print(f"model_name: {self.model_name}")
+        print(f"kwargs: {kwargs}")
+        if self.model_name:
             self.model = apps.get_model()
-            self.context_object_name = model_name.lower()
+            self.context_object_name = self.model_name.lower()
             self.template_name = f"{self.context_object_name}_detail.html"
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        return queryset
+        if self.model:
+            return self.model.objects.all()
 
     def get_object(self, queryset =None):
-        return super().get_object(queryset)
+        queryset = self.get_queryset()
+        lookup_field = self.get_lookup_field()
+
+        # Look up object with model lookup keyword argument
+        obj = queryset.filter(
+            **{lookup_field: self.kwargs[lookup_field]}
+        )
+
+        if not obj:
+            raise Http404(
+                f"Object of {lookup_field} {self.kwargs[lookup_field]} was not found."
+            )
+
+        return obj
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         # Get other context values
+        context[self.context_object_name] = self.object
+        match self.context_object_name:
+            case 'story':
+                context['scenes'] = self.object.scene_set.all().order_by('order')
+                context['plot'] = self.object.plot
+            case '_':
+                raise ValueError(f"{self.context_object_name} is not a valid model type.")
+
         return context
+
+    def get_lookup_field(self):
+        """Method for determining which field to lookup objects based on model."""
+
+        print("Getting lookup field")
+
+        lookup_fields = {
+            Story: 'slug',
+            Character: 'slug',
+            Scene: 'order',
+            Plot: 'id',
+            PlotPoint: 'order',
+            None: ''
+        }
+
+        return lookup_fields.get(self.model, '')
 
 
 
