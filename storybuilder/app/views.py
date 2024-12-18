@@ -11,16 +11,18 @@ from .models import Story, Scene, Character, Plot, PlotPoint
 class ObjectDetailView(DetailView):
     """Class view for rendering object details."""
 
-    model_name = ''
-
     def dispatch(self, request, *args, **kwargs):
-        self.model_name = kwargs.get('model_name', '')
-        print(f"model_name: {self.model_name}")
+        story_slug = kwargs.get('story_slug', None)
+        if story_slug:
+            model_name = 'Story'
+        print(f"model_name: {model_name}")
         print(f"kwargs: {kwargs}")
-        if self.model_name:
-            self.model = apps.get_model()
-            self.context_object_name = self.model_name.lower()
+        if model_name:
+            self.model = apps.get_model('app', model_name)
+            self.context_object_name = model_name.lower()
             self.template_name = f"{self.context_object_name}_detail.html"
+            print(f"context_object_name: {self.context_object_name}")
+            print(f"template_name: {self.template_name}")
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -63,11 +65,10 @@ class ObjectDetailView(DetailView):
         print("Getting lookup field")
 
         lookup_fields = {
-            Story: 'slug',
-            Character: 'slug',
-            Scene: 'order',
-            Plot: 'id',
-            PlotPoint: 'order',
+            Story: 'story_slug',
+            Character: 'character_slug',
+            Scene: 'scene_order',
+            PlotPoint: 'plot_point_order',
             None: ''
         }
 
