@@ -154,6 +154,10 @@ def delete_story(request, story_slug):
 
 ### Scene view functions
 
+def scenes(request, story_slug):
+    """View function for listing scenes."""
+
+
 def scene_detail(request, story_slug, scene_order):
     """View function for rendering scene details."""
 
@@ -289,6 +293,10 @@ def delete_scene(request, story_slug, scene_order):
 
 
 ### Character view functions
+
+def characters(request, story_slug):
+    """View function for listing characters."""
+
 
 def character_detail(request, story_slug, character_slug):
     """View function for displaying character details."""
