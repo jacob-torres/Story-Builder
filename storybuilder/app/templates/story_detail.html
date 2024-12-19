@@ -62,17 +62,16 @@
     {% endfor %}
   </ul>
   {% endif %}
-<hr>
 
-  <nav class="tab-container">
+  <!-- <nav class="tab-container">
     <h3 class="view-tab"><a href="#scenes">Scene View</a></h3>
     <h3 class="view-tab"><a href="#characters">Character View</a></h3>
     <h3 class="view-tab"><a href="#plot">Plot View</a></h3>
-  </nav>
+  </nav> -->
   
-  <div class="content-view" id="scenes">
+  <!-- <div class="content-view" id="scenes">
     <h2>Scene View</h2>
-    {% if story.scene_set.count == 0 %}
+    {% if not story.scene_set.count %}
     <p>There are no scenes in this story yet. When you add some, they will be listed here.</p>
 
     {% else %}
@@ -157,7 +156,6 @@
       </tbody>
     </table>
     {% endif %}
-    
     <div class="action-container">
       <div class="action-btn">
         <button class="action-btn" onclick="window.location.href='plot/update/'">Edit Plot Details</button>
@@ -167,5 +165,6 @@
       </div>
       </div>
   </div>
+  -->
 </section>
 {% endblock %}

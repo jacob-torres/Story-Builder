@@ -116,7 +116,7 @@ class Scene(models.Model):
 
     # Relationships: One story and one possible plot point, one or more characters
     story = models.ForeignKey(Story, on_delete=models.CASCADE, default=None)
-    plot_point = models.ForeignKey('PlotPoint', on_delete=models.SET_DEFAULT, default=None, blank=True, null=True)
+    plotpoint = models.ForeignKey('PlotPoint', on_delete=models.SET_DEFAULT, default=None, blank=True, null=True)
     characters = models.ManyToManyField(Character, blank=True)
 
     # Order in display list

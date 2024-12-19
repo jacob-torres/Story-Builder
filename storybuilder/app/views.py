@@ -454,7 +454,7 @@ def update_plot(request, story_slug):
 
 ### Plot point view functions
 
-def plot_point_detail(request, story_slug, plot_point_order):
+def plotpoint_detail(request, story_slug, plotpoint_order):
     """View function for rendering plot point details."""
 
     try:
@@ -466,10 +466,10 @@ def plot_point_detail(request, story_slug, plot_point_order):
         return render(request, '404_story_not_found.html', status=404)
 
     try:
-        plot_point = get_object_or_404(
+        plotpoint = get_object_or_404(
             PlotPoint,
             plot_id=plot_id,
-            order=plot_point_order
+            order=plotpoint_order
         )
     except Http404 as error:
         print(f"HTTP404 Error while getting Story object {story_slug}.")
@@ -479,13 +479,13 @@ def plot_point_detail(request, story_slug, plot_point_order):
     context = {
         'story_slug': story.slug,
         'story_title': story.title,
-        'plot_point': plot_point
+        'plotpoint': plotpoint
     }
 
-    return render(request, 'plot_point_detail.html', context=context)
+    return render(request, 'plotpoint_detail.html', context=context)
 
 
-def create_or_update_plot_point(request, story_slug, plot_point_order=None):
+def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
     """View function for creating or updating a plot point."""
 
     template_name = ''
@@ -500,46 +500,46 @@ def create_or_update_plot_point(request, story_slug, plot_point_order=None):
         return render(request, '404_story_not_found.html', status=404)
 
     # Update plot point
-    if plot_point_order:
+    if plotpoint_order:
         try:
-            plot_point = get_object_or_404(
+            plotpoint = get_object_or_404(
                 PlotPoint,
                 plot_id=plot_id,
-                order=plot_point_order
+                order=plotpoint_order
             )
         except Http404 as error:
-            print(f"HTTP404 Error while getting plot point object {plot_point_order}.")
+            print(f"HTTP404 Error while getting plot point object {plotpoint_order}.")
             print(error)
             return render(request, '404.html', status=404)
         
         # Form logic
         if request.method == 'POST':
-            print(f"Updating plot point {plot_point_order} ...")
+            print(f"Updating plot point {plotpoint_order} ...")
             form = PlotPointForm(
                 request.POST,
                 story_slug=story_slug,
                 plot_id=plot_id,
-                instance=plot_point
+                instance=plotpoint
             )
             if form.is_valid():
-                plot_point = form.save()
+                plotpoint = form.save()
                 return redirect(
-                    'plot_point_detail',
+                    'plotpoint_detail',
                     story_slug=story_slug,
-                    plot_point_order=plot_point_order
+                    plotpoint_order=plotpoint_order
                 )
 
         else:
             form = PlotPointForm(
                 story_slug=story_slug,
                 plot_id=plot_id,
-                instance=plot_point
+                instance=plotpoint
             )
 
-        template_name = 'update_plot_point.html'
+        template_name = 'update_plotpoint.html'
         context = {
             'story_title': story.title,
-            'plot_point_order': plot_point_order,
+            'plotpoint_order': plotpoint_order,
             'form': form
         }
 
@@ -555,11 +555,11 @@ def create_or_update_plot_point(request, story_slug, plot_point_order=None):
                 plot_id=plot_id
             )
             if form.is_valid():
-                new_plot_point = form.save()
+                new_plotpoint = form.save()
                 return redirect(
-                    'plot_point_detail',
+                    'plotpoint_detail',
                     story_slug=story_slug,
-                    plot_point_order=new_plot_point.order
+                    plotpoint_order=new_plotpoint.order
                 )
 
         else:
@@ -568,7 +568,7 @@ def create_or_update_plot_point(request, story_slug, plot_point_order=None):
                 plot_id=plot_id
             )
 
-        template_name = 'new_plot_point.html'
+        template_name = 'new_plotpoint.html'
         context = {
             'story_title': story.title,
             'form': form
@@ -577,7 +577,7 @@ def create_or_update_plot_point(request, story_slug, plot_point_order=None):
     return render(request=request, template_name=template_name, context=context)
 
 
-def delete_plot_point(request, story_slug, plot_point_order):
+def delete_plotpoint(request, story_slug, plotpoint_order):
     """View function for deleting a plot point."""
 
     print("******************************")
@@ -586,17 +586,17 @@ def delete_plot_point(request, story_slug, plot_point_order):
     try:
         story = get_object_or_404(Story, slug=story_slug)
         plot = story.plot
-        plot_point = get_object_or_404(PlotPoint, plot_id=plot.id, order=plot_point_order)
-        plot_point.delete()
+        plotpoint = get_object_or_404(PlotPoint, plot_id=plot.id, order=plotpoint_order)
+        plotpoint.delete()
 
         # Update the order of the next plot points
         PlotPoint.objects.filter(
             plot=plot,
-            order__gt=plot_point_order
+            order__gt=plotpoint_order
         ).update(order=F('order') - 1)
 
     except Http404 as error:
-        print(f"HTTP404 Error while deleteing plot point object {plot_point_order}.")
+        print(f"HTTP404 Error while deleteing plot point object {plotpoint_order}.")
         print(error)
         return render(request, '404.html', status=404)
 
@@ -605,7 +605,7 @@ def delete_plot_point(request, story_slug, plot_point_order):
 
 ### Vview functions to move scenes and plot points up or down in a list
 
-def move_up(request, story_slug, scene_order=None, plot_point_order=None):
+def move_up(request, story_slug, scene_order=None, plotpoint_order=None):
     """View function for moving scene or plot point objects up in a list."""
 
     print("******************")
@@ -634,24 +634,24 @@ def move_up(request, story_slug, scene_order=None, plot_point_order=None):
             scene.save()
         return redirect('story_detail', story_slug=story_slug)
 
-    elif plot_point_order:
-        print(f"Reordering plot point {plot_point_order}")
+    elif plotpoint_order:
+        print(f"Reordering plot point {plotpoint_order}")
         try:
-            plot_point = get_object_or_404(PlotPoint, story_id=story.id, order=plot_point_order)
+            plotpoint = get_object_or_404(PlotPoint, story_id=story.id, order=plotpoint_order)
         except Http404 as error:
-            print(f"HTTP404 Error while getting plot point object {plot_point_order}.")
+            print(f"HTTP404 Error while getting plot point object {plotpoint_order}.")
             print(error)
             return render(request, '404.html', status=404)
         
-        prev_plot_point = PlotPoint.objects.filter(order__lt=plot_point.order).order_by('-order').first()
-        if prev_plot_point:
-            prev_plot_point.order, plot_point.order = plot_point.order, prev_plot_point.order
-            prev_plot_point.save()
-            plot_point.save()
+        prev_plotpoint = PlotPoint.objects.filter(order__lt=plotpoint.order).order_by('-order').first()
+        if prev_plotpoint:
+            prev_plotpoint.order, plotpoint.order = plotpoint.order, prev_plotpoint.order
+            prev_plotpoint.save()
+            plotpoint.save()
         return redirect('plot_detail', story_slug=story_slug)
 
 
-def move_down(request, story_slug, scene_order=None, plot_point_order=None):
+def move_down(request, story_slug, scene_order=None, plotpoint_order=None):
     """View function for moving scene or plot point objects down in a list."""
 
     print("******************")
@@ -680,18 +680,18 @@ def move_down(request, story_slug, scene_order=None, plot_point_order=None):
             scene.save()
         return redirect('story_detail', story_slug=story_slug)
 
-    elif plot_point_order:
-        print(f"Reordering plot point {plot_point_order}")
+    elif plotpoint_order:
+        print(f"Reordering plot point {plotpoint_order}")
         try:
-            plot_point = get_object_or_404(PlotPoint, story_id=story.id, order=plot_point_order)
+            plotpoint = get_object_or_404(PlotPoint, story_id=story.id, order=plotpoint_order)
         except Http404 as error:
-            print(f"HTTP404 Error while getting plot point object {plot_point_order}.")
+            print(f"HTTP404 Error while getting plot point object {plotpoint_order}.")
             print(error)
             return render(request, '404.html', status=404)
         
-        next_plot_point = PlotPoint.objects.filter(order__lt=plot_point.order).order_by('-order').first()
-        if next_plot_point:
-            next_plot_point.order, plot_point.order = plot_point.order, next_plot_point.order
-            next_plot_point.save()
-            plot_point.save()
+        next_plotpoint = PlotPoint.objects.filter(order__lt=plotpoint.order).order_by('-order').first()
+        if next_plotpoint:
+            next_plotpoint.order, plotpoint.order = plotpoint.order, next_plotpoint.order
+            next_plotpoint.save()
+            plotpoint.save()
         return redirect('plot_detail', story_slug=story_slug)
