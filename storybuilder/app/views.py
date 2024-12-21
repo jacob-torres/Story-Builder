@@ -16,6 +16,9 @@ def home(request):
 def stories(request):
     """View function for listing stories."""
 
+    print("**********************************")
+    print("Stories View")
+
     try:
         stories = Story.objects.all()
         context = {'stories': stories}
@@ -157,6 +160,26 @@ def delete_story(request, story_slug):
 def scenes(request, story_slug):
     """View function for listing scenes."""
 
+    print("**********************************")
+    print("Scenes View")
+
+    try:
+        story = get_object_or_404(Story, slug=story_slug)
+    except Http404 as error:
+        print(f"HTTP404 Error while getting Story object {story_slug}.")
+        print(error)
+        return render(request, '404_story_not_found.html', status=404)
+
+    try:
+        scenes = Scene.objects.filter(story_id=story.id)
+        context = {'story_title': story.title, 'scenes': scenes}
+        return render(request, 'scenes.html', context=context)
+    except Exception as error:
+        print("*********** Error while rendering scene list ***********")
+        print(error)
+        context = {'error': error}
+        return render(request, '500.html', context=context)
+
 
 def scene_detail(request, story_slug, scene_order):
     """View function for rendering scene details."""
@@ -296,6 +319,26 @@ def delete_scene(request, story_slug, scene_order):
 
 def characters(request, story_slug):
     """View function for listing characters."""
+
+    print("**********************************")
+    print("Characters View")
+
+    try:
+        story = get_object_or_404(Story, slug=story_slug)
+    except Http404 as error:
+        print(f"HTTP404 Error while getting Story object {story_slug}.")
+        print(error)
+        return render(request, '404_story_not_found.html', status=404)
+
+    try:
+        characters = Character.objects.filter(story_id=story.id)
+        context = {'story_title': story.title, 'characters': characters}
+        return render(request, 'characters.html', context=context)
+    except Exception as error:
+        print("*********** Error while rendering character list ***********")
+        print(error)
+        context = {'error': error}
+        return render(request, '500.html', context=context)
 
 
 def character_detail(request, story_slug, character_slug):

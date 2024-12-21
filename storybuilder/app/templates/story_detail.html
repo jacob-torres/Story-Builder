@@ -33,6 +33,7 @@
       <th>Word Count</th>
       <th>Scenes</th>
       <th>Characters</th>
+      <th>Plot Points</th>
     </tr>
   </thead>
 
@@ -41,8 +42,9 @@
       <td>{{ story.title }}</td>
       <td>{{ story.date_started }}</td>
       <td><a href="#word-count-form" id="word-count-link">{{ story.word_count }}</a></td>
-      <td><a class="view-link" href="#scenes">{{ story.scene_set.count }}</a></td>
-        <td><a class="view-link" href="#characters">{{ story.character_set.count }}</a></td>
+      <td><a class="view-link" href="scenes/">{{ story.scene_set.count }}</a></td>
+        <td><a class="view-link" href="characters/">{{ story.character_set.count }}</a></td>
+        <td><a class="view-link" href="plot/">{{ story.plot.plotpoint_set.count }}</a></td>
     </tr>
   </tbody>
 </table>
