@@ -1,10 +1,10 @@
-from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
-from django.http import HttpResponse, Http404
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.db.models import F
 
 from .forms import StoryForm, SceneForm, CharacterForm, PlotForm, PlotPointForm, WordCountForm, SceneNoteForm
 from .models import Story, Scene, Character, Plot, PlotPoint
-from .utils import get_story_by_slug
+from .utils import get_story_by_slug, get_scene, get_character, get_plot, get_plotpoint
 
 # Create your views here.
 def home(request):
@@ -45,13 +45,8 @@ def story_detail(request, story_slug):
     scenes = story.scene_set.all().order_by('order')
 
     # Get story plot
-    try:
-        plot = get_object_or_404(Plot, story_id=story.id)
-        print(f"plot ID: {plot.id}")
-        print(f"plot points: {plot.plotpoint_set.all()}")
-    except Exception as error:
-        print("******* Error while getting story plot *******")
-        print(error)
+    plot = get_plot(story.id)
+    if not plot:
         return render(request, '404.html', status=404)
 
     # Instantiate word count update form
@@ -180,11 +175,8 @@ def scene_detail(request, story_slug, scene_order):
     if not story:
         return render(request, '404_story_not_found.html', status=404)
 
-    try:
-        scene = get_object_or_404(Scene, story_id=story.id, order=scene_order)
-    except Http404 as error:
-        print(f"HTTP404 Error while getting Scene object {scene_order}.")
-        print(error)
+    scene = get_scene(story.id, scene_order)
+    if not scene:
         return render(request, '404.html', status=404)
 
     # Add scene note form
@@ -226,12 +218,8 @@ def create_or_update_scene(request, story_slug, scene_order=None):
     try:
         # Update scene
         if scene_order:
-
-            try:
-                scene = get_object_or_404(Scene, story_id=story.id, order=scene_order)
-            except Http404 as error:
-                print(f"HTTP404 Error while getting Scene object {scene_order}.")
-                print(error)
+            scene = get_scene(story.id, scene_order)
+            if not scene:
                 return render(request, '404.html', status=404)
 
             if request.method == 'POST':
@@ -282,15 +270,17 @@ def delete_scene(request, story_slug, scene_order):
     story = get_story_by_slug(story_slug)
     if not story:
         return render(request, '404_story_not_found.html', status=404)
-    else:
-        scene = get_object_or_404(Scene, story_id=story.id, order=scene_order)
-        scene.delete()
 
-        # Update the order of the next scenes
-        Scene.objects.filter(
-            story=story,
-            order__gt=scene_order
-        ).update(order=F('order') - 1)
+    scene = get_scene(story.id, scene_order)
+    if not scene:
+        return render(request, '404.html', status=404)
+
+    # Delete scene and update the order of the next scenes
+    scene.delete()
+    Scene.objects.filter(
+        story=story,
+        order__gt=scene_order
+    ).update(order=F('order') - 1)
 
     return redirect('story_detail', story_slug=story_slug)
 
@@ -325,11 +315,8 @@ def character_detail(request, story_slug, character_slug):
     if not story:
         return render(request, '404_story_not_found.html', status=404)
 
-    try:
-        character = get_object_or_404(Character, slug=character_slug)
-    except Http404 as error:
-        print(f"HTTP404 Error while getting Character object {character_slug}.")
-        print(error)
+    character = get_character(story.id, character_slug)
+    if not character:
         return render(request, '404.html', status=404)
 
     context = {'story': story, 'character': character}
@@ -402,8 +389,8 @@ def delete_character(request, story_slug, character_slug):
     story = get_story_by_slug(story_slug)
     if not story:
         return render(request, '404_story_not_found.html', status=404)
-    else:
-        character = get_object_or_404(Character, slug=character_slug)
+
+        character = get_character(story.id, character_slug)
         character.delete()
 
     return redirect('story_detail', story_slug=story_slug)
@@ -422,12 +409,8 @@ def plot_detail(request, story_slug):
         return render(request, '404_story_not_found.html', status=404)
     
     # Get story plot
-    try:
-        plot_id = story.plot.id
-        plot = get_object_or_404(Plot, pk=plot_id)
-    except Exception as error:
-        print("******* Error while getting story plot *******")
-        print(error)
+    plot = get_plot(story.id)
+    if not plot:
         return render(request, '404.html', status=404)
 
     context = {'story_title': story.title, 'plot': plot}
@@ -446,12 +429,8 @@ def update_plot(request, story_slug):
         return render(request, '404_story_not_found.html', status=404)
     
     # Get story plot
-    try:
-        plot_id = story.plot.id
-        plot = get_object_or_404(Plot, pk=plot_id)
-    except Exception as error:
-        print("******* Error while getting story plot *******")
-        print(error)
+    plot = get_plot(story.id)
+    if not plot:
         return render(request, '404.html', status=404)
     
     if request.method == 'POST':
@@ -476,15 +455,8 @@ def plotpoint_detail(request, story_slug, plotpoint_order):
     if not story:
         return render(request, '404_story_not_found.html', status=404)
 
-    try:
-        plotpoint = get_object_or_404(
-            PlotPoint,
-            plot_id=plot_id,
-            order=plotpoint_order
-        )
-    except Http404 as error:
-        print(f"HTTP404 Error while getting Story object {story_slug}.")
-        print(error)
+    plotpoint = get_plotpoint(story_slug, plotpoint_order)
+    if not plotpoint:
         return render(request, '404.html', status=404)
     
     context = {
@@ -508,16 +480,8 @@ def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
 
     # Update plot point
     if plotpoint_order:
-        try:
-            plot_id = story.plot.id
-            plotpoint = get_object_or_404(
-                PlotPoint,
-                plot_id=plot_id,
-                order=plotpoint_order
-            )
-        except Http404 as error:
-            print(f"HTTP404 Error while getting plot point object {plotpoint_order}.")
-            print(error)
+        plotpoint = get_plotpoint(story_slug, plotpoint_order)
+        if not plotpoint:
             return render(request, '404.html', status=404)
         
         # Form logic
@@ -594,12 +558,13 @@ def delete_plotpoint(request, story_slug, plotpoint_order):
     story = get_story_by_slug(story_slug)
     if not story:
         return render(request, '404_story_not_found.html', status=404)
-    else:
-        plot = story.plot
-        plotpoint = get_object_or_404(PlotPoint, plot_id=plot.id, order=plotpoint_order)
-        plotpoint.delete()
 
-        # Update the order of the next plot points
+    plotpoint = get_plotpoint(story_slug, plotpoint_order)
+    if not plotpoint:
+        return render(request, '404.html', status=404)
+
+        # Delete plot point and update the order of the next plot points
+        plotpoint.delete()
         PlotPoint.objects.filter(
             plot=plot,
             order__gt=plotpoint_order
@@ -622,11 +587,9 @@ def move_up(request, story_slug, scene_order=None, plotpoint_order=None):
 
     if scene_order:
         print(f"Reordering scene {scene_order}")
-        try:
-            scene = get_object_or_404(Scene, story_id=story.id, order=scene_order)
-        except Http404 as error:
-            print(f"HTTP404 Error while getting Scene object {scene_order}.")
-            print(error)
+
+        scene = get_scene(story.id, scene_order)
+        if not scene:
             return render(request, '404.html', status=404)
         
         prev_scene = Scene.objects.filter(order__lt=scene.order).order_by('-order').first()
@@ -638,11 +601,9 @@ def move_up(request, story_slug, scene_order=None, plotpoint_order=None):
 
     elif plotpoint_order:
         print(f"Reordering plot point {plotpoint_order}")
-        try:
-            plotpoint = get_object_or_404(PlotPoint, story_id=story.id, order=plotpoint_order)
-        except Http404 as error:
-            print(f"HTTP404 Error while getting plot point object {plotpoint_order}.")
-            print(error)
+
+        plotpoint = get_plotpoint(story_slug, plotpoint_order)
+        if not plotpoint:
             return render(request, '404.html', status=404)
         
         prev_plotpoint = PlotPoint.objects.filter(order__lt=plotpoint.order).order_by('-order').first()
@@ -665,11 +626,9 @@ def move_down(request, story_slug, scene_order=None, plotpoint_order=None):
 
     if scene_order:
         print(f"Reordering scene {scene_order}")
-        try:
-            scene = get_object_or_404(Scene, story_id=story.id, order=scene_order)
-        except Http404 as error:
-            print(f"HTTP404 Error while getting Scene object {scene_order}.")
-            print(error)
+
+        scene = get_scene(story.id, scene_order)
+        if not scene:
             return render(request, '404.html', status=404)
         
         next_scene = Scene.objects.filter(order__gt=scene.order).order_by('order').first()
@@ -681,11 +640,9 @@ def move_down(request, story_slug, scene_order=None, plotpoint_order=None):
 
     elif plotpoint_order:
         print(f"Reordering plot point {plotpoint_order}")
-        try:
-            plotpoint = get_object_or_404(PlotPoint, story_id=story.id, order=plotpoint_order)
-        except Http404 as error:
-            print(f"HTTP404 Error while getting plot point object {plotpoint_order}.")
-            print(error)
+
+        plotpoint = get_plotpoint(story_slug, plotpoint_order)
+        if not plotpoint:
             return render(request, '404.html', status=404)
         
         next_plotpoint = PlotPoint.objects.filter(order__lt=plotpoint.order).order_by('-order').first()
