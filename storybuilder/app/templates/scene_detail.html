@@ -38,7 +38,9 @@
   <h2>Characters in this Scene</h2>
   <ul>
     {% for character in scene.characters.all %}
-    <li>{{ character }}</li>
+    <li>
+      <a href="/stories/{{ story_slug }}/characters/{{ character.slug }}/">{{ character }}</a>
+    </li>
     {% endfor %}
   </ul>
 </div>
