@@ -29,11 +29,7 @@ class Story(models.Model):
     date_started = models.DateField(auto_now_add=True)
     date_last_saved = models.DateField(auto_now=True)
     date_finished = models.DateField(null=True)
-
     slug = models.SlugField(max_length=mid_length, unique=True, blank=True)
-
-    # Relationships: One plot
-    # plot = models.OneToOneField('Plot', on_delete=models.CASCADE, null=True, default=None, related_name='story')
 
     def __str__(self):
         """Override the string method for the Story object."""
@@ -66,7 +62,12 @@ class Character(models.Model):
     height = models.CharField(max_length=short_length, blank=True, null=True)
     body_type = models.CharField(max_length=short_length, blank=True, null=True)
 
-# Personality types
+    # Personality
+    personality_traits = ArrayField(
+        models.CharField(max_length=tiny_length),
+        blank=True,
+        null=True
+    )
     mbti_personality = models.CharField(choices=mbti_choices, blank=True, null=True)
     enneagram_personality = models.CharField(choices=enneagram_choices, blank=True, null=True)
 

@@ -9,7 +9,7 @@ class StoryForm(forms.ModelForm):
 
     class Meta:
         model = Story
-        fields = ('title', 'description', 'premise', 'genres')
+        fields = ['title', 'description', 'premise', 'genres']
 
     genres = forms.MultipleChoiceField(
         choices=genre_choices,
@@ -78,7 +78,7 @@ class CharacterForm(forms.ModelForm):
 
     class Meta:
         model = Character
-        exclude = ['full_name']
+        exclude = ['full_name', 'story', 'slug']
 
         # Define personality type fields
         mbti_personality = forms.ChoiceField(choices=mbti_choices)
@@ -182,7 +182,6 @@ class SceneCharacterForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         story_slug = kwargs.pop('story_slug', None)
-        print(f"story_slug: {story_slug}")
         super().__init__(*args, **kwargs)
 
         # Pre-populate fields if an instance of the object exists
@@ -195,7 +194,7 @@ class SceneCharacterForm(forms.ModelForm):
 
         # Define the character multiple choice field
         character_choices = [
-            (character, character) for character in Character.objects.filter(story=self.instance.story)
+            (character.full_name, character.full_name) for character in Character.objects.filter(story=self.instance.story)
         ]
 
         characters = forms.MultipleChoiceField(
