@@ -16,6 +16,7 @@ urlpatterns = [
     path('stories/<slug:story_slug>/scenes/<int:scene_order>/delete/', views.delete_scene, name='delete_scene'),
     path('stories/<slug:story_slug>/scenes/<int:scene_order>/up/', views.move_up, name='move_up'),
     path('stories/<slug:story_slug>/scenes/<int:scene_order>/down/', views.move_down, name='move_down'),
+    path('stories/<slug:story_slug>/scenes/<int:scene_order>/add-character/', views.add_scene_character, name='add_scene_character'),
     path('stories/<slug:story_slug>/characters/', views.characters, name='characters'),
     path('stories/<slug:story_slug>/characters/new/', views.create_or_update_character, name='new_character'),
     path('stories/<slug:story_slug>/characters/<slug:character_slug>/', views.character_detail, name='character_detail'),

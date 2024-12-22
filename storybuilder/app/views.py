@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db.models import F
 
-from .forms import StoryForm, SceneForm, CharacterForm, PlotForm, PlotPointForm, WordCountForm, SceneNoteForm
+from .forms import StoryForm, SceneForm, CharacterForm, PlotForm, PlotPointForm, WordCountForm, SceneNoteForm, SceneCharacterForm
 from .models import Story, Scene, Character, Plot, PlotPoint
 from .utils import get_story_by_slug, get_scene, get_character, get_plot, get_plotpoint
 
@@ -259,6 +259,44 @@ def create_or_update_scene(request, story_slug, scene_order=None):
         print("*************** Error while rendering template ***************")
         print(error)
         return render(request, '505.html', context={'error': error})
+
+
+def add_scene_character(request, story_slug: str, scene_order: int):
+    """View function for the form for adding a character to a specific scene."""
+
+    print("**********************")
+    print("Add Scene Character")
+
+    template_name = ''
+    context = {}
+
+    story = get_story_by_slug(story_slug)
+    if not story:
+        return render(request, '404_story_not_found.html', status=404)
+    
+    scene = get_scene(story.id, scene_order)
+    if not scene:
+        return render(request, '404.html', status=404)
+    
+    # Form logic for adding scene characters
+    if request.method == 'POST':
+        form = SceneCharacterForm(request.POST, instance=scene, story_slug=story_slug)
+        if form.is_valid():
+            scene = form.save()
+            return redirect('scene_detail', story_slug=story_slug, scene_order=scene_order)
+    else:
+        form = SceneCharacterForm(instance=scene)
+
+    template_name = 'add_scene_character.html'
+    context = {
+        'story_slug': story_slug,
+        'story_title': story.title,
+        'scene_title': scene.title,
+        'form': form
+    }
+
+    print(f"context: {context}")
+    return render(request=request, template_name=template_name, context=context)
 
 
 def delete_scene(request, story_slug, scene_order):

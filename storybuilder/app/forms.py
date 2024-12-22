@@ -140,7 +140,6 @@ class PlotPointForm(forms.ModelForm):
         exclude = ['plot', 'order']
 
     def __init__(self, *args, **kwargs):
-        story_slug = kwargs.pop('story_slug', None)
         plot_id = kwargs.pop('plot_id', None)
         super().__init__(*args, **kwargs)
 
@@ -149,9 +148,7 @@ class PlotPointForm(forms.ModelForm):
             self.fields['name'].initial = self.instance.name
             self.fields['description'].initial = self.instance.description
 
-            # Define the story and the plot that the object is associated with
-            # if story_slug:
-            #     self.instance.story = Story.objects.get(slug=story_slug)
+            # Define the plot that the object is associated with
             if plot_id:
                 self.instance.plot = Plot.objects.get(pk=plot_id)
 
@@ -174,3 +171,34 @@ class SceneNoteForm(forms.ModelForm):
     class Meta:
         model = Scene
         fields = ['note']
+
+
+class SceneCharacterForm(forms.ModelForm):
+    """Form for adding characters to a specific scene."""
+
+    class Meta:
+        model = Scene
+        fields = ['characters']
+
+    def __init__(self, *args, **kwargs):
+        story_slug = kwargs.pop('story_slug', None)
+        print(f"story_slug: {story_slug}")
+        super().__init__(*args, **kwargs)
+
+        # Pre-populate fields if an instance of the object exists
+        if self.instance:
+            self.fields['characters'].initial = self.instance.characters
+
+            # Define the story that the object is associated with
+            if story_slug:
+                self.instance.story = Story.objects.get(slug=story_slug)
+
+        # Define the character multiple choice field
+        character_choices = [
+            (character, character) for character in Character.objects.filter(story=self.instance.story)
+        ]
+
+        characters = forms.MultipleChoiceField(
+            choices=character_choices,
+            widget=forms.CheckboxSelectMultiple
+        )
