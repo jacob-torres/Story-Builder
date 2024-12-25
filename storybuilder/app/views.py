@@ -39,7 +39,8 @@ def story_detail(request, story_slug):
 
     story = get_story_by_slug(story_slug)
     if not story:
-        return render(request, '404_story_not_found.html', status=404)
+        context = {'model_name': 'Story'}
+        return render(request, '404.html', status=404, context=context)
     
     # Ordered scene list
     scenes = story.scene_set.all().order_by('order')
@@ -47,7 +48,8 @@ def story_detail(request, story_slug):
     # Get story plot
     plot = get_plot(story.id)
     if not plot:
-        return render(request, '404.html', status=404)
+        context = {'model_name': 'Plot'}
+        return render(request, '404.html', status=404, context=context)
 
     # Instantiate word count update form
     if request.method == 'POST':
@@ -80,7 +82,8 @@ def create_or_update_story(request, story_slug=None):
         if story_slug:
             story = get_story_by_slug(story_slug)
             if not story:
-                return render(request, '404_story_not_found.html', status=404)
+                context = {'model_name': 'Story'}
+                return render(request, '404.html', status=404, context=context)
 
             if request.method == 'POST':
                 print(f"Updating Story object {story_slug} ...")
@@ -135,10 +138,10 @@ def delete_story(request, story_slug):
 
     story = get_story_by_slug(story_slug)
     if not story:
-        return render(request, '404_story_not_found.html', status=404)
-    else:
-        story.delete()
+        context = {'model_name': 'Story'}
+        return render(request, '404.html', status=404, context=context)
 
+    story.delete()
     return redirect('stories')
 
 
@@ -152,7 +155,8 @@ def scenes(request, story_slug):
 
     story = get_story_by_slug(story_slug)
     if not story:
-        return render(request, '404_story_not_found.html', status=404)
+        context = {'model_name': 'Story'}
+        return render(request, '404.html', status=404, context=context)
 
     try:
         scenes = Scene.objects.filter(story_id=story.id)
@@ -173,11 +177,13 @@ def scene_detail(request, story_slug, scene_order):
 
     story = get_story_by_slug(story_slug)
     if not story:
-        return render(request, '404_story_not_found.html', status=404)
+        context = {'model_name': 'Story'}
+        return render(request, '404.html', status=404, context=context)
 
     scene = get_scene(story.id, scene_order)
     if not scene:
-        return render(request, '404.html', status=404)
+        context = {'model_name': 'Scene'}
+        return render(request, '404.html', status=404, context=context)
 
     # Add scene note form
     if request.method == 'POST':
@@ -213,14 +219,16 @@ def create_or_update_scene(request, story_slug, scene_order=None):
 
     story = get_story_by_slug(story_slug)
     if not story:
-        return render(request, '404_story_not_found.html', status=404)
+        context = {'model_name': 'Story'}
+        return render(request, '404.html', status=404, context=context)
 
     try:
         # Update scene
         if scene_order:
             scene = get_scene(story.id, scene_order)
             if not scene:
-                return render(request, '404.html', status=404)
+                context = {'model_name': 'Scene'}
+                return render(request, '404.html', status=404, context=context)
 
             if request.method == 'POST':
                 print(f"Updating Scene object {scene_order}")
@@ -272,11 +280,13 @@ def add_scene_character(request, story_slug: str, scene_order: int):
 
     story = get_story_by_slug(story_slug)
     if not story:
-        return render(request, '404_story_not_found.html', status=404)
+        context = {'model_name': 'Story'}
+        return render(request, '404.html', status=404, context=context)
     
     scene = get_scene(story.id, scene_order)
     if not scene:
-        return render(request, '404.html', status=404)
+                context = {'model_name': 'Scene'}
+                return render(request, '404.html', status=404, context=context)
     
     # Form logic for adding scene characters
     if request.method == 'POST':
@@ -307,11 +317,13 @@ def delete_scene(request, story_slug, scene_order):
 
     story = get_story_by_slug(story_slug)
     if not story:
-        return render(request, '404_story_not_found.html', status=404)
+        context = {'model_name': 'Story'}
+        return render(request, '404.html', status=404, context=context)
 
     scene = get_scene(story.id, scene_order)
     if not scene:
-        return render(request, '404.html', status=404)
+                context = {'model_name': 'Scene'}
+                return render(request, '404.html', status=404, context=context)
 
     # Delete scene and update the order of the next scenes
     scene.delete()
@@ -333,7 +345,8 @@ def characters(request, story_slug):
 
     story = get_story_by_slug(story_slug)
     if not story:
-        return render(request, '404_story_not_found.html', status=404)
+        context = {'model_name': 'Story'}
+        return render(request, '404.html', status=404, context=context)
 
     try:
         characters = Character.objects.filter(story_id=story.id)
@@ -351,11 +364,13 @@ def character_detail(request, story_slug, character_slug):
 
     story = get_story_by_slug(story_slug)
     if not story:
-        return render(request, '404_story_not_found.html', status=404)
+        context = {'model_name': 'Story'}
+        return render(request, '404.html', status=404, context=context)
 
     character = get_character(story.id, character_slug)
     if not character:
-        return render(request, '404.html', status=404)
+        context = {'model_name': 'Character'}
+        return render(request, '404.html', status=404, context=context)
 
     context = {'story': story, 'character': character}
     print(f"context: {context}")
@@ -374,7 +389,8 @@ def create_or_update_character(request, story_slug=None, character_slug=None):
 
     story = get_story_by_slug(story_slug)
     if not story:
-        return render(request, '404_story_not_found.html', status=404)
+        context = {'model_name': 'Story'}
+        return render(request, '404.html', status=404, context=context)
 
     try:
         # Update character
@@ -426,11 +442,15 @@ def delete_character(request, story_slug, character_slug):
 
     story = get_story_by_slug(story_slug)
     if not story:
-        return render(request, '404_story_not_found.html', status=404)
+        context = {'model_name': 'Story'}
+        return render(request, '404.html', status=404, context=context)
 
-        character = get_character(story.id, character_slug)
-        character.delete()
+    character = get_character(story.id, character_slug)
+    if not character:
+        context = {'model_name': 'Character'}
+        return render(request, '404.html', status=404, context=context)
 
+    character.delete()
     return redirect('story_detail', story_slug=story_slug)
 
 
@@ -444,12 +464,14 @@ def plot_detail(request, story_slug):
 
     story = get_story_by_slug(story_slug)
     if not story:
-        return render(request, '404_story_not_found.html', status=404)
+        context = {'model_name': 'Story'}
+        return render(request, '404.html', status=404, context=context)
     
     # Get story plot
     plot = get_plot(story.id)
     if not plot:
-        return render(request, '404.html', status=404)
+        context = {'model_name': 'Plot'}
+        return render(request, '404.html', status=404, context=context)
 
     context = {'story_title': story.title, 'plot': plot}
     print(f"context: {context}")
@@ -464,12 +486,14 @@ def update_plot(request, story_slug):
 
     story = get_story_by_slug(story_slug)
     if not story:
-        return render(request, '404_story_not_found.html', status=404)
-    
+        context = {'model_name': 'Story'}
+        return render(request, '404.html', status=404, context=context)
+
     # Get story plot
     plot = get_plot(story.id)
     if not plot:
-        return render(request, '404.html', status=404)
+        context = {'model_name': 'Plot'}
+        return render(request, '404.html', status=404, context=context)
     
     if request.method == 'POST':
         form = PlotForm(request.POST, instance=plot)
@@ -491,11 +515,13 @@ def plotpoint_detail(request, story_slug, plotpoint_order):
 
     story = get_story_by_slug(story_slug)
     if not story:
-        return render(request, '404_story_not_found.html', status=404)
+        context = {'model_name': 'Story'}
+        return render(request, '404.html', status=404, context=context)
 
     plotpoint = get_plotpoint(story_slug, plotpoint_order)
     if not plotpoint:
-        return render(request, '404.html', status=404)
+        context = {'model_name': 'Plot Point'}
+        return render(request, '404.html', status=404, context=context)
     
     context = {
         'story_slug': story.slug,
@@ -514,13 +540,15 @@ def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
 
     story = get_story_by_slug(story_slug)
     if not story:
-        return render(request, '404_story_not_found.html', status=404)
+        context = {'model_name': 'Story'}
+        return render(request, '404.html', status=404, context=context)
 
     # Update plot point
     if plotpoint_order:
         plotpoint = get_plotpoint(story_slug, plotpoint_order)
         if not plotpoint:
-            return render(request, '404.html', status=404)
+            context = {'model_name': 'Plot Point'}
+            return render(request, '404.html', status=404, context=context)
         
         # Form logic
         if request.method == 'POST':
@@ -595,18 +623,21 @@ def delete_plotpoint(request, story_slug, plotpoint_order):
 
     story = get_story_by_slug(story_slug)
     if not story:
-        return render(request, '404_story_not_found.html', status=404)
+        context = {'model_name': 'Story'}
+        return render(request, '404.html', status=404, context=context)
 
     plotpoint = get_plotpoint(story_slug, plotpoint_order)
     if not plotpoint:
-        return render(request, '404.html', status=404)
+        context = {'model_name': 'Plot Point'}
+        return render(request, '404.html', status=404, context=context)
 
-        # Delete plot point and update the order of the next plot points
-        plotpoint.delete()
-        PlotPoint.objects.filter(
-            plot=plot,
-            order__gt=plotpoint_order
-        ).update(order=F('order') - 1)
+    # Delete plot point and update the order of the next plot points
+    plot = plotpoint.plot
+    plotpoint.delete()
+    PlotPoint.objects.filter(
+        plot=plot,
+        order__gt=plotpoint_order
+    ).update(order=F('order') - 1)
 
     return redirect('plot_detail', story_slug=story_slug)
 
@@ -621,14 +652,16 @@ def move_up(request, story_slug, scene_order=None, plotpoint_order=None):
 
     story = get_story_by_slug(story_slug)
     if not story:
-        return render(request, '404_story_not_found.html', status=404)
+        context = {'model_name': 'Story'}
+        return render(request, '404.html', status=404, context=context)
 
     if scene_order:
         print(f"Reordering scene {scene_order}")
 
         scene = get_scene(story.id, scene_order)
         if not scene:
-            return render(request, '404.html', status=404)
+                context = {'model_name': 'Scene'}
+                return render(request, '404.html', status=404, context=context)
         
         prev_scene = Scene.objects.filter(order__lt=scene.order).order_by('-order').first()
         if prev_scene:
@@ -642,7 +675,8 @@ def move_up(request, story_slug, scene_order=None, plotpoint_order=None):
 
         plotpoint = get_plotpoint(story_slug, plotpoint_order)
         if not plotpoint:
-            return render(request, '404.html', status=404)
+            context = {'model_name': 'Plot Point'}
+            return render(request, '404.html', status=404, context=context)
         
         prev_plotpoint = PlotPoint.objects.filter(order__lt=plotpoint.order).order_by('-order').first()
         if prev_plotpoint:
@@ -660,14 +694,16 @@ def move_down(request, story_slug, scene_order=None, plotpoint_order=None):
 
     story = get_story_by_slug(story_slug)
     if not story:
-        return render(request, '404_story_not_found.html', status=404)
+        context = {'model_name': 'Story'}
+        return render(request, '404.html', status=404, context=context)
 
     if scene_order:
         print(f"Reordering scene {scene_order}")
 
         scene = get_scene(story.id, scene_order)
         if not scene:
-            return render(request, '404.html', status=404)
+                context = {'model_name': 'Scene'}
+                return render(request, '404.html', status=404, context=context)
         
         next_scene = Scene.objects.filter(order__gt=scene.order).order_by('order').first()
         if next_scene:
@@ -681,7 +717,8 @@ def move_down(request, story_slug, scene_order=None, plotpoint_order=None):
 
         plotpoint = get_plotpoint(story_slug, plotpoint_order)
         if not plotpoint:
-            return render(request, '404.html', status=404)
+            context = {'model_name': 'Plot Point'}
+            return render(request, '404.html', status=404, context=context)
         
         next_plotpoint = PlotPoint.objects.filter(order__lt=plotpoint.order).order_by('-order').first()
         if next_plotpoint:
