@@ -72,7 +72,7 @@ class Character(models.Model):
     enneagram_personality = models.CharField(choices=enneagram_choices, blank=True, null=True)
 
     # Long character description
-    description = models.TextField(max_length=long_length, null=True)
+    description = models.TextField(max_length=long_length, blank=True, null=True)
 
     # Relationships: 1 story
     story = models.ForeignKey(Story, on_delete=models.CASCADE, default=None)

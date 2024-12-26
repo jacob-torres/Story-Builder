@@ -11,8 +11,9 @@
 
 {% block detail_content %}
 <h1>Character Details for {{ character.full_name }}</h1>
+{% if character.description %}
 <p>{{ character.description }}</p>
-<hr>
+{% endif %}
 
 <h2>Demographics</h2>
 <ul>
