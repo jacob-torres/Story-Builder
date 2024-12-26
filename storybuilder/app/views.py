@@ -332,7 +332,7 @@ def delete_scene(request, story_slug, scene_order):
         order__gt=scene_order
     ).update(order=F('order') - 1)
 
-    return redirect('story_detail', story_slug=story_slug)
+    return redirect('scenes', story_slug=story_slug)
 
 
 ### Character view functions
@@ -451,7 +451,7 @@ def delete_character(request, story_slug, character_slug):
         return render(request, '404.html', status=404, context=context)
 
     character.delete()
-    return redirect('story_detail', story_slug=story_slug)
+    return redirect('characters', story_slug=story_slug)
 
 
 ### Plot View Functions
