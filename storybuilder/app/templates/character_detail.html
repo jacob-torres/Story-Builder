@@ -3,10 +3,9 @@
 
 {% block action_buttons %}
 <div class="action-btn">
-  <button class="action-btn" onclick="window.location.href='update/'">Edit Character Details</button>
-</div>
-<div class="action-btn">
-  <button class="action-btn" onclick="window.location.href='delete/'">Delete Character</button>
+  <button class="action-btn" onclick="return confirmDelete();">
+    <a href="delete/">Delete Character</a>
+  </button>
 </div>
 {% endblock %}
 
