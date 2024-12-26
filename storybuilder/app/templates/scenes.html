@@ -1,26 +1,40 @@
-{% extends 'base.html' %}
-{% block title %}Scenes in {{ story.title }}{% endblock %}
+{% extends 'list_layout.html' %}
+{% block title %}Scenes from {{ story_title }}{% endblock %}
 
-{% block content %}
-<section class="scenes-section">
-    <h1>Scenes in {{ story.title }}</h1>
-    <!-- Loop through the list of stories passed from the new_story view function.-->
-    {% if not scenes %}
-    <p>There are no scenes in this story yet. When you add some, they will be listed here.</p>
+{% block list_content %}
+<h1>Scenes in {{ story_title }}</h1>
 
-    {% else %}
-    <ul id="scenes-list">
+{% if not scenes %}
+<p>You have no scenes yet. When you do, they will be listed here.</p>
+
+{% else %}
+<table class="list-table">
+    <thead>
+        <th>Scene Title</th>
+        <th>Reorder</th>
+        <th>Actions</th>
+    </thead>
+
+    <tbody>
         {% for scene in scenes %}
-        <li>
-            <a href={{ scene.id }}>{{ scene.title }}</a>
-        </li>
+        <tr>
+            <td>
+                <a href={{ scene.order }}>{{ scene.title }}</a>
+            </td>
+            <td>
+                <button onclick="window.location.href='{{ scene.order }}/up/'">Move Up</button>
+                <button onclick="window.location.href='{{ scene.order }}/down/'">Move Down</button>
+            </td>
+            <td>
+                <a href="{{ scene.order }}/update/">Update</a> | <a href="{{ scene.order }}/delete/">Delete</a>
+            </td>
+        </tr>
         {% endfor %}
-    </ul>
-    {% endif %}
-    <hr>
+    </tbody>
+</table>
+{% endif %}
 
-    <div class="big-btn">
-        <button class="big-btn" onclick="window.location.href='new/'">New Scene</button></section>
-    </div>
-</section>
+<div class="big-btn">
+    <button class="big-btn" onclick="window.location.href='new/'">New Scene</button></section>
+</div>
 {% endblock %}

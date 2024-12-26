@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from django.utils.text import slugify
 
 from .constants import genre_choices, mbti_choices, enneagram_choices
 
@@ -14,7 +15,7 @@ class Story(models.Model):
     """The story data structure, with characters, plots, worlds, and scenes."""
 
     # Story details
-    title = models.CharField(max_length=short_length, null=False)
+    title = models.CharField(max_length=short_length, null=False, unique=True)
     description = models.TextField(max_length=long_length, null=True)
     premise = models.CharField(max_length=mid_length, null=True)
 
@@ -28,10 +29,17 @@ class Story(models.Model):
     date_started = models.DateField(auto_now_add=True)
     date_last_saved = models.DateField(auto_now=True)
     date_finished = models.DateField(null=True)
+    slug = models.SlugField(max_length=mid_length, unique=True, blank=True)
 
-    # Relationships: One or more characters, genres,  and scenes
-    characters = models.ManyToManyField('Character', blank=True)
-
+    def __str__(self):
+        """Override the string method for the Story object."""
+        return self.title
+    
+    def save(self, *args, **kwargs):
+        """Override the save method for the story model."""
+        self.slug = slugify(self.title)
+        super(Story, self).save(*args, **kwargs)
+    
 
 class Character(models.Model):
     """Story character."""
@@ -54,12 +62,26 @@ class Character(models.Model):
     height = models.CharField(max_length=short_length, blank=True, null=True)
     body_type = models.CharField(max_length=short_length, blank=True, null=True)
 
-# Personality types
+    # Personality
+    personality_traits = ArrayField(
+        models.CharField(max_length=tiny_length),
+        blank=True,
+        null=True
+    )
     mbti_personality = models.CharField(choices=mbti_choices, blank=True, null=True)
     enneagram_personality = models.CharField(choices=enneagram_choices, blank=True, null=True)
 
     # Long character description
     description = models.TextField(max_length=long_length, null=True)
+
+    # Relationships: 1 story
+    story = models.ForeignKey(Story, on_delete=models.CASCADE, default=None)
+
+    slug = models.SlugField(max_length=mid_length, unique=True, blank=True)
+
+    def __str__(self):
+        """Override string method to display character name."""
+        return self.full_name
 
     def clean(self):
         """Data cleaning method for the Character object."""
@@ -76,17 +98,45 @@ class Character(models.Model):
         else:
             self.full_name = ' '.join(filter(None, names))
 
+    def save(self, *args, **kwargs):
+        """Override the save method for the character model."""
+        self.slug = slugify(self.full_name)
+        super(Character, self).save(*args, **kwargs)
+
 
 class Scene(models.Model):
     """A single unit or building block of a story."""
 
     title = models.CharField(max_length=short_length, null=False)
     description = models.TextField(max_length=long_length, null=True)
+    notes = ArrayField(
+        models.CharField(max_length=long_length),
+        blank=True,
+        default=list
+    )
 
     # Relationships: One story and one possible plot point, one or more characters
     story = models.ForeignKey(Story, on_delete=models.CASCADE, default=None)
-    plot_point = models.ForeignKey('PlotPoint', on_delete=models.SET_DEFAULT, default=None, blank=True, null=True)
+    plotpoint = models.ForeignKey('PlotPoint', on_delete=models.SET_DEFAULT, default=None, blank=True, null=True)
     characters = models.ManyToManyField(Character, blank=True)
+
+    # Order in display list
+    order = models.SmallIntegerField(default=1, blank=True)
+
+    def __str__(self):
+        """Override the string method for the Scene object."""
+        return self.title
+
+    def save(self, *args, **kwargs):
+        """Override the save method for the scene model."""
+
+        if not self.id:
+            prev_scene = Scene.objects.filter(
+                story=self.story
+            ).order_by('-order').first()
+            if prev_scene:
+                self.order = prev_scene.order + 1
+        super().save(*args, **kwargs)
 
 
 class Plot(models.Model):
@@ -94,9 +144,11 @@ class Plot(models.Model):
 
     name = models.CharField(max_length=short_length, null=False)
     description = models.TextField(max_length=long_length, null=True)
+    story = models.OneToOneField(Story, on_delete=models.CASCADE, null=True, default=None, related_name='plot')
 
-    # Relationships: One story
-    story = models.OneToOneField(Story, on_delete=models.CASCADE, default=None, related_name='plot')
+    def __str__(self):
+        """Override the string method for the Plot object."""
+        return self.name
 
 
 class PlotPoint(models.Model):
@@ -108,6 +160,24 @@ class PlotPoint(models.Model):
     # Relationships: One plot
     plot = models.ForeignKey(Plot, on_delete=models.CASCADE, default=None)
 
+    # Order in display list
+    order = models.SmallIntegerField(default=1, blank=True)
+
+    def __str__(self):
+        """Override the string method for the PlotPoint object."""
+        return self.name
+
+    def save(self, *args, **kwargs):
+        """Override the save method for the plot point model."""
+
+        if not self.id:
+            prev_point = PlotPoint.objects.filter(
+                plot=self.plot
+            ).order_by('-order').first()
+            if prev_point:
+                self.order = prev_point.order + 1
+        super().save(*args, **kwargs)
+
 
 class World(models.Model):
     """Worlds and their details."""
@@ -118,3 +188,7 @@ class World(models.Model):
     # Relationships: One or more stories and characters
     stories = models.ManyToManyField(Story, blank=True)
     characters = models.ManyToManyField(Character, blank=True)
+
+    def __str__(self):
+        """Override the string method for the World object."""
+        return self.name

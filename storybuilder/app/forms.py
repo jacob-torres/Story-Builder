@@ -9,7 +9,7 @@ class StoryForm(forms.ModelForm):
 
     class Meta:
         model = Story
-        fields = ('title', 'description', 'genres', 'premise')
+        fields = ['title', 'description', 'premise', 'genres']
 
     genres = forms.MultipleChoiceField(
         choices=genre_choices,
@@ -30,24 +30,25 @@ class StoryForm(forms.ModelForm):
             self.fields['genres'].initial = self.instance.genres
 
     def clean(self):
-        """Data cleaning function for story form."""
+        """Override the clean method for the story form."""
 
         print("**********************************")
         print("Story Form Clean Method")
-        clean_data = super().clean()
+
+        cleaned_data = super().clean()
+        print(f"Data before genre cleaning: {cleaned_data}")
 
         # Process other genre choice
-        if 'genres' in clean_data:
-            genre_choices = list(clean_data['genres'])
-            if 'Other' in genre_choices:
-                if not clean_data['other_choice']:
-                    raise forms.ValidationError('Please specify your other choice.')
-                genre_choices.remove('Other')
-                genre_choices.append(clean_data['other_choice'])
-            clean_data['genres'] = genre_choices
+        genre_choices = list(cleaned_data['genres'])
+        if 'Other' in genre_choices:
+            if not cleaned_data['other_choice']:
+                raise forms.ValidationError('Please specify your other choice.')
+            genre_choices.remove('Other')
+            genre_choices.append(cleaned_data['other_choice'])
+        cleaned_data['genres'] = genre_choices
 
-        print(f"clean_data: {clean_data}")
-        return clean_data
+        print(f"cleaned_data: {cleaned_data}")
+        return cleaned_data
     
 
 class SceneForm(forms.ModelForm):
@@ -55,22 +56,21 @@ class SceneForm(forms.ModelForm):
 
     class Meta:
         model = Scene
-        exclude = ('story',)
+        exclude = ['story', 'notes', 'order']
 
     def __init__(self, *args, **kwargs):
-        story_id = kwargs.pop('story_id', None)
+        story_slug = kwargs.pop('story_slug', None)
+        print(f"story_slug: {story_slug}")
         super().__init__(*args, **kwargs)
-
-        # Define the story that the object is associated with
-        if story_id:
-            self.instance.story = Story.objects.get(pk=story_id)
 
         # Pre-populate fields if an instance of the object exists
         if self.instance:
             self.fields['title'].initial = self.instance.title
             self.fields['description'].initial = self.instance.description
-            self.fields['characters'].initial = self.instance.characters
-            self.fields['plot_point'].initial = self.instance.plot_point
+
+            # Define the story that the object is associated with
+            if story_slug:
+                self.instance.story = Story.objects.get(slug=story_slug)
 
 
 class CharacterForm(forms.ModelForm):
@@ -78,19 +78,19 @@ class CharacterForm(forms.ModelForm):
 
     class Meta:
         model = Character
-        exclude = ('full_name',)
+        exclude = ['full_name', 'story', 'slug']
 
         # Define personality type fields
         mbti_personality = forms.ChoiceField(choices=mbti_choices)
         enneagram_personality = forms.ChoiceField(choices=enneagram_choices)
 
     def __init__(self, *args, **kwargs):
-        story_id = kwargs.pop('story_id', None)
+        story_slug = kwargs.pop('story_slug', None)
         super().__init__(*args, **kwargs)
 
         # Define the story that the object is associated with
-        if story_id:
-            self.instance.story = Story.objects.get(pk=story_id)
+        if story_slug:
+            self.instance.story = Story.objects.get(slug=story_slug)
 
         # Pre-populate fields if an instance of the object exists
         if self.instance:
@@ -112,25 +112,24 @@ class CharacterForm(forms.ModelForm):
 
 
 class PlotForm(forms.ModelForm):
-    """Form for creating a new plot."""
+    """Form for updating a story plot."""
 
     class Meta:
         model = Plot
-        fields = '__all__'
+        exclude = ['story']
 
     def __init__(self, *args, **kwargs):
-        story_id = kwargs.pop('story_id', None)
+        story_slug = kwargs.pop('story_slug', None)
         super().__init__(*args, **kwargs)
-
-        # Define the story that the object is associated with
-        if story_id:
-            self.instance.story = Story.objects.get(pk=story_id)
 
         # Pre-populate fields if an instance of the object exists
         if self.instance:
             self.fields['name'].initial = self.instance.name
             self.fields['description'].initial = self.instance.description
-            self.fields['plot_points'].initial = self.instance.plot_points
+
+            # Define the story that the object is associated with
+            if story_slug:
+                self.instance.story = Story.objects.get(slug=story_slug)
 
 
 class PlotPointForm(forms.ModelForm):
@@ -138,20 +137,67 @@ class PlotPointForm(forms.ModelForm):
 
     class Meta:
         model = PlotPoint
-        fields = '__all__'
+        exclude = ['plot', 'order']
 
     def __init__(self, *args, **kwargs):
-        story_id = kwargs.pop('story_id', None)
         plot_id = kwargs.pop('plot_id', None)
         super().__init__(*args, **kwargs)
-
-        # Define the story and the plot that the object is associated with
-        if story_id:
-            self.instance.story = Story.objects.get(pk=story_id)
-        if plot_id:
-            self.instance.plot = Plot.objects.get(pk=plot_id)
 
         # Pre-populate fields if an instance of the object exists
         if self.instance:
             self.fields['name'].initial = self.instance.name
             self.fields['description'].initial = self.instance.description
+
+            # Define the plot that the object is associated with
+            if plot_id:
+                self.instance.plot = Plot.objects.get(pk=plot_id)
+
+
+class WordCountForm(forms.ModelForm):
+    """Form for updating the story word count."""
+
+    word_count = forms.IntegerField(min_value=0, label='New Word Count')
+
+    class Meta:
+        model = Story
+        fields = ['word_count']
+
+
+class SceneNoteForm(forms.ModelForm):
+    """Form for adding a new note to a scene."""
+
+    note = forms.CharField(max_length=500, label='New Scene Note')
+
+    class Meta:
+        model = Scene
+        fields = ['note']
+
+
+class SceneCharacterForm(forms.ModelForm):
+    """Form for adding characters to a specific scene."""
+
+    class Meta:
+        model = Scene
+        fields = ['characters']
+
+    def __init__(self, *args, **kwargs):
+        story_slug = kwargs.pop('story_slug', None)
+        super().__init__(*args, **kwargs)
+
+        # Pre-populate fields if an instance of the object exists
+        if self.instance:
+            self.fields['characters'].initial = self.instance.characters
+
+            # Define the story that the object is associated with
+            if story_slug:
+                self.instance.story = Story.objects.get(slug=story_slug)
+
+        # Define the character multiple choice field
+        character_choices = [
+            (character.full_name, character.full_name) for character in Character.objects.filter(story=self.instance.story)
+        ]
+
+        characters = forms.MultipleChoiceField(
+            choices=character_choices,
+            widget=forms.CheckboxSelectMultiple
+        )
