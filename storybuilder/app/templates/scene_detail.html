@@ -2,19 +2,16 @@
 {% block title %}{{ scene.title }}, from {{ story_title }}{% endblock %}
 
 {% block action_buttons %}
-<div class="action-container">
-  <div class="action-btn">
-    <button class="action-btn" onclick="window.location.href='update/'">Edit Scene Details</button>
-  </div>
-  <div class="action-btn">
-    <button class="action-btn" onclick="window.location.href='add-character/'">Add Character</button>
-  </div>
-  <div class="action-btn">
-    <button class="action-btn" onclick="toggleSceneNoteForm()">Add Note</button>
-  </div>
-  <div class="action-btn">
-    <button class="action-btn" onclick="window.location.href='delete/'">Delete Scene</button>
-  </div>
+<div class="action-btn">
+  <button class="action-btn" onclick="window.location.href='add-character/'">Add Character</button>
+</div>
+<div class="action-btn">
+  <button class="action-btn" onclick="toggleSceneNoteForm()">Add Note</button>
+</div>
+<div class="action-btn">
+  <button class="action-btn" onclick="return confirmDelete();">
+    <a href="delete/">Delete Scene</a>
+  </button>
 </div>
 {% endblock %}
 

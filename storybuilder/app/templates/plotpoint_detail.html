@@ -1,18 +1,23 @@
 {% extends 'detail_layout.html' %}
-{% block title %}{{ plot_point.name }}, from {{ story_title }}{% endblock %}
+{% block title %}{{ plotpoint.name }}, from {{ story_title }}{% endblock %}
+
+{% block action_buttons %}
+<!-- <div class="action-btn">
+  <button class="action-btn" onclick="window.location.href='characters/new/'">Add Character</button>
+</div> -->
+<div class="action-btn">
+  <button class="action-btn" onclick="return confirmDelete();">
+    <a href="delete/">Delete Plot Point</a>
+  </button>
+</div>
+{% endblock %}
 
 {% block detail_content %}
-<h1>{{ plot_point.name }}</h1>
+<h1>{{ plotpoint.name }}</h1>
 <h2>
-  Plot Point {{ plot_point.order }} in <a href="/stories/{{ story_slug }}/">
+  Plot Point {{ plotpoint.order }} in <a href="/stories/{{ story_slug }}/">
     {{ story_title }}
   </a>
 </h2>
-<p>{{ plot_point.description }}</p>
-{% endblock %}
-
-{% block action_buttons %}
-<div class="action-btn">
-    <button class="action-btn" onclick="window.location.href='characters/new/'">Add Character</button>
-  </div>
+<p>{{ plotpoint.description }}</p>
 {% endblock %}

@@ -3,8 +3,15 @@
 
 {% block content %}
 <section class="action-section" aria-label="actions">
-  {% block action_buttons %}
-  {% endblock %}
+  <div class="action-container">
+    <div class="action-btn">
+      <button class="action-btn">
+        <a href="update/">Edit Details</a>
+      </button>
+    </div>
+    {% block action_buttons %}
+    {% endblock %}
+  </div>
 </section>
 
 <section class="detail-section" aria-label="details">
