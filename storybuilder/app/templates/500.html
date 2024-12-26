@@ -1,0 +1,11 @@
+{% extends 'error_layout.html' %}
+{% block title %}Oops!{% endblock %}
+
+{% block error_message %}
+<h1>Something Went Wrong</h1>
+<p>Sorry, there was an error. Our engineers are looking into the problem and will have this page back up in no time!</p>
+
+<div style="display: none;">
+    <p>{{ error }}</p>
+</div>
+{% endblock %}
