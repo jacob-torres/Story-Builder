@@ -1,0 +1,16 @@
+{% extends 'form_layout.html' %}
+{% block title %}Add a Character to the {{ scene_title }} Scene{% endblock %}
+
+{% block form_heading %}
+<h1>Add a Character to the {{ scene_title }} Scene in {{ story_title }}</h1>
+{% endblock %}
+
+{% block submit_button %}
+<button type="submit">Add</button>
+
+<p>
+    To create a new character,
+    <a href="/stories/{{ story_slug }}/characters/new/">click here</a>,
+    then add them to this scene.
+</p>
+{% endblock %}

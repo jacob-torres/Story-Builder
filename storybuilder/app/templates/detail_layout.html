@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}{% endblock %}
+
+{% block content %}
+<section class="action-section" aria-label="actions">
+  <div class="action-container">
+    <div class="action-btn">
+      <button class="action-btn">
+        <a href="update/">Edit Details</a>
+      </button>
+    </div>
+    {% block action_buttons %}
+    {% endblock %}
+  </div>
+</section>
+
+<section class="detail-section" aria-label="details">
+  {% block detail_content %}{% endblock %}
+</section>
+
+<section class="list-content">
+  {% block list_content %}{% endblock %}
+</section>
+<hr>
+{% endblock %}

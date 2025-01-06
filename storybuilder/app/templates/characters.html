@@ -1,0 +1,23 @@
+{% extends 'list_layout.html' %}
+{% block title %}Characters in {{ story_title }}{% endblock %}
+
+{% block list_content %}
+<h1>Characters in {{ story_title }}</h1>
+
+{% if not characters %}
+<p>There are no characters in this story yet. When you add some, they will be listed here.</p>
+
+{% else %}
+<ul>
+    {% for character in characters %}
+    <li>
+        <a href={{ character.slug }}>{{ character }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<div class="big-btn">
+    <button class="big-btn" onclick="window.location.href='new/'">New Character</button>
+</div>
+{% endblock %}

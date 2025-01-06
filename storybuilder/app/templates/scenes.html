@@ -1,0 +1,40 @@
+{% extends 'list_layout.html' %}
+{% block title %}Scenes from {{ story_title }}{% endblock %}
+
+{% block list_content %}
+<h1>Scenes in {{ story_title }}</h1>
+
+{% if not scenes %}
+<p>You have no scenes yet. When you do, they will be listed here.</p>
+
+{% else %}
+<table class="list-table">
+    <thead>
+        <th>Scene Title</th>
+        <th>Reorder</th>
+        <th>Actions</th>
+    </thead>
+
+    <tbody>
+        {% for scene in scenes %}
+        <tr>
+            <td>
+                <a href={{ scene.order }}>{{ scene.title }}</a>
+            </td>
+            <td>
+                <button onclick="window.location.href='{{ scene.order }}/up/'">Move Up</button>
+                <button onclick="window.location.href='{{ scene.order }}/down/'">Move Down</button>
+            </td>
+            <td>
+                <a href="{{ scene.order }}/update/">Update</a> | <a href="{{ scene.order }}/delete/">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+<div class="big-btn">
+    <button class="big-btn" onclick="window.location.href='new/'">New Scene</button></section>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'list_layout.html' %}
+{% block title %}Stories{% endblock %}
+
+{% block list_content %}
+<h1>Your Stories</h1>
+
+{% if not stories %}
+<p>You have no stories yet. When you do, they will be listed here.</p>
+
+{% else %}
+<table class="list-table">
+    <tr>
+        <th>Story Title</th>
+        <th>Actions</th>
+    </tr>
+    {% for story in stories %}
+    <tr>
+        <td>
+            <a href={{ story.slug }}>{{ story.title }}</a>
+        </td>
+        <td>
+            <a class="action-lnk" href="{{ story.slug}}/update/">Update</a> | <a class="action-lnk" href="{{ story.slug}}/delete/">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+<div class="big-btn">
+    <button class="big-btn" onclick="window.location.href='new/'">New Story</button>
+</div>
+{% endblock %}

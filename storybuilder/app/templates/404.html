@@ -1,0 +1,7 @@
+{% extends 'error_layout.html' %}
+{% block title %}{{ model_name }} Not Found{% endblock %}
+
+{% block error_message %}
+<h1>{{ model_name }} Not Found</h1>
+<p>Sorry, but the {{ model_name.lower }} you're looking for wasn't found.</p>
+{% endblock %}

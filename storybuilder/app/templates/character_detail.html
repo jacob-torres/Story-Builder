@@ -1,0 +1,50 @@
+{% extends 'detail_layout.html' %}
+{% block title %}{{ character.full_name }}, from {{ story.title }}{% endblock %}
+
+{% block action_buttons %}
+<div class="action-btn">
+  <button class="action-btn" onclick="return confirmDelete();">
+    <a href="delete/">Delete Character</a>
+  </button>
+</div>
+{% endblock %}
+
+{% block detail_content %}
+<h1>Character Details for {{ character.full_name }}</h1>
+{% if character.description %}
+<p>{{ character.description }}</p>
+{% endif %}
+
+<h2>Demographics</h2>
+<ul>
+  <li>Name: {{ character.full_name }}</li>
+  <li>Gender: {{ character.gender }}</li>
+  <li>Age: {{ character.age }}</li>
+  <li>Ethnicity: {{ character.ethnicity }}</li>
+  <li>Occupation: {{ character.occupation }}</li>
+  <li>Location: {{ character.location }}</li>
+</ul>
+
+<h2>Physical Traits</h2>
+<ul>
+  <li>Hair Color: {{ character.hair_color }}</li>
+  <li>Eye Color: {{ character.eye_color }}</li>
+  <li>Height: {{ character.height }}</li>
+  <li>Body Type: {{ character.body_type }}</li>
+</ul>
+
+<h2>Personality</h2>
+<ul>
+  {% if character.mbti_personality %}
+  <li>MBTI Type {{ character.mbti_personality }}</li>
+  {% endif %}
+
+  {% if character.enneagram_personality %}
+  <li>Enneagram Type {{ character.enneagram_personality }}</li>
+  {% endif %}
+
+  {% for trait in character.personality_traits %}
+  <li>{{ trait }}</li>
+  {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'detail_layout.html' %}
+{% block title %}{{ plot.name }}{% endblock %}
+
+{% block action_buttons %}
+<div class="action-btn">
+  <button class="action-btn" onclick="window.location.href='new-plot-point/'">Add Plot Point</button>
+</div>
+{% endblock %}
+
+{% block detail_content %}
+<h1>{{ plot.name }}</h1>
+<p>{{ plot.description }}</p>
+{% endblock %}
+
+{% block list_content %}
+<h2>Plot Points</h2>
+
+{% if not plot.plotpoint_set.count %}
+<p>There are no plot points in this story yet. When you add some, they will be listed here.</p>
+
+{% else %}
+<table>
+  <thead>
+    <th>Name</th>
+    <th>Reorder</th>
+    <th>Actions</th>
+  </thead>
+
+  <tbody>
+    {% for plotpoint in plot.plotpoint_set.all %}
+    <tr>
+      <td>
+        <a href="plot/point{{ plotpoint.order }}/">{{ plotpoint.name }}</a>
+      </td>
+      <td>
+        <button onclick="window.location.href='plot/point{{ plotpoint.order }}/up/'">Move Up</button>
+        <button onclick="window.location.href='plot/point{{ plotpoint.order }}/down/'">Move Down</button>
+      </td>
+      <td>
+        <a href="plot/point{{ plotpoint.order }}/update/">Edit</a> | <a href="plot/point{{ plotpoint.order }}/delete/">Delete</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+<div class="big-btn">
+  <button class="big-btn" onclick="window.location.href='new/'">New Plot Point</button>
+</div>
+{% endblock %}

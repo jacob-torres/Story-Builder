@@ -1,0 +1,54 @@
+{% extends 'detail_layout.html' %}
+{% block title %}{{ scene.title }}, from {{ story_title }}{% endblock %}
+
+{% block action_buttons %}
+<div class="action-btn">
+  <button class="action-btn" onclick="window.location.href='add-character/'">Add Character</button>
+</div>
+<div class="action-btn">
+  <button class="action-btn" onclick="toggleSceneNoteForm()">Add Note</button>
+</div>
+<div class="action-btn">
+  <button class="action-btn" onclick="return confirmDelete();">
+    <a href="delete/">Delete Scene</a>
+  </button>
+</div>
+{% endblock %}
+
+{% block detail_content %}
+<form id="scene-note-form" style="display: none;" method="post">
+  <h2>Add a Note</h2>
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Add</button>
+  <button type="button" onclick="toggleSceneNoteForm()">Cancel</button>
+</form>
+
+<div class="scene-section">
+  <h1>{{ scene.title }}</h1>
+  <h2>Scene {{ scene.order }} in <a href="/stories/{{ story_slug }}">{{ story_title }}</a></h2>
+  <p>{{ scene.description }}</p>
+</div>
+
+{% if scene.characters.count %}
+<div>
+  <h2>Characters in this Scene</h2>
+  <ul>
+    {% for character in scene.characters.all %}
+    <li>
+      <a href="/stories/{{ story_slug }}/characters/{{ character.slug }}/">{{ character }}</a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+{% if scene.notes %}
+<h2>Notes</h2>
+<ul>
+  {% for note in scene.notes %}
+  <li>{{ note }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

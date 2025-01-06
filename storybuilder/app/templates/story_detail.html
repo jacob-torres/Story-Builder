@@ -1,0 +1,168 @@
+{% extends 'detail_layout.html' %}
+{% block title %}{{ story.title }}{% endblock %}
+
+{% block action_buttons %}
+<div class="action-btn">
+  <button class="action-btn" onclick="toggleWordCountForm()">Update Word Count</button>
+</div>
+<div class="action-btn">
+  <button class="action-btn" onclick="return confirmDelete();">
+    <a href="delete/">Delete Story</a>
+  </button>
+</div>
+{% endblock %}
+
+{% block detail_content %}
+<form id="word-count-form" style="display: none;" method="post">
+  <h2>Update Word Count</h2>
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Update</button>
+  <button type="button" onclick="toggleWordCountForm()">Cancel</button>
+</form>
+
+<h1>Story Details</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Start Date</th>
+      <th>Word Count</th>
+      <th>Scenes</th>
+      <th>Characters</th>
+      <th>Plot Points</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>{{ story.title }}</td>
+      <td>{{ story.date_started }}</td>
+      <td><a href="#word-count-form" id="word-count-link">{{ story.word_count }}</a></td>
+      <td><a class="view-link" href="scenes/">{{ story.scene_set.count }}</a></td>
+        <td><a class="view-link" href="characters/">{{ story.character_set.count }}</a></td>
+        <td><a class="view-link" href="plot/">{{ story.plot.plotpoint_set.count }}</a></td>
+    </tr>
+  </tbody>
+</table>
+
+{% if story.premise %}
+<h2>Premise</h2>
+<p>{{ story.premise }}</p>
+{% endif %}
+<h2>Description</h2>
+<p>{{ story.description }}</p>
+{% if story.genres %}
+<h2>Genres</h2>
+<ul>
+  {% for genre in story.genres %}
+  <li>{{ genre }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<!-- <nav class="tab-container">
+  <h3 class="view-tab"><a href="#scenes">Scene View</a></h3>
+  <h3 class="view-tab"><a href="#characters">Character View</a></h3>
+  <h3 class="view-tab"><a href="#plot">Plot View</a></h3>
+</nav> -->
+
+<!-- <div class="content-view" id="scenes">
+  <h2>Scene View</h2>
+  {% if not story.scene_set.count %}
+  <p>There are no scenes in this story yet. When you add some, they will be listed here.</p>
+
+  {% else %}
+  <table id="scene-table">
+    <thead>
+      <th>Title</th>
+      <th>Reorder</th>
+      <th>Actions</th>
+    </thead>
+
+    <tbody>
+      {% for scene in scenes %}
+      <tr>
+        <td>
+          <a href="scene{{ scene.order }}">{{ scene.title }}</a>
+        </td>
+        <td>
+          <button onclick="window.location.href='scene{{ scene.order }}/up/'">Move Up</button>
+          <button onclick="window.location.href='scene{{ scene.order }}/down/'">Move Down</button>
+        </td>
+        <td>
+          <a href="scene{{ scene.order }}/update/">Update</a> | <a href="scene{{ scene.order }}/delete/">Delete</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  <div class="big-btn">
+    <button class="big-btn" onclick="window.location.href='new-scene/'">Add Scene</button>
+  </div>
+</div>
+
+<div class="content-view" id="characters" style="display: none;">
+  <h2>Character View</h2>
+  {% if story.character_set.count == 0 %}
+  <p>There are no characters in this story yet. When you add some, they will be listed here.</p>
+
+  {% else %}
+  <ul>
+      {% for character in story.character_set.all %}
+      <li>
+          <a href={{ character.slug }}>{{ character.full_name }}</a>
+      </li>
+      {% endfor %}
+  </ul>
+  {% endif %}
+
+  <div class="action-btn">
+    <button class="action-btn" onclick="window.location.href='new-character/'">Add Character</button>
+  </div>
+</div>
+
+<div class="content-view" id="plot" style="display: none;">
+  <h2>{{ plot.name }}</h2>
+  <p>{{ plot.description }}</p>
+
+  {% if plot.plotpoint_set.count %}
+  <table>
+    <thead>
+      <th>Name</th>
+      <th>Reorder</th>
+      <th>Actions</th>
+    </thead>
+
+    <tbody>
+      {% for plot_point in plot.plotpoint_set.all %}
+      <tr>
+        <td>
+          <a href="plot/point{{ plot_point.order }}/">{{ plot_point.name }}</a>
+        </td>
+        <td>
+          <button onclick="window.location.href='plot/point{{ plot_point.order }}/up/'">Move Up</button>
+          <button onclick="window.location.href='plot/point{{ plot_point.order }}/down/'">Move Down</button>
+        </td>
+        <td>
+          <a href="plot/point{{ plot_point.order }}/update/">Edit</a> | <a href="plot/point{{ plot_point.order }}/delete/">Delete</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+  <div class="action-container">
+    <div class="action-btn">
+      <button class="action-btn" onclick="window.location.href='plot/update/'">Edit Plot Details</button>
+    </div>
+    <div class="action-btn">
+      <button class="action-btn" onclick="window.location.href='plot/new-plot-point/'">Add Plot Point</button>
+    </div>
+    </div>
+</div>
+-->
+
+{% endblock %}
