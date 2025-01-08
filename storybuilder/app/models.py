@@ -2,9 +2,11 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.utils.text import slugify
 
+from accounts.models import CustomUser
+
 from .constants import genre_choices, mbti_choices, enneagram_choices
 
-# Create your models here.
+# Length constants
 tiny_length = 30
 short_length = 100
 mid_length = 250
@@ -30,6 +32,7 @@ class Story(models.Model):
     date_last_saved = models.DateField(auto_now=True)
     date_finished = models.DateField(null=True)
     slug = models.SlugField(max_length=mid_length, unique=True, blank=True)
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None, related_name='stories')
 
     def __str__(self):
         """Override the string method for the Story object."""
