@@ -16,6 +16,21 @@ class CustomUser(AbstractUser):
     first_name = models.CharField(max_length=short_length, default=None)
     last_name = models.CharField(max_length=short_length, default=None)
 
+    # Add related_name args for groups and permissions fields to avoid conflicts
+    groups = models.ManyToManyField(
+        'auth.Group',
+        verbose_name='groups',
+        help_text='The groups this user belongs to.',
+        related_name='custom_user_set'
+    )
+
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        verbose_name='user permissions',
+        help_text='Specific permissions for this user.',
+        related_name='custom_user_set'
+    )
+
 
 class UserProfile(models.Model):
     """User profile model for each custom user object."""
