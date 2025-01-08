@@ -42,6 +42,7 @@ def login_view(request):
 
     return render(request, 'accounts/login.html', {'form': form})
 
+
 def logout_view(request):
     """View function for logging out an existing user."""
 
@@ -62,10 +63,11 @@ def profile(request):
         if request.method == 'POST':
             form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
             if form.is_valid():
-                form.save()
+                user_profile = form.save()
                 messages.success(request, 'Profile updated successfully!')
+                return redirect('profile')
         else:
             form = UserProfileForm(instance=user_profile)
-        return render(request, 'accounts/profile.html', {'form': form})
+        return render(request, 'accounts/update_profile.html', {'form': form})
     else:
         return redirect('login')
