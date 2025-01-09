@@ -2,6 +2,25 @@
 
 {% block title %}Home{% endblock %}
 
+{% block nav_links %}
+{% if not user %}
+<li>
+    <a href="login/">Login</a>
+</li>
+<li>
+    <a href="register/">Register</a>
+</li>
+
+{% else %}
+<li>
+    <a href="stories/">Stories</a>
+</li>
+<li>
+    <a href="logout/">Logout</a>
+</li>
+{% endif %}
+{% endblock %}
+
 {% block content %}
 <section class="top-section">
 <h1>Welcome to The Story Builder</h1>

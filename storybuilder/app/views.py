@@ -8,8 +8,18 @@ from .utils import get_story_by_slug, get_scene, get_character, get_plot, get_pl
 
 # Create your views here.
 def home(request):
-    """Home page."""
-    return render(request, 'home.html')
+    """View function for rendering the home page."""
+
+    print("*****************************")
+    print("Home Page")
+
+    if request.user.is_authenticated:
+        print(f"User logged in: {request.user}")
+        context = {'user': request.user} 
+    else:
+        print("No user logged in")
+        context = {'user': None}
+    return render(request, 'home.html', context=context)
 
 
 ### Story view functions
