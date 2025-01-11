@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
+
 from .models import CustomUser, UserProfile
 
 
@@ -27,7 +29,7 @@ class UserRegistrationForm(forms.ModelForm):
         return password2
 
 
-class UserLoginForm(forms.ModelForm):
+class UserLoginForm(AuthenticationForm):
     """Form for logging in an existing user."""
 
     class Meta:
