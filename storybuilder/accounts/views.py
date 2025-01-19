@@ -14,9 +14,7 @@ def register(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])
-            user.save()
+            user = form.save()
             messages.success(request, 'Registration successful!')
             print("New user created successfully!")
             print(user)
@@ -41,8 +39,6 @@ def login_view(request):
             print("Form is valid")
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            # username = request.POST['username']
-            # password = request.POST['password']
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
@@ -54,8 +50,6 @@ def login_view(request):
                 messages.error(request, 'Invalid username or password')
                 print("Login was unsuccessful")
                 print(user)
-        else:
-            print("Form is not valid")
     else:
         form = UserLoginForm()
 
