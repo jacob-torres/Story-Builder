@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib import messages
+
 from .forms import UserRegistrationForm, UserLoginForm, UserProfileForm
 from .models import CustomUser, UserProfile
 
@@ -34,9 +36,7 @@ def login_view(request):
 
     if request.method == 'POST':
         form = UserLoginForm(request=request, data=request.POST)
-        print(request.POST)
         if form.is_valid():
-            print("Form is valid")
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = authenticate(request, username=username, password=password)
