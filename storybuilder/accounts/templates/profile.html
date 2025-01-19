@@ -2,6 +2,10 @@
 {% block title %}User Profile{% endblock %}
 
 {% block content %}
-<h1>User Profile</h1>
+<h1>User Profile for {{ user.username }}</h1>
 <p>User profile details will be rendered here.</p>
+
+<div class="big-btn">
+    <button class="big-btn" onclick="window.location.href='update/'">Update Profile</button>
+</div>
 {% endblock %}

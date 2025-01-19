@@ -2,4 +2,10 @@
 {% block title %}Register{% endblock %}
 
 {% block form_heading %}<h1>Register</h1>{% endblock %}
-{% block submit_button %}<button type="submit">Register</button>{% endblock %}
+{% block submit_button %}
+<button type="submit">Register</button>
+
+<p>
+    Already have an account? <a href="/accounts/login/">Click here to login!</a>
+</p>
+{% endblock %}
