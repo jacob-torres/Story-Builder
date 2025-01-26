@@ -2,10 +2,33 @@
 {% block title %}User Profile{% endblock %}
 
 {% block content %}
+{% if user.image %}
+<div>
+    {{ user.image }}
+</div>
+{% endif %}
+
 <h1>User Profile for {{ user.username }}</h1>
-<p>User profile details will be rendered here.</p>
+<ul>
+    <li>
+        Name: {{ user.full_name }}
+    </li>
+    <li>
+        Stories: <a href="/stories/">{{ user.stories.count }}</a>
+    </li>
+
+    {% if user.website %}
+    <li>
+        Website: <a href={{ user.website }}></a>
+    </li>
+    {% endif %}
+</ul>
+
+{% if user.bio %}
+<p>{{ user.bio }}</p>
+{% endif %}
 
 <div class="big-btn">
-    <button class="big-btn" onclick="window.location.href='update/'">Update Profile</button>
+    <button class="big-btn" onclick="window.location.href='update/'">Update Profile Details</button>
 </div>
 {% endblock %}
