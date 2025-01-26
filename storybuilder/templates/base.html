@@ -20,24 +20,24 @@
                 <li>
                     <a href="/">Home</a>
                 </li>
+
                 {% if not user %}
                 <li>
-                    <a href="accounts/login/">Login</a>
+                    <a href="/accounts/login/">Login</a>
                 </li>
                 <li>
-                    <a href="accounts/register/">Register</a>
+                    <a href="/accounts/register/">Register</a>
                 </li>
                 
                 {% else %}
-                <li>{{ user.username }}</li>
                 <li>
-                    <a href="stories/">Stories</a>
+                    <a href="/stories/">Stories</a>
                 </li>
                 <li>
-                    <a href="accounts/profile">Profile</a>
+                    <a href="/accounts/profile">Profile</a>
                 </li>
                 <li>
-                    <a href="accounts/logout/">Logout</a>
+                    <a href="/accounts/logout/">Logout</a>
                 </li>
                 {% endif %}
             </ul>

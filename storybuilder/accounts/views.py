@@ -12,6 +12,14 @@ def register(request):
     print("*************************")
     print("Register New User")
 
+    if request.user.is_authenticated:
+        print(f"User logged in: {request.user}")
+        return redirect('home')
+    else:
+        print("No user logged in")
+        # context = {'user': None}
+        # return render(request, 'login.html', context=context)
+
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
@@ -23,7 +31,10 @@ def register(request):
     else:
         form = UserRegistrationForm()
 
-    context = {'form': form}
+    context = {
+        'user': None,
+        'form': form
+    }
     return render(request, 'register.html', context=context)
 
 
@@ -32,6 +43,14 @@ def login_view(request):
 
     print("********************************")
     print("Login Existing User")
+
+    if request.user.is_authenticated:
+        print(f"User logged in: {request.user}")
+        return redirect('home')
+    else:
+        print("No user logged in")
+        # context = {'user': None}
+        # return render(request, 'login.html', context=context)
 
     if request.method == 'POST':
         form = UserLoginForm(request=request, data=request.POST)
@@ -52,7 +71,10 @@ def login_view(request):
     else:
         form = UserLoginForm()
 
-    context = {'form': form}
+    context = {
+        'user': None,
+        'form': form
+    }
     return render(request, 'login.html', context=context)
 
 

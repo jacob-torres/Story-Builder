@@ -140,11 +140,11 @@ def create_or_update_story(request, story_slug=None):
                 'story_title': story.title
             }
 
-        # Create story when no story ID is passed
+        # Create story when no story slug is passed
         else:
             if request.method == 'POST':
                 print("Creating a new Story object ...")
-                form = StoryForm(request.POST)
+                form = StoryForm(request.POST, username=request.user.username)
                 if form.is_valid():
                     new_story = form.save()
                     new_plot = Plot.objects.create(
