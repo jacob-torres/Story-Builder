@@ -1,5 +1,7 @@
 from django import forms
 
+from accounts.models import CustomUser
+
 from .models import Story, Scene, Character, Plot, PlotPoint
 from .constants import genre_choices, mbti_choices, enneagram_choices
 
@@ -20,6 +22,7 @@ class StoryForm(forms.ModelForm):
     premise = forms.CharField(required=False)
 
     def __init__(self, *args, **kwargs):
+        username = kwargs.pop('username', None)
         super().__init__(*args, **kwargs)
 
         # Pre-populate fields if an instance of the object exists
@@ -28,6 +31,10 @@ class StoryForm(forms.ModelForm):
             self.fields['description'].initial = self.instance.description
             self.fields['premise'].initial = self.instance.premise
             self.fields['genres'].initial = self.instance.genres
+
+            # Define the story that the object is associated with
+            if username:
+                self.instance.author = CustomUser.objects.get(username=username)
 
     def clean(self):
         """Override the clean method for the story form."""

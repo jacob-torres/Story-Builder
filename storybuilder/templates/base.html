@@ -20,8 +20,26 @@
                 <li>
                     <a href="/">Home</a>
                 </li>
-                {% block nav_links %}
-                {% endblock %}
+
+                {% if not user %}
+                <li>
+                    <a href="/accounts/login/">Login</a>
+                </li>
+                <li>
+                    <a href="/accounts/register/">Register</a>
+                </li>
+                
+                {% else %}
+                <li>
+                    <a href="/stories/">Stories</a>
+                </li>
+                <li>
+                    <a href="/accounts/profile">Profile</a>
+                </li>
+                <li>
+                    <a href="/accounts/logout/">Logout</a>
+                </li>
+                {% endif %}
             </ul>
         </nav>
     </section>
