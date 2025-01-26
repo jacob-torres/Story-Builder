@@ -14,7 +14,9 @@ class CustomUser(AbstractUser):
 
     email = models.EmailField(unique=True, default=None)
     first_name = models.CharField(max_length=short_length, default=None)
+    middle_name = models.CharField(max_length=short_length, blank=True, null=True)
     last_name = models.CharField(max_length=short_length, default=None)
+    full_name = models.CharField(max_length=long_length, null=True)
 
     # Add related_name args for groups and permissions fields to avoid conflicts
     groups = models.ManyToManyField(
@@ -30,6 +32,22 @@ class CustomUser(AbstractUser):
         help_text='Specific permissions for this user.',
         related_name='custom_user_set'
     )
+
+    def __str__(self):
+        """Override string method to display user full name."""
+        return self.full_name
+
+    def clean(self):
+        """Data cleaning method for the custom user object."""
+        super().clean()
+
+        # Construct full name
+        names = [self.first_name, self.middle_name, self.last_name]
+        for name in names:
+            if not name:
+                names.remove(name)
+
+        self.full_name = ' '.join(filter(None, names))
 
 
 class UserProfile(models.Model):

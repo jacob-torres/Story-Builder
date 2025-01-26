@@ -14,11 +14,13 @@
     {% else %}
     <h1>Welcome back, {{ user.first_name }}!</h1>
     <p>
-        You have <a href="stories/">{{ user.stories.count }}</a> stories.
+        Stories: <a href="stories/">{{ user.stories.count }}</a>
     </p>
-    <div class="big-btn">
-        <button class="big-btn" onclick="window.location.href='stories/new/'">Create a New Story</button>
-    </div>
+    <p>
+        <div class="big-btn">
+            <button class="big-btn" onclick="window.location.href='stories/new/'">New Story</button>
+        </div>
+    </p>
     {% endif %}
     </section>
     <hr>

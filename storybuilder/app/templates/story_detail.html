@@ -26,6 +26,7 @@
   <thead>
     <tr>
       <th>Title</th>
+      <th>Author</th>
       <th>Start Date</th>
       <th>Word Count</th>
       <th>Scenes</th>
@@ -37,6 +38,7 @@
   <tbody>
     <tr>
       <td>{{ story.title }}</td>
+      <td>{{ story.author }}</td>
       <td>{{ story.date_started }}</td>
       <td><a href="#word-count-form" id="word-count-link">{{ story.word_count }}</a></td>
       <td><a class="view-link" href="scenes/">{{ story.scene_set.count }}</a></td>
