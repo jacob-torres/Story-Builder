@@ -38,7 +38,7 @@ def stories(request):
         return render(request, 'login.html', context=context)
 
     try:
-        stories = Story.objects.all()
+        stories = Story.objects.filter(author_id=request.user.id)
         context = {
             'user': request.user,
             'stories': stories
