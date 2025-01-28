@@ -1,0 +1,92 @@
+/* Define color variables  */
+:root {
+  --primary-color: #000080;  /* Navy Blue */
+  --accent-color: #FFFAA0;  /* Pastel Yellow */
+  --background-color: #f8f8f8;  /* Light Gray */
+  --dark-text-color: #333;  /* Dark Gray */
+  --light-text-color: #fff;  /* White */
+}
+
+
+/* HTML and body */
+html, body {
+  font-family: Arial, sans-serif;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--dark-text-color);
+  padding: 1.25rem;
+}
+
+/* Banner */
+section.banner {
+  background-color: var(--accent-color);
+  margin: 0 auto;
+  padding: 1rem;
+  border: hidden;
+}
+
+header {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Link Styles */
+a:hover {
+  background-color: var(--background-color);
+  color: var(--primary-color);
+  text-decoration: underline; /* Add underline on hover */
+}
+
+/* Button Styles */
+button {
+  background-color: var(--accent-color);
+  color: var(--dark-text-color);
+  text-align: center;
+  text-decoration: none;
+  font-size: 1.2rem;
+  border: 2px solid var(--primary-color);
+  border-radius: 22%;
+}
+
+/* Navigation bar */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+nav ul {
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  margin-right: 1.25rem;
+}
+
+nav li a {
+  text-align: center;
+  text-decoration: none;
+  padding: 0.75rem 1rem;
+}
+
+/* Footer */
+footer {
+  background-color: #F0E68C;  /* Light Yellow */
+}
+
+
+/* Button Container Styles */
+div.big-btn {
+  display: block;
+  padding: 0.5rem;
+  margin: 0 auto;
+}

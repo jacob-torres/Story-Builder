@@ -9,7 +9,10 @@
     <meta name="author" content="Jacob A. Torres">
 
     <title>{% block title %}{% endblock %} | The Story Builder</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/story_styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/account_styles.css' %}">
 </head>
 
 <body>
@@ -53,7 +56,6 @@
         <p>Copyright © 2024 <a href="https://jacobtorres.net/">Jacob A. Torres</a></p>
         </footer>
 
-        <script src="{% static 'js/switch-content-views.js' %}"></script>
         <script src="{% static 'js/update-word-count.js' %}"></script>
         <script src="{% static 'js/add-scene-note.js' %}"></script>
         <script src="{% static 'js/confirm-delete.js' %}"></script>

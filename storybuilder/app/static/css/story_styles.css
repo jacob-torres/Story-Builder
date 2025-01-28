@@ -1,0 +1,48 @@
+/* Story Styles */
+
+
+/* Stories Page */
+ul#stories-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+  
+ul#stories-list li {
+    list-style-type: none;
+    margin: 0.5rem;
+    border: 2px solid #333;
+}
+  
+ul#stories-list li a:hover {
+    background-color: var(--primary-color);
+}
+  
+  
+/* Story detail page */
+div.action-container {
+    width: 98%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  
+  div.action-btn {
+    flex: 1;
+  }
+  
+  table {
+    border-collapse: collapse;
+    width: 100%;
+}
+  
+th, td {
+    border: 1px solid var(--primary-color);
+    padding: 0.5rem;
+    text-align: left;
+}
+  
+th {
+    font-size: 1.2rem;
+    font-weight: bold;
+}

@@ -1,0 +1,49 @@
+/* Home Page */
+main {
+    background-color: var(--background-color);
+}
+
+section.top-section {
+    background-color: var(--primary-color);
+    color: var(--light-text-color);
+    padding: 1rem;
+}
+  
+section.top-section h1 {
+    font-size: 1.75rem;
+    margin-bottom: 1.25rem;
+}
+
+section.top-section a:hover {
+    background-color: var(--dark-text-color);
+}
+
+/* Intro section with 2 columns */
+section.intro-section {
+    display: flex;
+    justify-content: space-around;
+}
+
+div.home-container {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+div.home-column {
+    border: 1px solid #333;
+    padding: 1.25rem;
+}
+
+div#home-left-column {
+    flex: 0 0 60%; /* Fixed width of 60% */
+}
+
+div#home-right-column {
+    flex: 1; /* Remaining space */
+}
+
+/* Contribution Aside */
+aside#contribution-aside {
+    background-color: var(--accent-color);
+    color: var(--dark-text-color);
+  }
