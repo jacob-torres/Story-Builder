@@ -54,6 +54,6 @@ class UserProfile(models.Model):
     """User profile model for each custom user object."""
 
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, default=None, related_name='profile')
-    bio = models.TextField(blank=True, default=None)
-    website = models.URLField(blank=True, default=None)
+    bio = models.TextField(blank=True, default=None, null=True)
+    website = models.URLField(blank=True, default=None, null=True)
     image = models.ImageField(upload_to='profile_pics', blank=True, null=True)

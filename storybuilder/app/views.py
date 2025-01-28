@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db.models import F
 
+from accounts.forms import UserLoginForm
+
 from .forms import StoryForm, SceneForm, CharacterForm, PlotForm, PlotPointForm, WordCountForm, SceneNoteForm, SceneCharacterForm
 from .models import Story, Scene, Character, Plot, PlotPoint
 from .utils import get_story_by_slug, get_scene, get_character, get_plot, get_plotpoint
@@ -34,7 +36,10 @@ def stories(request):
         print(f"User logged in: {request.user}")
     else:
         print("No user logged in")
-        context = {'user': None}
+        context = {
+            'user': None,
+            'form': UserLoginForm()
+        }
         return render(request, 'login.html', context=context)
 
     try:
@@ -61,7 +66,10 @@ def story_detail(request, story_slug):
         print(f"User logged in: {request.user}")
     else:
         print("No user logged in")
-        context = {'user': None}
+        context = {
+            'user': None,
+            'form': UserLoginForm()
+        }
         return render(request, 'login.html', context=context)
 
     story = get_story_by_slug(story_slug)
@@ -114,7 +122,10 @@ def create_or_update_story(request, story_slug=None):
         print(f"User logged in: {request.user}")
     else:
         print("No user logged in")
-        context = {'user': None}
+        context = {
+            'user': None,
+            'form': UserLoginForm()
+        }
         return render(request, 'login.html', context=context)
 
     try:
@@ -188,7 +199,10 @@ def delete_story(request, story_slug):
         print(f"User logged in: {request.user}")
     else:
         print("No user logged in")
-        context = {'user': None}
+        context = {
+            'user': None,
+            'form': UserLoginForm()
+        }
         return render(request, 'login.html', context=context)
 
     story = get_story_by_slug(story_slug)
@@ -212,7 +226,10 @@ def scenes(request, story_slug):
         print(f"User logged in: {request.user}")
     else:
         print("No user logged in")
-        context = {'user': None}
+        context = {
+            'user': None,
+            'form': UserLoginForm()
+        }
         return render(request, 'login.html', context=context)
 
     story = get_story_by_slug(story_slug)
@@ -245,7 +262,10 @@ def scene_detail(request, story_slug, scene_order):
         print(f"User logged in: {request.user}")
     else:
         print("No user logged in")
-        context = {'user': None}
+        context = {
+            'user': None,
+            'form': UserLoginForm()
+        }
         return render(request, 'login.html', context=context)
 
     story = get_story_by_slug(story_slug)
@@ -295,7 +315,10 @@ def create_or_update_scene(request, story_slug, scene_order=None):
         print(f"User logged in: {request.user}")
     else:
         print("No user logged in")
-        context = {'user': None}
+        context = {
+            'user': None,
+            'form': UserLoginForm()
+        }
         return render(request, 'login.html', context=context)
 
     story = get_story_by_slug(story_slug)
@@ -371,7 +394,10 @@ def add_scene_character(request, story_slug: str, scene_order: int):
         print(f"User logged in: {request.user}")
     else:
         print("No user logged in")
-        context = {'user': None}
+        context = {
+            'user': None,
+            'form': UserLoginForm()
+        }
         return render(request, 'login.html', context=context)
 
     story = get_story_by_slug(story_slug)
@@ -416,7 +442,10 @@ def delete_scene(request, story_slug, scene_order):
         print(f"User logged in: {request.user}")
     else:
         print("No user logged in")
-        context = {'user': None}
+        context = {
+            'user': None,
+            'form': UserLoginForm()
+        }
         return render(request, 'login.html', context=context)
 
     story = get_story_by_slug(story_slug)
@@ -451,7 +480,10 @@ def characters(request, story_slug):
         print(f"User logged in: {request.user}")
     else:
         print("No user logged in")
-        context = {'user': None}
+        context = {
+            'user': None,
+            'form': UserLoginForm()
+        }
         return render(request, 'login.html', context=context)
 
     story = get_story_by_slug(story_slug)
@@ -481,7 +513,10 @@ def character_detail(request, story_slug, character_slug):
         print(f"User logged in: {request.user}")
     else:
         print("No user logged in")
-        context = {'user': None}
+        context = {
+            'user': None,
+            'form': UserLoginForm()
+        }
         return render(request, 'login.html', context=context)
 
     story = get_story_by_slug(story_slug)
@@ -517,7 +552,10 @@ def create_or_update_character(request, story_slug=None, character_slug=None):
         print(f"User logged in: {request.user}")
     else:
         print("No user logged in")
-        context = {'user': None}
+        context = {
+            'user': None,
+            'form': UserLoginForm()
+        }
         return render(request, 'login.html', context=context)
 
     story = get_story_by_slug(story_slug)
@@ -585,7 +623,10 @@ def delete_character(request, story_slug, character_slug):
         print(f"User logged in: {request.user}")
     else:
         print("No user logged in")
-        context = {'user': None}
+        context = {
+            'user': None,
+            'form': UserLoginForm()
+        }
         return render(request, 'login.html', context=context)
 
     story = get_story_by_slug(story_slug)
@@ -614,7 +655,10 @@ def plot_detail(request, story_slug):
         print(f"User logged in: {request.user}")
     else:
         print("No user logged in")
-        context = {'user': None}
+        context = {
+            'user': None,
+            'form': UserLoginForm()
+        }
         return render(request, 'login.html', context=context)
 
     story = get_story_by_slug(story_slug)
@@ -647,7 +691,10 @@ def update_plot(request, story_slug):
         print(f"User logged in: {request.user}")
     else:
         print("No user logged in")
-        context = {'user': None}
+        context = {
+            'user': None,
+            'form': UserLoginForm()
+        }
         return render(request, 'login.html', context=context)
 
     story = get_story_by_slug(story_slug)
@@ -687,7 +734,10 @@ def plotpoint_detail(request, story_slug, plotpoint_order):
         print(f"User logged in: {request.user}")
     else:
         print("No user logged in")
-        context = {'user': None}
+        context = {
+            'user': None,
+            'form': UserLoginForm()
+        }
         return render(request, 'login.html', context=context)
 
     story = get_story_by_slug(story_slug)
@@ -720,13 +770,20 @@ def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
         print(f"User logged in: {request.user}")
     else:
         print("No user logged in")
-        context = {'user': None}
+        context = {
+            'user': None,
+            'form': UserLoginForm()
+        }
         return render(request, 'login.html', context=context)
 
     story = get_story_by_slug(story_slug)
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
+    
+    # Define plot ID
+    plot_id = story.plot.id
+    print(f"plot ID: {plot_id}")
 
     # Update plot point
     if plotpoint_order:
@@ -740,7 +797,6 @@ def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
             print(f"Updating plot point {plotpoint_order} ...")
             form = PlotPointForm(
                 request.POST,
-                story_slug=story_slug,
                 plot_id=plot_id,
                 instance=plotpoint
             )
@@ -754,7 +810,6 @@ def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
 
         else:
             form = PlotPointForm(
-                story_slug=story_slug,
                 plot_id=plot_id,
                 instance=plotpoint
             )
@@ -773,11 +828,7 @@ def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
 
         if request.method == 'POST':
             print(f"Creating new plot point ...")
-            form = PlotPointForm(
-                request.POST,
-                story_slug=story_slug,
-                plot_id=plot_id
-            )
+            form = PlotPointForm(request.POST, plot_id=plot_id)
             if form.is_valid():
                 new_plotpoint = form.save()
                 return redirect(
@@ -787,10 +838,7 @@ def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
                 )
 
         else:
-            form = PlotPointForm(
-                story_slug=story_slug,
-                plot_id=plot_id
-            )
+            form = PlotPointForm(plot_id=plot_id)
 
         template_name = 'new_plotpoint.html'
         context = {
@@ -812,7 +860,10 @@ def delete_plotpoint(request, story_slug, plotpoint_order):
         print(f"User logged in: {request.user}")
     else:
         print("No user logged in")
-        context = {'user': None}
+        context = {
+            'user': None,
+            'form': UserLoginForm()
+        }
         return render(request, 'login.html', context=context)
 
     story = get_story_by_slug(story_slug)
@@ -848,7 +899,10 @@ def move_up(request, story_slug, scene_order=None, plotpoint_order=None):
         print(f"User logged in: {request.user}")
     else:
         print("No user logged in")
-        context = {'user': None}
+        context = {
+            'user': None,
+            'form': UserLoginForm()
+        }
         return render(request, 'login.html', context=context)
 
     story = get_story_by_slug(story_slug)
@@ -897,7 +951,10 @@ def move_down(request, story_slug, scene_order=None, plotpoint_order=None):
         print(f"User logged in: {request.user}")
     else:
         print("No user logged in")
-        context = {'user': None}
+        context = {
+            'user': None,
+            'form': UserLoginForm()
+        }
         return render(request, 'login.html', context=context)
 
     story = get_story_by_slug(story_slug)
