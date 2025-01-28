@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block detail_content %}
-<h1>Character Details for {{ character.full_name }}</h1>
+<h1>Character Details for {{ character.full_name }} from <a href="/stories/{{ story.slug }}">{{ story.title }}</a></h1>
 {% if character.description %}
 <p>{{ character.description }}</p>
 {% endif %}
@@ -35,14 +35,8 @@
 
 <h2>Personality</h2>
 <ul>
-  {% if character.mbti_personality %}
   <li>MBTI Type {{ character.mbti_personality }}</li>
-  {% endif %}
-
-  {% if character.enneagram_personality %}
   <li>Enneagram Type {{ character.enneagram_personality }}</li>
-  {% endif %}
-
   {% for trait in character.personality_traits %}
   <li>{{ trait }}</li>
   {% endfor %}

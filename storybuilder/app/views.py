@@ -780,6 +780,10 @@ def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
+    
+    # Define plot ID
+    plot_id = story.plot.id
+    print(f"plot ID: {plot_id}")
 
     # Update plot point
     if plotpoint_order:
@@ -793,7 +797,6 @@ def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
             print(f"Updating plot point {plotpoint_order} ...")
             form = PlotPointForm(
                 request.POST,
-                story_slug=story_slug,
                 plot_id=plot_id,
                 instance=plotpoint
             )
@@ -807,7 +810,6 @@ def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
 
         else:
             form = PlotPointForm(
-                story_slug=story_slug,
                 plot_id=plot_id,
                 instance=plotpoint
             )
@@ -826,11 +828,7 @@ def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
 
         if request.method == 'POST':
             print(f"Creating new plot point ...")
-            form = PlotPointForm(
-                request.POST,
-                story_slug=story_slug,
-                plot_id=plot_id
-            )
+            form = PlotPointForm(request.POST, plot_id=plot_id)
             if form.is_valid():
                 new_plotpoint = form.save()
                 return redirect(
@@ -840,10 +838,7 @@ def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
                 )
 
         else:
-            form = PlotPointForm(
-                story_slug=story_slug,
-                plot_id=plot_id
-            )
+            form = PlotPointForm(plot_id=plot_id)
 
         template_name = 'new_plotpoint.html'
         context = {
