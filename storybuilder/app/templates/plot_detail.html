@@ -13,10 +13,12 @@
 {% endblock %}
 
 {% block list_content %}
-<h2>Plot Points</h2>
+<h2 class="list-heading">Plot Points</h2>
 
 {% if not plot.plotpoint_set.count %}
-<p>There are no plot points in this story yet. When you add some, they will be listed here.</p>
+<p class="list-no-items">
+  There are no plot points in this story yet. When you add some, they will be listed here.
+</p>
 
 {% else %}
 <table>

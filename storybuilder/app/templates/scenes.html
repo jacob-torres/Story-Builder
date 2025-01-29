@@ -2,13 +2,17 @@
 {% block title %}Scenes from {{ story_title }}{% endblock %}
 
 {% block list_content %}
-<h1>Scenes in {{ story_title }}</h1>
+<h1 class="list-heading">
+    Scenes in {{ story_title }}
+</h1>
 
 {% if not scenes %}
-<p>You have no scenes yet. When you do, they will be listed here.</p>
+<p class="list-no-items">
+    You have no scenes yet. When you do, they will be listed here.
+</p>
 
 {% else %}
-<table class="list-table">
+<table>
     <thead>
         <th>Scene Title</th>
         <th>Reorder</th>

@@ -36,14 +36,6 @@ header {
 }
 
 
-/* Headings */
-h1.list-heading {
-  font-size: 2rem;
-  font-weight: bold;
-  /* text-align: center; */
-  padding: 0.5rem;
-}
-
 /* Link Styles */
 a:hover {
   background-color: var(--background-color);
@@ -53,8 +45,6 @@ a:hover {
 
 /* Button Styles */
 button {
-  background-color: var(--accent-color);
-  color: var(--dark-text-color);
   text-align: center;
   text-decoration: none;
   font-size: 1.2rem;
@@ -100,4 +90,22 @@ div.big-btn {
   display: block;
   padding: 0.5rem;
   margin: 0 auto;
+}
+
+button.big-btn {
+  background-color: var(--primary-color);
+  color: var(--light-text-color);
+}
+
+
+/* List Headings and Paragraphs */
+.list-heading {
+  font-size: 2rem;
+  font-weight: bold;
+  /* text-align: center; */
+  padding: 0.5rem;
+}
+
+p.list-no-items {
+  text-align: center;
 }
