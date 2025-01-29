@@ -588,6 +588,8 @@ def create_or_update_character(request, story_slug=None, character_slug=None):
     try:
         # Update character
         if character_slug:
+            character = get_character(story.id, character_slug)
+
             if request.method == 'POST':
                 print(f"Updating Character object {character_slug}")
                 form = CharacterForm(request.POST, instance=character)
