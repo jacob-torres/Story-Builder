@@ -5,11 +5,11 @@ from django.http import Http404
 from .models import Story, Scene, Character, Plot, PlotPoint
 
 
-def get_story_by_slug(story_slug: str):
+def get_story_by_slug(story_slug: str, author_id: int):
     """Get a story object by a given URL slug."""
 
     try:
-        story = get_object_or_404(Story, slug=story_slug)
+        story = get_object_or_404(Story, slug=story_slug, author_id=author_id)
         return story
     except Http404 as error:
         print(f"HTTP404 Error while getting Story object {story_slug}.")

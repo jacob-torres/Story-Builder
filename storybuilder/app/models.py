@@ -32,7 +32,7 @@ class Story(models.Model):
     date_started = models.DateField(auto_now_add=True)
     date_last_saved = models.DateField(auto_now=True)
     date_finished = models.DateField(null=True)
-    slug = models.SlugField(max_length=mid_length, unique=True, blank=True)
+    slug = models.SlugField(max_length=mid_length, blank=True)
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None, related_name='stories')
 
     class Meta:

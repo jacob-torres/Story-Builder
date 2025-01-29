@@ -64,6 +64,7 @@ def story_detail(request, story_slug):
 
     if request.user.is_authenticated:
         print(f"User logged in: {request.user}")
+        author_id = request.user.id
     else:
         print("No user logged in")
         context = {
@@ -72,7 +73,7 @@ def story_detail(request, story_slug):
         }
         return render(request, 'login.html', context=context)
 
-    story = get_story_by_slug(story_slug)
+    story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
@@ -120,6 +121,7 @@ def create_or_update_story(request, story_slug=None):
 
     if request.user.is_authenticated:
         print(f"User logged in: {request.user}")
+        author_id = request.user.id
     else:
         print("No user logged in")
         context = {
@@ -131,7 +133,7 @@ def create_or_update_story(request, story_slug=None):
     try:
         # Update story if slug is passed
         if story_slug:
-            story = get_story_by_slug(story_slug)
+            story = get_story_by_slug(story_slug, author_id)
             if not story:
                 context = {'model_name': 'Story'}
                 return render(request, '404.html', status=404, context=context)
@@ -197,6 +199,7 @@ def delete_story(request, story_slug):
 
     if request.user.is_authenticated:
         print(f"User logged in: {request.user}")
+        author_id = request.user.id
     else:
         print("No user logged in")
         context = {
@@ -205,7 +208,7 @@ def delete_story(request, story_slug):
         }
         return render(request, 'login.html', context=context)
 
-    story = get_story_by_slug(story_slug)
+    story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
@@ -224,6 +227,7 @@ def scenes(request, story_slug):
 
     if request.user.is_authenticated:
         print(f"User logged in: {request.user}")
+        author_id = request.user.id
     else:
         print("No user logged in")
         context = {
@@ -232,7 +236,7 @@ def scenes(request, story_slug):
         }
         return render(request, 'login.html', context=context)
 
-    story = get_story_by_slug(story_slug)
+    story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
@@ -260,6 +264,7 @@ def scene_detail(request, story_slug, scene_order):
 
     if request.user.is_authenticated:
         print(f"User logged in: {request.user}")
+        author_id = request.user.id
     else:
         print("No user logged in")
         context = {
@@ -268,7 +273,7 @@ def scene_detail(request, story_slug, scene_order):
         }
         return render(request, 'login.html', context=context)
 
-    story = get_story_by_slug(story_slug)
+    story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
@@ -313,6 +318,7 @@ def create_or_update_scene(request, story_slug, scene_order=None):
 
     if request.user.is_authenticated:
         print(f"User logged in: {request.user}")
+        author_id = request.user.id
     else:
         print("No user logged in")
         context = {
@@ -321,7 +327,7 @@ def create_or_update_scene(request, story_slug, scene_order=None):
         }
         return render(request, 'login.html', context=context)
 
-    story = get_story_by_slug(story_slug)
+    story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
@@ -392,6 +398,7 @@ def add_scene_character(request, story_slug: str, scene_order: int):
 
     if request.user.is_authenticated:
         print(f"User logged in: {request.user}")
+        author_id = request.user.id
     else:
         print("No user logged in")
         context = {
@@ -400,7 +407,7 @@ def add_scene_character(request, story_slug: str, scene_order: int):
         }
         return render(request, 'login.html', context=context)
 
-    story = get_story_by_slug(story_slug)
+    story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
@@ -440,6 +447,7 @@ def delete_scene(request, story_slug, scene_order):
 
     if request.user.is_authenticated:
         print(f"User logged in: {request.user}")
+        author_id = request.user.id
     else:
         print("No user logged in")
         context = {
@@ -448,7 +456,7 @@ def delete_scene(request, story_slug, scene_order):
         }
         return render(request, 'login.html', context=context)
 
-    story = get_story_by_slug(story_slug)
+    story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
@@ -478,6 +486,7 @@ def characters(request, story_slug):
 
     if request.user.is_authenticated:
         print(f"User logged in: {request.user}")
+        author_id = request.user.id
     else:
         print("No user logged in")
         context = {
@@ -486,7 +495,7 @@ def characters(request, story_slug):
         }
         return render(request, 'login.html', context=context)
 
-    story = get_story_by_slug(story_slug)
+    story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
@@ -511,6 +520,7 @@ def character_detail(request, story_slug, character_slug):
 
     if request.user.is_authenticated:
         print(f"User logged in: {request.user}")
+        author_id = request.user.id
     else:
         print("No user logged in")
         context = {
@@ -519,7 +529,7 @@ def character_detail(request, story_slug, character_slug):
         }
         return render(request, 'login.html', context=context)
 
-    story = get_story_by_slug(story_slug)
+    story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
@@ -550,6 +560,7 @@ def create_or_update_character(request, story_slug=None, character_slug=None):
 
     if request.user.is_authenticated:
         print(f"User logged in: {request.user}")
+        author_id = request.user.id
     else:
         print("No user logged in")
         context = {
@@ -558,7 +569,7 @@ def create_or_update_character(request, story_slug=None, character_slug=None):
         }
         return render(request, 'login.html', context=context)
 
-    story = get_story_by_slug(story_slug)
+    story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
@@ -621,6 +632,7 @@ def delete_character(request, story_slug, character_slug):
 
     if request.user.is_authenticated:
         print(f"User logged in: {request.user}")
+        author_id = request.user.id
     else:
         print("No user logged in")
         context = {
@@ -629,7 +641,7 @@ def delete_character(request, story_slug, character_slug):
         }
         return render(request, 'login.html', context=context)
 
-    story = get_story_by_slug(story_slug)
+    story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
@@ -653,6 +665,7 @@ def plot_detail(request, story_slug):
 
     if request.user.is_authenticated:
         print(f"User logged in: {request.user}")
+        author_id = request.user.id
     else:
         print("No user logged in")
         context = {
@@ -661,7 +674,7 @@ def plot_detail(request, story_slug):
         }
         return render(request, 'login.html', context=context)
 
-    story = get_story_by_slug(story_slug)
+    story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
@@ -689,6 +702,7 @@ def update_plot(request, story_slug):
 
     if request.user.is_authenticated:
         print(f"User logged in: {request.user}")
+        author_id = request.user.id
     else:
         print("No user logged in")
         context = {
@@ -697,7 +711,7 @@ def update_plot(request, story_slug):
         }
         return render(request, 'login.html', context=context)
 
-    story = get_story_by_slug(story_slug)
+    story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
@@ -732,6 +746,7 @@ def plotpoint_detail(request, story_slug, plotpoint_order):
 
     if request.user.is_authenticated:
         print(f"User logged in: {request.user}")
+        author_id = request.user.id
     else:
         print("No user logged in")
         context = {
@@ -740,7 +755,7 @@ def plotpoint_detail(request, story_slug, plotpoint_order):
         }
         return render(request, 'login.html', context=context)
 
-    story = get_story_by_slug(story_slug)
+    story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
@@ -768,6 +783,7 @@ def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
 
     if request.user.is_authenticated:
         print(f"User logged in: {request.user}")
+        author_id = request.user.id
     else:
         print("No user logged in")
         context = {
@@ -776,7 +792,7 @@ def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
         }
         return render(request, 'login.html', context=context)
 
-    story = get_story_by_slug(story_slug)
+    story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
@@ -858,6 +874,7 @@ def delete_plotpoint(request, story_slug, plotpoint_order):
 
     if request.user.is_authenticated:
         print(f"User logged in: {request.user}")
+        author_id = request.user.id
     else:
         print("No user logged in")
         context = {
@@ -866,7 +883,7 @@ def delete_plotpoint(request, story_slug, plotpoint_order):
         }
         return render(request, 'login.html', context=context)
 
-    story = get_story_by_slug(story_slug)
+    story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
@@ -897,6 +914,7 @@ def move_up(request, story_slug, scene_order=None, plotpoint_order=None):
 
     if request.user.is_authenticated:
         print(f"User logged in: {request.user}")
+        author_id = request.user.id
     else:
         print("No user logged in")
         context = {
@@ -905,7 +923,7 @@ def move_up(request, story_slug, scene_order=None, plotpoint_order=None):
         }
         return render(request, 'login.html', context=context)
 
-    story = get_story_by_slug(story_slug)
+    story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
@@ -949,6 +967,7 @@ def move_down(request, story_slug, scene_order=None, plotpoint_order=None):
 
     if request.user.is_authenticated:
         print(f"User logged in: {request.user}")
+        author_id = request.user.id
     else:
         print("No user logged in")
         context = {
@@ -957,7 +976,7 @@ def move_down(request, story_slug, scene_order=None, plotpoint_order=None):
         }
         return render(request, 'login.html', context=context)
 
-    story = get_story_by_slug(story_slug)
+    story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
