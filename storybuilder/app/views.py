@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db.models import F
+from django.db.utils import IntegrityError
 
 from accounts.forms import UserLoginForm
 
@@ -159,16 +160,26 @@ def create_or_update_story(request, story_slug=None):
                 print("Creating a new Story object ...")
                 form = StoryForm(request.POST, username=request.user.username)
                 if form.is_valid():
-                    new_story = form.save()
-                    new_plot = Plot.objects.create(
-                        name=f"Plot for {new_story.title}",
-                        description=f"Briefly summarize the plot of your story here.",
-                        story_id=new_story.id
-                    )
-                    print(f"Successfully created new story {new_story.id} and plot {new_plot.id}.")
-                    return redirect('story_detail', story_slug=new_story.slug)
+                    try:
+                        new_story = form.save()
+                        new_plot = Plot.objects.create(
+                            name=f"Plot for {new_story.title}",
+                            description=f"Briefly summarize the plot of your story here.",
+                            story_id=new_story.id
+                        )
+                        print(f"Successfully created new story {new_story.id} and plot {new_plot.id}.")
+                        return redirect('story_detail', story_slug=new_story.slug)
+                    except IntegrityError:
+                        print("Duplicate story ...")
+                        form.add_error(
+                            None,
+                            'You already have a story with this title.'
+                        )
+
             else:
                 form = StoryForm()
+
+            # Default template name and context dictionary
             template_name = 'new_story.html'
             context = {
                 'user': request.user,
