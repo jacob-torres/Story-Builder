@@ -2,7 +2,7 @@
 {% block title %}Stories{% endblock %}
 
 {% block list_content %}
-<h1>Your Stories</h1>
+<h1 class="list-heading">Your Stories</h1>
 
 {% if not stories %}
 <p>You have no stories yet. When you do, they will be listed here.</p>
@@ -27,6 +27,6 @@
 {% endif %}
 
 <div class="big-btn">
-    <button class="big-btn" onclick="window.location.href='new/'">New Story</button>
+    <button onclick="window.location.href='new/'">New Story</button>
 </div>
 {% endblock %}

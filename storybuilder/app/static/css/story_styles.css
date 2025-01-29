@@ -1,25 +1,6 @@
 /* Story Styles */
 
-
-/* Stories Page */
-ul#stories-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
-  
-ul#stories-list li {
-    list-style-type: none;
-    margin: 0.5rem;
-    border: 2px solid #333;
-}
-  
-ul#stories-list li a:hover {
-    background-color: var(--primary-color);
-}
-  
-  
-/* Story detail page */
+/* Actions */
 div.action-container {
     width: 98%;
     display: flex;
@@ -30,7 +11,8 @@ div.action-container {
   div.action-btn {
     flex: 1;
   }
-  
+
+  /* Tables */
   table {
     border-collapse: collapse;
     width: 100%;
