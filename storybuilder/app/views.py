@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db.models import F
 from django.db.utils import IntegrityError
+from django.utils.text import slugify
 
 from accounts.forms import UserLoginForm
 
@@ -594,8 +595,8 @@ def create_or_update_character(request, story_slug=None, character_slug=None):
                 print(f"Updating Character object {character_slug}")
                 form = CharacterForm(request.POST, instance=character)
                 if form.is_valid():
-                    character = form.save()
-                    return redirect('character_detail', story_slug=story_slug, character_slug=character_slug)
+                    character = form.save(  )
+                    return redirect('character_detail', story_slug=story_slug, character_slug=character.slug)
             else:
                 form = CharacterForm(instance=character)
 
