@@ -86,10 +86,8 @@ class Character(models.Model):
     # Long character description
     description = models.TextField(max_length=long_length, blank=True, null=True)
 
-    # Relationships: 1 story
     story = models.ForeignKey(Story, on_delete=models.CASCADE, default=None)
-
-    slug = models.SlugField(max_length=mid_length, unique=True, blank=True)
+    slug = models.SlugField(max_length=mid_length, blank=True)
 
     def __str__(self):
         """Override string method to display character name."""
