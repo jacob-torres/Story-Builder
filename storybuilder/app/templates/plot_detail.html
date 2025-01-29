@@ -42,7 +42,7 @@
       <td>
         <a href="plot/point{{ plotpoint.order }}/update/">Update</a>
         <span style="margin: 0 0.5rem;">|</span>
-        <a href="plot/point{{ plotpoint.order }}/delete/">Delete</a>
+        <a onclick="return confirmDelete();" href="plot/point{{ plotpoint.order }}/delete/">Delete</a>
       </td>
     </tr>
     {% endfor %}

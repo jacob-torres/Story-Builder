@@ -23,7 +23,7 @@
         <td>
             <a href="{{ story.slug}}/update/">Update</a>
             <span style="margin: 0 0.5rem;">|</span>
-            <a href="{{ story.slug}}/delete/">Delete</a>
+            <a onclick="return confirmDelete();" href="{{ story.slug}}/delete/">Delete</a>
         </td>
     </tr>
     {% endfor %}

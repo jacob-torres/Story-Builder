@@ -33,7 +33,7 @@
             <td>
                 <a href="{{ scene.order }}/update/">Update</a>
                 <span style="margin: 0 0.5rem;">|</span>
-                <a href="{{ scene.order }}/delete/">Delete</a>
+                <a onclick="return confirmDelete();" href="{{ scene.order }}/delete/">Delete</a>
             </td>
         </tr>
         {% endfor %}
