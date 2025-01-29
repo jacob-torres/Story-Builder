@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db.models import F
 from django.db.utils import IntegrityError
-from django.utils.text import slugify
 
 from accounts.forms import UserLoginForm
 
