@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import UniqueConstraint
 from django.contrib.postgres.fields import ArrayField
 from django.utils.text import slugify
 
@@ -17,7 +18,7 @@ class Story(models.Model):
     """The story data structure, with characters, plots, worlds, and scenes."""
 
     # Story details
-    title = models.CharField(max_length=short_length, null=False, unique=True)
+    title = models.CharField(max_length=short_length, null=False)
     description = models.TextField(max_length=long_length, null=True)
     premise = models.CharField(max_length=mid_length, null=True)
 
@@ -33,6 +34,14 @@ class Story(models.Model):
     date_finished = models.DateField(null=True)
     slug = models.SlugField(max_length=mid_length, unique=True, blank=True)
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None, related_name='stories')
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(
+                fields=['author', 'title'],
+                name='author_title_constraint'
+            )
+        ]
 
     def __str__(self):
         """Override the string method for the Story object."""
