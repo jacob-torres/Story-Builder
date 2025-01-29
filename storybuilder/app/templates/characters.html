@@ -21,7 +21,9 @@
             <a href={{ character.slug }}>{{ character.full_name }}</a>
         </td>
         <td>
-            <a href="{{ character.slug }}/update/">Update</a> | <a href="{{ character.slug }}/delete/">Delete</a>
+            <a href="{{ character.slug }}/update/">Update</a>
+            <span style="margin: 0 0.5rem;">|</span>
+            <a href="{{ character.slug }}/delete/">Delete</a>
         </td>
     </tr>
     {% endfor %}

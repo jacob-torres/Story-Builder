@@ -26,11 +26,14 @@
                 <a href={{ scene.order }}>{{ scene.title }}</a>
             </td>
             <td>
-                <button onclick="window.location.href='{{ scene.order }}/up/'">Move Up</button>
-                <button onclick="window.location.href='{{ scene.order }}/down/'">Move Down</button>
-            </td>
+                <a href="{{ scene.order }}/up/">Move Up</button>
+                    <span style="margin: 0 0.5rem;">|</span>
+                    <a href="{{ scene.order }}/down/">Move Down</button>
+                </td>
             <td>
-                <a href="{{ scene.order }}/update/">Update</a> | <a href="{{ scene.order }}/delete/">Delete</a>
+                <a href="{{ scene.order }}/update/">Update</a>
+                <span style="margin: 0 0.5rem;">|</span>
+                <a href="{{ scene.order }}/delete/">Delete</a>
             </td>
         </tr>
         {% endfor %}

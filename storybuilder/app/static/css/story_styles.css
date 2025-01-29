@@ -17,7 +17,7 @@ button.action-btn {
     color: var(--dark-text-color);
   }
 
-  
+
   /* Tables */
   table {
     border-collapse: collapse;
@@ -27,7 +27,7 @@ button.action-btn {
 th, td {
     border: 1px solid var(--primary-color);
     padding: 0.5rem;
-    text-align: left;
+    text-align: center;
 }
   
 th {

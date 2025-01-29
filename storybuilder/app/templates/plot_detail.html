@@ -35,11 +35,14 @@
         <a href="plot/point{{ plotpoint.order }}/">{{ plotpoint.name }}</a>
       </td>
       <td>
-        <button onclick="window.location.href='plot/point{{ plotpoint.order }}/up/'">Move Up</button>
-        <button onclick="window.location.href='plot/point{{ plotpoint.order }}/down/'">Move Down</button>
+        <a href="plot/point{{ plotpoint.order }}/up/">Move Up</a>
+        <span style="margin: 0 0.5rem;">|</span>
+        <a href="plot/point{{ plotpoint.order }}/down/">Move Down</a>
       </td>
       <td>
-        <a href="plot/point{{ plotpoint.order }}/update/">Edit</a> | <a href="plot/point{{ plotpoint.order }}/delete/">Delete</a>
+        <a href="plot/point{{ plotpoint.order }}/update/">Update</a>
+        <span style="margin: 0 0.5rem;">|</span>
+        <a href="plot/point{{ plotpoint.order }}/delete/">Delete</a>
       </td>
     </tr>
     {% endfor %}
