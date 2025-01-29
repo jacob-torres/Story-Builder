@@ -33,12 +33,21 @@
   <li>Body Type: {{ character.body_type }}</li>
 </ul>
 
+{% if character.personality_traits or character.mbti_personality or character.enneagram_personality %}
 <h2>Personality</h2>
 <ul>
-  <li>MBTI Type {{ character.mbti_personality }}</li>
-  <li>Enneagram Type {{ character.enneagram_personality }}</li>
   {% for trait in character.personality_traits %}
-  <li>{{ trait }}</li>
+  <li>{{ trait.capitalize }}</li>
   {% endfor %}
+
+  {% if character.mbti_personality %}
+  <li>MBTI Type: {{ character.mbti_personality }}</li>
+  {% endif %}
+
+  {% if character.enneagram_personality %}
+  <li>Enneagram Type: {{ character.enneagram_personality }}</li>
+  {% endif %}
 </ul>
+{% endif %}
+
 {% endblock %}

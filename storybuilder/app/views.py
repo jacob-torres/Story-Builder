@@ -590,12 +590,13 @@ def create_or_update_character(request, story_slug=None, character_slug=None):
         if character_slug:
             if request.method == 'POST':
                 print(f"Updating Character object {character_slug}")
-                form = CharacterForm(request.POST, story_slug=story_slug, character_slug=character_slug)
+                form = CharacterForm(request.POST, instance=character)
                 if form.is_valid():
                     character = form.save()
                     return redirect('character_detail', story_slug=story_slug, character_slug=character_slug)
             else:
-                form = CharacterForm(story_slug=story_slug, character_slug=character_slug)
+                form = CharacterForm(instance=character)
+
             template_name = 'update_character.html'
             context = {
                 'user': request.user,
@@ -607,12 +608,18 @@ def create_or_update_character(request, story_slug=None, character_slug=None):
         else:
             if request.method == 'POST':
                 print("Creating a new Character object ...")
-                form = CharacterForm(request.POST, story_slug=story_slug)
+                form = CharacterForm(
+                    request.POST,
+                    story_slug=story_slug,
+                    author_id=author_id
+                )
                 if form.is_valid():
                     new_character = form.save()
                     return redirect('character_detail', story_slug=story_slug, character_slug=new_character.slug)
+
             else:
-                form = CharacterForm(story_slug=story_slug)
+                form = CharacterForm(story_slug=story_slug, author_id=author_id)
+
             template_name = 'new_character.html'
             context = {
                 'user': request.user,

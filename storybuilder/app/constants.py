@@ -30,31 +30,31 @@ genre_choices = [
 
 # MBTI personality types
 mbti_choices = [
-    ('INTJ: The Architect', 'INTJ: The Architect'),
-    ('INTP: The Logician', 'INTP: The Logician'),
-    ('ENTJ: The Commander', 'ENTJ: The Commander'),
-    ('ENTP: The Visionary', 'ENTP: The Visionary'),
-    ('INFJ: The Advocate', 'INFJ: The Advocate'),
-    ('INFP: The Idealist', 'INFP: The Idealist'),
-    ('ENFJ: The Giver', 'ENFJ: The Giver'),
-    ('ENFP: The Enthusiast', 'ENFP: The Enthusiast'),
-    ('ISTJ: The Duty Fulfiller', 'ISTJ: The Duty Fulfiller'),
-    ('ISFJ: The Protector', 'ISFJ: The Protector'),
-    ('ESTJ: The Executive', 'ESTJ: The Executive'),
-    ('ESFJ: The Caregiver', 'ESFJ: The Caregiver'),
-    ('ISTP: The Craftsman', 'ISTP: The Craftsman'),
-    ('ISFP: The Artist', 'ISFP: The Artist')
+    ('INTJ - The Architect', 'INTJ - The Architect'),
+    ('INTP - The Logician', 'INTP - The Logician'),
+    ('ENTJ - The Commander', 'ENTJ - The Commander'),
+    ('ENTP - The Visionary', 'ENTP - The Visionary'),
+    ('INFJ - The Advocate', 'INFJ - The Advocate'),
+    ('INFP - The Idealist', 'INFP - The Idealist'),
+    ('ENFJ - The Giver', 'ENFJ - The Giver'),
+    ('ENFP - The Enthusiast', 'ENFP - The Enthusiast'),
+    ('ISTJ - The Duty Fulfiller', 'ISTJ - The Duty Fulfiller'),
+    ('ISFJ - The Protector', 'ISFJ - The Protector'),
+    ('ESTJ - The Executive', 'ESTJ - The Executive'),
+    ('ESFJ - The Caregiver', 'ESFJ - The Caregiver'),
+    ('ISTP - The Craftsman', 'ISTP - The Craftsman'),
+    ('ISFP - The Artist', 'ISFP - The Artist')
 ]
 
 # Enneagram personality types
 enneagram_choices = [
-    ('1: The Reformer', '1: The Reformer'),
-    ('2: The Helper', '2: The Helper'),
-    ('3: The Achiever', '3: The Achiever'),
-    ('4: The Romantic', '4: The Romantic'),
-    ('5: The Investigator', '5: The Investigator'),
-    ('6: The Skeptic', '6: The Skeptic'),
-    ('7: The Enthusiast', '7: The Enthusiast'),
-    ('8: The Challenger', '8: The Challenger'),
-    ('9: The Peacemaker', '9: The Peacemaker')
+    ('1 - The Reformer', '1 - The Reformer'),
+    ('2 - The Helper', '2 - The Helper'),
+    ('3 - The Achiever', '3 - The Achiever'),
+    ('4 - The Romantic', '4 - The Romantic'),
+    ('5 - The Investigator', '5 - The Investigator'),
+    ('6 - The Skeptic', '6 - The Skeptic'),
+    ('7 - The Enthusiast', '7 - The Enthusiast'),
+    ('8 - The Challenger', '8 - The Challenger'),
+    ('9 - The Peacemaker', '9 - The Peacemaker')
 ]
