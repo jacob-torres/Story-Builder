@@ -63,21 +63,21 @@ class SceneForm(forms.ModelForm):
 
     class Meta:
         model = Scene
-        exclude = ['story', 'notes', 'order']
+        exclude = ['story', 'order']
 
     def __init__(self, *args, **kwargs):
         story_slug = kwargs.pop('story_slug', None)
-        print(f"story_slug: {story_slug}")
+        author_id = kwargs.pop('author_id', None)
         super().__init__(*args, **kwargs)
+
+        # Define the story that the object is associated with
+        if story_slug:
+            self.instance.story = Story.objects.get(slug=story_slug, author_id=author_id)
 
         # Pre-populate fields if an instance of the object exists
         if self.instance:
             self.fields['title'].initial = self.instance.title
             self.fields['description'].initial = self.instance.description
-
-            # Define the story that the object is associated with
-            if story_slug:
-                self.instance.story = Story.objects.get(slug=story_slug)
 
 
 class CharacterForm(forms.ModelForm):
@@ -92,8 +92,8 @@ class CharacterForm(forms.ModelForm):
         enneagram_personality = forms.ChoiceField(choices=enneagram_choices)
 
     def __init__(self, *args, **kwargs):
-        author_id = kwargs.pop('author_id', None)
         story_slug = kwargs.pop('story_slug', None)
+        author_id = kwargs.pop('author_id', None)
         super().__init__(*args, **kwargs)
 
         # Define the story that the object is associated with

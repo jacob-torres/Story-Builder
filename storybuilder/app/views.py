@@ -353,12 +353,13 @@ def create_or_update_scene(request, story_slug, scene_order=None):
 
             if request.method == 'POST':
                 print(f"Updating Scene object {scene_order}")
-                form = SceneForm(request.POST, story_slug=story_slug, instance=scene)
+                form = SceneForm(request.POST, instance=scene)
                 if form.is_valid():
                     scene = form.save()
                     return redirect('scene_detail', story_slug=story_slug, scene_order=scene_order)
+
             else:
-                form = SceneForm(story_slug=story_slug, instance=scene)
+                form = SceneForm(instance=scene)
             template_name = 'update_scene.html'
             context = {
                 'user': request.user,
@@ -370,12 +371,21 @@ def create_or_update_scene(request, story_slug, scene_order=None):
         else:
             if request.method == 'POST':
                 print("Creating a new Scene object ...")
-                form = SceneForm(request.POST, story_slug=story_slug)
+                form = SceneForm(
+                    request.POST,
+                    story_slug=story_slug,
+                    author_id=author_id
+                )
                 if form.is_valid():
                     new_scene = form.save()
                     return redirect('scene_detail', story_slug=story_slug, scene_order=new_scene.order)
+
             else:
-                form = SceneForm(story_slug=story_slug)
+                form = SceneForm(
+                    story_slug=story_slug,
+                    author_id=author_id
+                )
+
             template_name = 'new_scene.html'
             context = {
                 'user': request.user,
@@ -395,7 +405,7 @@ def create_or_update_scene(request, story_slug, scene_order=None):
     except Exception as error:
         print("*************** Error while rendering template ***************")
         print(error)
-        return render(request, '505.html', context={'error': error})
+        return render(request, '500.html', context={'error': error})
 
 
 def add_scene_character(request, story_slug: str, scene_order: int):
