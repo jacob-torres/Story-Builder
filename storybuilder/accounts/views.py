@@ -109,11 +109,13 @@ def profile(request):
     if request.user.is_authenticated:
         user = request.user
         try:
-            user_profile = user.profile
+            profile = user.profile
         except:
-            user_profile = UserProfile.objects.create(user=user) 
+            print("No user profile, creating one now ...")
+            profile = UserProfile.objects.create(user=user) 
+            print(f"Created user profile with ID {profile.id}")
 
-        context = {'user': user}
+        context = {'user': user, 'profile': profile}
         return render(request, 'profile.html', context=context)
     
     else:
@@ -131,22 +133,55 @@ def update_profile(request):
     if request.user.is_authenticated:
         user = request.user
         try:
-            user_profile = user.profile
+            profile = user.profile
         except UserProfile.DoesNotExist:
-            user_profile = UserProfile.objects.create(user=user) 
+            profile = UserProfile.objects.create(user=user) 
 
         if request.method == 'POST':
-            form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+            form = UserProfileForm(request.POST, request.FILES, instance=profile)
             if form.is_valid():
-                user_profile = form.save()
+                profile = form.save()
                 messages.success(request, 'Profile updated successfully!')
                 print("Successfully updated user profile")
                 print(user)
                 return redirect('profile')
         else:
-            form = UserProfileForm(instance=user_profile)
+            form = UserProfileForm(instance=profile)
         context = {'form': form}
         return render(request, 'update_profile.html', context=context)
 
     else:
+        return redirect('login')
+
+
+def delete_user(request):
+    """View function for deleting a user account."""
+
+    print("*****************************")
+    print("Delete User Account")
+
+    if request.user.is_authenticated:
+        try:
+            user = request.user
+            profile = user.profile
+
+            print(f"Preparing to delete user {user} ...")
+            profile.delete()
+            user.delete()
+            print("Successfully deleted the user.")
+
+            context = {
+                'user': None,
+                'form': UserRegistrationForm()
+            }
+            return render(request, 'register.html', context=context)
+
+        except Exception as error:
+            print("***************")
+            print("There was an error while deleting the user.")
+            print(error)
+            return redirect('home')
+
+    else:
+        print("User not logged in")
         return redirect('login')

@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
-{% block title %}User Profile{% endblock %}
+{% block title %}{{ user.username }}{% endblock %}
 
 {% block content %}
-{% if user.image %}
+{% if profile.image %}
 <div>
-    {{ user.image }}
+    {{ profile.image }}
 </div>
 {% endif %}
 
@@ -17,18 +17,28 @@
         Stories: <a href="/stories/">{{ user.stories.count }}</a>
     </li>
 
-    {% if user.website %}
+    {% if profile.website %}
     <li>
-        Website: <a href={{ user.website }}></a>
+        Website: <a href={{ profile.website }}></a>
     </li>
     {% endif %}
 </ul>
 
-{% if user.bio %}
-<p>{{ user.bio }}</p>
+{% if profile.bio %}
+<p>{{ profile.bio }}</p>
 {% endif %}
 
 <div class="big-btn">
     <button class="big-btn" onclick="window.location.href='update/'">Update Profile Details</button>
+</div>
+
+<div class="danger">
+    <h2>Delete Account</h2>
+    <p>Be careful, you can't undo this!</p>
+    <div>
+        <button onclick="return confirmDelete();">
+            <a href="delete/">Delete My Account</a>
+        </button>
+    </div>
 </div>
 {% endblock %}
