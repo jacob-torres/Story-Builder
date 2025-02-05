@@ -23,11 +23,19 @@ def register(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            messages.success(request, 'Registration successful!')
-            print("New user created successfully!")
-            print(user)
-            return redirect('login') 
+            try:
+                user = form.save()
+                print("Saved new user, creating user profile ...")
+                profile = UserProfile.objects.create(user=user)
+                print(f"User Profile created with ID {profile.id}")
+                messages.success(request, 'Registration successful!')
+                print("New user created successfully!")
+                print(user)
+                return redirect('login') 
+            except Exception as error:
+                print("There was an error while creating a new user.")
+                print(error)
+
     else:
         form = UserRegistrationForm()
 

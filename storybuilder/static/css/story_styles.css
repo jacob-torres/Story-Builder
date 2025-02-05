@@ -1,0 +1,36 @@
+/* Story Styles */
+
+/* Actions */
+div.action-container {
+    width: 98%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+  
+div.action-btn {
+    flex: 1;
+}
+
+button.action-btn {
+    background-color: var(--accent-color);
+    color: var(--dark-text-color);
+  }
+
+
+  /* Tables */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+}
+  
+th, td {
+    border: 1px solid var(--primary-color);
+    padding: 0.5rem;
+    text-align: center;
+}
+  
+th {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
