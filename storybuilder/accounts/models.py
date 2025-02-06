@@ -34,8 +34,8 @@ class CustomUser(AbstractUser):
     )
 
     def __str__(self):
-        """Override string method to display user full name."""
-        return self.full_name
+        """Override string method to display full name and username."""
+        return f"{self.full_name} ({self.username})"
 
     def clean(self):
         """Data cleaning method for the custom user object."""
@@ -56,4 +56,3 @@ class UserProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, default=None, related_name='profile')
     bio = models.TextField(blank=True, default=None, null=True)
     website = models.URLField(blank=True, default=None, null=True)
-    image = models.ImageField(upload_to='profile_pics', blank=True, null=True)

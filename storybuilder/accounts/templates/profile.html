@@ -2,12 +2,6 @@
 {% block title %}{{ user.username }}{% endblock %}
 
 {% block content %}
-{% if profile.image %}
-<div>
-    {{ profile.image }}
-</div>
-{% endif %}
-
 <h1>User Profile for {{ user.username }}</h1>
 <ul>
     <li>

@@ -128,7 +128,6 @@ STATIC_ROOT = BASE_DIR / 'static/'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'app/static/',
-    BASE_DIR / 'accounts/static/'
 ]
 
 # Default primary key field type

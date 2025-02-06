@@ -15,8 +15,8 @@ def register(request):
     if request.user.is_authenticated:
         print(f"User logged in: {request.user}")
         return redirect('home')
-    else:
-        print("No user logged in")
+    # else:
+    #     print("No user logged in")
         # context = {'user': None}
         # return render(request, 'login.html', context=context)
 
@@ -25,7 +25,7 @@ def register(request):
         if form.is_valid():
             try:
                 user = form.save()
-                print("Saved new user, creating user profile ...")
+                print(f"Saved new user with ID {user.id}, creating user profile ...")
                 profile = UserProfile.objects.create(user=user)
                 print(f"User Profile created with ID {profile.id}")
                 messages.success(request, 'Registration successful!')
@@ -170,17 +170,18 @@ def delete_user(request):
             user.delete()
             print("Successfully deleted the user.")
 
-            context = {
-                'user': None,
-                'form': UserRegistrationForm()
-            }
-            return render(request, 'register.html', context=context)
+            # context = {
+            #     'user': None,
+            #     'form': UserRegistrationForm()
+            # }
+            # return render(request, 'register.html', context=context)
 
         except Exception as error:
             print("***************")
             print("There was an error while deleting the user.")
             print(error)
-            return redirect('home')
+
+        return redirect('home')
 
     else:
         print("User not logged in")
