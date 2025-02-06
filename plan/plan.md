@@ -6,6 +6,7 @@ Project description: An application for organizing and outlining stories.
 
 ## Next Tasks
 
+* Create unit test suite.
 * Develop the scene-plotpoint association
 * Add a "delete all plot points" button to the plot detail page.
 * Add note functionality to the plot point detail page.
