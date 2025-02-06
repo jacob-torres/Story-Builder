@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db.models import F
 from django.db.utils import IntegrityError
+from django.contrib.auth.decorators import login_required
 
 from accounts.forms import UserLoginForm
 
@@ -16,37 +17,22 @@ def home(request):
     print("*****************************")
     print("Home Page")
 
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        context = {'user': request.user} 
-    else:
-        print("No user logged in")
-        context = {'user': None}
-    return render(request, 'home.html', context=context)
+    return render(request, 'home.html')
 
 
 ### Story view functions
 
+@login_required
 def stories(request):
     """View function for listing stories."""
 
     print("**********************************")
     print("Stories View")
 
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-    else:
-        print("No user logged in")
-        context = {
-            'user': None,
-            'form': UserLoginForm()
-        }
-        return render(request, 'login.html', context=context)
-
     try:
-        stories = Story.objects.filter(author_id=request.user.id)
+        author_id = request.user.id
+        stories = Story.objects.filter(author_id=author_id)
         context = {
-            'user': request.user,
             'stories': stories
         }
         return render(request, 'stories.html', context=context)
@@ -57,23 +43,14 @@ def stories(request):
         return render(request, '500.html', context=context)
 
 
+@login_required
 def story_detail(request, story_slug):
     """View function for displaying story details."""
 
     print("**************************************************")
     print("Story Detail View")
 
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        author_id = request.user.id
-    else:
-        print("No user logged in")
-        context = {
-            'user': None,
-            'form': UserLoginForm()
-        }
-        return render(request, 'login.html', context=context)
-
+    author_id = request.user.id
     story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
@@ -100,7 +77,6 @@ def story_detail(request, story_slug):
         form = WordCountForm()
 
     context = {
-        'user': request.user,
         'story': story,
         'scenes': scenes,
         'plot': plot,
@@ -111,6 +87,7 @@ def story_detail(request, story_slug):
     return render(request, 'story_detail.html', context=context)
 
 
+@login_required
 def create_or_update_story(request, story_slug=None):
     """View function for creating a new story."""
 
@@ -120,20 +97,11 @@ def create_or_update_story(request, story_slug=None):
     template_name = ''
     context= {}
 
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        author_id = request.user.id
-    else:
-        print("No user logged in")
-        context = {
-            'user': None,
-            'form': UserLoginForm()
-        }
-        return render(request, 'login.html', context=context)
-
     try:
+
         # Update story if slug is passed
         if story_slug:
+            author_id = request.user.id
             story = get_story_by_slug(story_slug, author_id)
             if not story:
                 context = {'model_name': 'Story'}
@@ -182,7 +150,6 @@ def create_or_update_story(request, story_slug=None):
             # Default template name and context dictionary
             template_name = 'new_story.html'
             context = {
-                'user': request.user,
                 'form': form
             }
 
@@ -202,51 +169,38 @@ def create_or_update_story(request, story_slug=None):
         return render(request, '500.html', context=context)
 
 
+@login_required
 def delete_story(request, story_slug):
     """View function for deleting a story."""
 
     print("*********************")
     print("Delete Story")
 
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        author_id = request.user.id
-    else:
-        print("No user logged in")
-        context = {
-            'user': None,
-            'form': UserLoginForm()
-        }
-        return render(request, 'login.html', context=context)
-
+    author_id = request.user.id
     story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
 
-    story.delete()
+    try:
+        story.delete()
+    except Exception as error:
+        print("There was an error while deleting the story.")
+        print(error)
+
     return redirect('stories')
 
 
 ### Scene view functions
 
+@login_required
 def scenes(request, story_slug):
     """View function for listing scenes."""
 
     print("**********************************")
     print("Scenes View")
 
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        author_id = request.user.id
-    else:
-        print("No user logged in")
-        context = {
-            'user': None,
-            'form': UserLoginForm()
-        }
-        return render(request, 'login.html', context=context)
-
+    author_id = request.user.id
     story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
@@ -255,7 +209,6 @@ def scenes(request, story_slug):
     try:
         scenes = Scene.objects.filter(story_id=story.id)
         context = {
-            'user': request.user,
             'story_title': story.title,
             'scenes': scenes
         }
@@ -267,23 +220,14 @@ def scenes(request, story_slug):
         return render(request, '500.html', context=context)
 
 
+@login_required
 def scene_detail(request, story_slug, scene_order):
     """View function for rendering scene details."""
 
     print("*************************************")
     print("Scene Detail")
 
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        author_id = request.user.id
-    else:
-        print("No user logged in")
-        context = {
-            'user': None,
-            'form': UserLoginForm()
-        }
-        return render(request, 'login.html', context=context)
-
+    author_id = request.user.id
     story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
@@ -307,7 +251,6 @@ def scene_detail(request, story_slug, scene_order):
         form = SceneNoteForm()
 
     context = {
-        'user': request.user,
         'scene': scene,
         'story_title': story.title,
         'story_slug': story.slug,
@@ -318,6 +261,7 @@ def scene_detail(request, story_slug, scene_order):
     return render(request, 'scene_detail.html', context=context)
 
 
+@login_required
 def create_or_update_scene(request, story_slug, scene_order=None):
     """View function for creating a new scene in a story."""
 
@@ -327,17 +271,7 @@ def create_or_update_scene(request, story_slug, scene_order=None):
     template_name = ''
     context= {}
 
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        author_id = request.user.id
-    else:
-        print("No user logged in")
-        context = {
-            'user': None,
-            'form': UserLoginForm()
-        }
-        return render(request, 'login.html', context=context)
-
+    author_id = request.user.id
     story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
@@ -362,7 +296,6 @@ def create_or_update_scene(request, story_slug, scene_order=None):
                 form = SceneForm(instance=scene)
             template_name = 'update_scene.html'
             context = {
-                'user': request.user,
                 'form': form,
                 'story_title': story.title
             }
@@ -388,7 +321,6 @@ def create_or_update_scene(request, story_slug, scene_order=None):
 
             template_name = 'new_scene.html'
             context = {
-                'user': request.user,
                 'form': form,
                 'story_title': story.title
             }
@@ -408,6 +340,7 @@ def create_or_update_scene(request, story_slug, scene_order=None):
         return render(request, '500.html', context={'error': error})
 
 
+@login_required
 def add_scene_character(request, story_slug: str, scene_order: int):
     """View function for the form for adding a character to a specific scene."""
 
@@ -417,17 +350,7 @@ def add_scene_character(request, story_slug: str, scene_order: int):
     template_name = ''
     context = {}
 
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        author_id = request.user.id
-    else:
-        print("No user logged in")
-        context = {
-            'user': None,
-            'form': UserLoginForm()
-        }
-        return render(request, 'login.html', context=context)
-
+    author_id = request.user.id
     story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
@@ -449,7 +372,6 @@ def add_scene_character(request, story_slug: str, scene_order: int):
 
     template_name = 'add_scene_character.html'
     context = {
-        'user': request.user,
         'story_slug': story_slug,
         'story_title': story.title,
         'scene_title': scene.title,
@@ -460,23 +382,14 @@ def add_scene_character(request, story_slug: str, scene_order: int):
     return render(request=request, template_name=template_name, context=context)
 
 
+@login_required
 def delete_scene(request, story_slug, scene_order):
     """View function for deleting an existing scene in a story."""
 
     print("******************************")
     print("Delete Scene")
 
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        author_id = request.user.id
-    else:
-        print("No user logged in")
-        context = {
-            'user': None,
-            'form': UserLoginForm()
-        }
-        return render(request, 'login.html', context=context)
-
+    author_id = request.user.id
     story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
@@ -488,34 +401,30 @@ def delete_scene(request, story_slug, scene_order):
                 return render(request, '404.html', status=404, context=context)
 
     # Delete scene and update the order of the next scenes
-    scene.delete()
-    Scene.objects.filter(
-        story=story,
-        order__gt=scene_order
-    ).update(order=F('order') - 1)
+    try:
+        scene.delete()
+        Scene.objects.filter(
+            story=story,
+            order__gt=scene_order
+        ).update(order=F('order') - 1)
+
+    except Exception as error:
+        print("There was an error while deleting the scene.")
+        print(error)
 
     return redirect('scenes', story_slug=story_slug)
 
 
 ### Character view functions
 
+@login_required
 def characters(request, story_slug):
     """View function for listing characters."""
 
     print("**********************************")
     print("Characters View")
 
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        author_id = request.user.id
-    else:
-        print("No user logged in")
-        context = {
-            'user': None,
-            'form': UserLoginForm()
-        }
-        return render(request, 'login.html', context=context)
-
+    author_id = request.user.id
     story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
@@ -536,20 +445,11 @@ def characters(request, story_slug):
         return render(request, '500.html', context=context)
 
 
+@login_required
 def character_detail(request, story_slug, character_slug):
     """View function for displaying character details."""
 
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        author_id = request.user.id
-    else:
-        print("No user logged in")
-        context = {
-            'user': None,
-            'form': UserLoginForm()
-        }
-        return render(request, 'login.html', context=context)
-
+    author_id = request.user.id
     story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
@@ -561,7 +461,6 @@ def character_detail(request, story_slug, character_slug):
         return render(request, '404.html', status=404, context=context)
 
     context = {
-        'user': request.user,
         'story': story,
         'character': character
     }
@@ -570,6 +469,7 @@ def character_detail(request, story_slug, character_slug):
     return render(request, 'character_detail.html', context=context)
 
 
+@login_required
 def create_or_update_character(request, story_slug=None, character_slug=None):
     """View function for creating a new character."""
 
@@ -579,23 +479,14 @@ def create_or_update_character(request, story_slug=None, character_slug=None):
     template_name = ''
     context = {}
 
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        author_id = request.user.id
-    else:
-        print("No user logged in")
-        context = {
-            'user': None,
-            'form': UserLoginForm()
-        }
-        return render(request, 'login.html', context=context)
-
+    author_id = request.user.id
     story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
 
     try:
+
         # Update character
         if character_slug:
             character = get_character(story.id, character_slug)
@@ -611,7 +502,6 @@ def create_or_update_character(request, story_slug=None, character_slug=None):
 
             template_name = 'update_character.html'
             context = {
-                'user': request.user,
                 'form': form,
                 'story_title': story.title
             }
@@ -634,7 +524,6 @@ def create_or_update_character(request, story_slug=None, character_slug=None):
 
             template_name = 'new_character.html'
             context = {
-                'user': request.user,
                 'form': form,
                 'story_title': story.title
             }
@@ -651,26 +540,17 @@ def create_or_update_character(request, story_slug=None, character_slug=None):
     except Exception as error:
         print("*************** Error while rendering template ***************")
         print(error)
-        return render(request, '505.html', context={'error': error})
+        return render(request, '500.html', context={'error': error})
 
 
+@login_required
 def delete_character(request, story_slug, character_slug):
     """View function for deleting a character."""
 
     print("**************************")
     print("Delete Character")
 
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        author_id = request.user.id
-    else:
-        print("No user logged in")
-        context = {
-            'user': None,
-            'form': UserLoginForm()
-        }
-        return render(request, 'login.html', context=context)
-
+    author_id = request.user.id
     story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
@@ -681,29 +561,25 @@ def delete_character(request, story_slug, character_slug):
         context = {'model_name': 'Character'}
         return render(request, '404.html', status=404, context=context)
 
-    character.delete()
+    try:
+        character.delete()
+    except Exception as error:
+        print("There was an error while deleting the character.")
+        print(error)
+
     return redirect('characters', story_slug=story_slug)
 
 
 ### Plot View Functions
 
+@login_required
 def plot_detail(request, story_slug):
     """View function for rendering story plot details."""
 
     print("*************************************")
     print("Plot Details")
 
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        author_id = request.user.id
-    else:
-        print("No user logged in")
-        context = {
-            'user': None,
-            'form': UserLoginForm()
-        }
-        return render(request, 'login.html', context=context)
-
+    author_id = request.user.id
     story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
@@ -716,7 +592,6 @@ def plot_detail(request, story_slug):
         return render(request, '404.html', status=404, context=context)
 
     context = {
-        'user': request.user,
         'story_title': story.title,
         'plot': plot
     }
@@ -724,23 +599,14 @@ def plot_detail(request, story_slug):
     return render(request, 'plot_detail.html', context=context)
 
 
+@login_required
 def update_plot(request, story_slug):
     """View function for updating story plot details."""
 
     print("***********************************")
     print("Update Plot Details")
 
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        author_id = request.user.id
-    else:
-        print("No user logged in")
-        context = {
-            'user': None,
-            'form': UserLoginForm()
-        }
-        return render(request, 'login.html', context=context)
-
+    author_id = request.user.id
     story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
@@ -761,7 +627,6 @@ def update_plot(request, story_slug):
         form = PlotForm(instance=plot)
     
     context = {
-        'user': request.user,
         'plot': plot,
         'form': form
     }
@@ -771,20 +636,11 @@ def update_plot(request, story_slug):
 
 ### Plot point view functions
 
+@login_required
 def plotpoint_detail(request, story_slug, plotpoint_order):
     """View function for rendering plot point details."""
 
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        author_id = request.user.id
-    else:
-        print("No user logged in")
-        context = {
-            'user': None,
-            'form': UserLoginForm()
-        }
-        return render(request, 'login.html', context=context)
-
+    author_id = request.user.id
     story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
@@ -796,7 +652,6 @@ def plotpoint_detail(request, story_slug, plotpoint_order):
         return render(request, '404.html', status=404, context=context)
     
     context = {
-        'user': request.user,
         'story_slug': story.slug,
         'story_title': story.title,
         'plotpoint': plotpoint
@@ -805,23 +660,14 @@ def plotpoint_detail(request, story_slug, plotpoint_order):
     return render(request, 'plotpoint_detail.html', context=context)
 
 
+@login_required
 def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
     """View function for creating or updating a plot point."""
 
     template_name = ''
     context = {}
 
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        author_id = request.user.id
-    else:
-        print("No user logged in")
-        context = {
-            'user': None,
-            'form': UserLoginForm()
-        }
-        return render(request, 'login.html', context=context)
-
+    author_id = request.user.id
     story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
@@ -862,7 +708,6 @@ def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
 
         template_name = 'update_plotpoint.html'
         context = {
-            'user': request.user,
             'story_title': story.title,
             'plotpoint_order': plotpoint_order,
             'form': form
@@ -888,7 +733,6 @@ def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
 
         template_name = 'new_plotpoint.html'
         context = {
-            'user': request.user,
             'story_title': story.title,
             'form': form
         }
@@ -896,23 +740,14 @@ def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
     return render(request=request, template_name=template_name, context=context)
 
 
+@login_required
 def delete_plotpoint(request, story_slug, plotpoint_order):
     """View function for deleting a plot point."""
 
     print("******************************")
     print("Delete Plot Point")
 
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        author_id = request.user.id
-    else:
-        print("No user logged in")
-        context = {
-            'user': None,
-            'form': UserLoginForm()
-        }
-        return render(request, 'login.html', context=context)
-
+    author_id = request.user.id
     story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
@@ -924,35 +759,30 @@ def delete_plotpoint(request, story_slug, plotpoint_order):
         return render(request, '404.html', status=404, context=context)
 
     # Delete plot point and update the order of the next plot points
-    plot = plotpoint.plot
-    plotpoint.delete()
-    PlotPoint.objects.filter(
-        plot=plot,
-        order__gt=plotpoint_order
-    ).update(order=F('order') - 1)
+    try:
+        plot = plotpoint.plot
+        plotpoint.delete()
+        PlotPoint.objects.filter(
+            plot=plot,
+            order__gt=plotpoint_order
+        ).update(order=F('order') - 1)
+    except Exception as error:
+        print("There was an error while deleting plot point.")
+        print(error)
 
     return redirect('plot_detail', story_slug=story_slug)
 
 
 ### Vview functions to move scenes and plot points up or down in a list
 
+@login_required
 def move_up(request, story_slug, scene_order=None, plotpoint_order=None):
     """View function for moving scene or plot point objects up in a list."""
 
     print("******************")
     print("Move Up")
 
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        author_id = request.user.id
-    else:
-        print("No user logged in")
-        context = {
-            'user': None,
-            'form': UserLoginForm()
-        }
-        return render(request, 'login.html', context=context)
-
+    author_id = request.user.id
     story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}
@@ -989,23 +819,14 @@ def move_up(request, story_slug, scene_order=None, plotpoint_order=None):
         return redirect('plot_detail', story_slug=story_slug)
 
 
+@login_required
 def move_down(request, story_slug, scene_order=None, plotpoint_order=None):
     """View function for moving scene or plot point objects down in a list."""
 
     print("******************")
     print("Move Down")
 
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        author_id = request.user.id
-    else:
-        print("No user logged in")
-        context = {
-            'user': None,
-            'form': UserLoginForm()
-        }
-        return render(request, 'login.html', context=context)
-
+    author_id = request.user.id
     story = get_story_by_slug(story_slug, author_id)
     if not story:
         context = {'model_name': 'Story'}

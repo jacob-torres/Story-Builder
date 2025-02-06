@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 from .forms import UserRegistrationForm, UserLoginForm, UserProfileForm
 from .models import CustomUser, UserProfile
@@ -11,14 +12,6 @@ def register(request):
 
     print("*************************")
     print("Register New User")
-
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        return redirect('home')
-    # else:
-    #     print("No user logged in")
-        # context = {'user': None}
-        # return render(request, 'login.html', context=context)
 
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
@@ -40,7 +33,6 @@ def register(request):
         form = UserRegistrationForm()
 
     context = {
-        'user': None,
         'form': form
     }
     return render(request, 'register.html', context=context)
@@ -51,14 +43,6 @@ def login_view(request):
 
     print("********************************")
     print("Login Existing User")
-
-    if request.user.is_authenticated:
-        print(f"User logged in: {request.user}")
-        return redirect('home')
-    else:
-        print("No user logged in")
-        # context = {'user': None}
-        # return render(request, 'login.html', context=context)
 
     if request.method == 'POST':
         form = UserLoginForm(request=request, data=request.POST)
@@ -80,12 +64,12 @@ def login_view(request):
         form = UserLoginForm()
 
     context = {
-        'user': None,
         'form': form
     }
     return render(request, 'login.html', context=context)
 
 
+@login_required
 def logout_view(request):
     """View function for logging out an existing user."""
 
@@ -99,6 +83,7 @@ def logout_view(request):
     return redirect('home')
 
 
+@login_required
 def profile(request):
     """View function for rendering user profile."""
 
@@ -123,6 +108,7 @@ def profile(request):
         return redirect('login')
 
 
+@login_required
 def update_profile(request):
     """View function for updating a user profile."""
 
@@ -147,13 +133,17 @@ def update_profile(request):
                 return redirect('profile')
         else:
             form = UserProfileForm(instance=profile)
-        context = {'form': form}
+        context = {
+            'user': user,
+            'form': form
+        }
         return render(request, 'update_profile.html', context=context)
 
     else:
         return redirect('login')
 
 
+@login_required
 def delete_user(request):
     """View function for deleting a user account."""
 
@@ -169,12 +159,6 @@ def delete_user(request):
             profile.delete()
             user.delete()
             print("Successfully deleted the user.")
-
-            # context = {
-            #     'user': None,
-            #     'form': UserRegistrationForm()
-            # }
-            # return render(request, 'register.html', context=context)
 
         except Exception as error:
             print("***************")
