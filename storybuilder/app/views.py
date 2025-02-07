@@ -1,10 +1,7 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from django.db.models import F
 from django.db.utils import IntegrityError
 from django.contrib.auth.decorators import login_required
-
-from accounts.forms import UserLoginForm
 
 from .forms import StoryForm, SceneForm, CharacterForm, PlotForm, PlotPointForm, WordCountForm, SceneNoteForm, SceneCharacterForm
 from .models import Story, Scene, Character, Plot, PlotPoint
@@ -39,8 +36,7 @@ def stories(request):
     except Exception as error:
         print("*********** Error while rendering story list ***********")
         print(error)
-        context = {'error': error}
-        return render(request, '500.html', context=context)
+        return render(request, '500.html')
 
 
 @login_required
@@ -156,8 +152,7 @@ def create_or_update_story(request, story_slug=None):
     except Exception as error:
         print("****** Error while creating or updating story ******")
         print(error)
-        template_name = '500.html'
-        context = {'error': error}
+        return render(request, '500.html')
 
     try:
         print(f"context: {context}")
@@ -165,8 +160,7 @@ def create_or_update_story(request, story_slug=None):
     except Exception as error:
         print("*************** Error while rendering template ***************")
         print(error)
-        context = {'error': error}
-        return render(request, '500.html', context=context)
+        return render(request, '500.html')
 
 
 @login_required
@@ -216,8 +210,7 @@ def scenes(request, story_slug):
     except Exception as error:
         print("*********** Error while rendering scene list ***********")
         print(error)
-        context = {'error': error}
-        return render(request, '500.html', context=context)
+        return render(request, '500.html')
 
 
 @login_required
@@ -328,8 +321,7 @@ def create_or_update_scene(request, story_slug, scene_order=None):
     except Exception as error:
         print("****** Error while creating or updating scene ******")
         print(error)
-        template_name = '500.html'
-        context = {'error': error}
+        return render(request, '500.html')
 
     try:
         print(f"context: {context}")
@@ -337,7 +329,7 @@ def create_or_update_scene(request, story_slug, scene_order=None):
     except Exception as error:
         print("*************** Error while rendering template ***************")
         print(error)
-        return render(request, '500.html', context={'error': error})
+        return render(request, '500.html')
 
 
 @login_required
@@ -442,7 +434,7 @@ def characters(request, story_slug):
         print("*********** Error while rendering character list ***********")
         print(error)
         context = {'error': error}
-        return render(request, '500.html', context=context)
+        return render(request, '500.html')
 
 
 @login_required
@@ -531,8 +523,7 @@ def create_or_update_character(request, story_slug=None, character_slug=None):
     except Exception as error:
         print("****** Error while creating or updating character ******")
         print(error)
-        template_name = '500.html'
-        context = {'error': error}
+        return render(request, '500.html')
 
     try:
         print(f"context: {context}")
@@ -540,7 +531,7 @@ def create_or_update_character(request, story_slug=None, character_slug=None):
     except Exception as error:
         print("*************** Error while rendering template ***************")
         print(error)
-        return render(request, '500.html', context={'error': error})
+        return render(request, '500.html')
 
 
 @login_required
