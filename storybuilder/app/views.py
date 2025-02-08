@@ -355,7 +355,7 @@ def add_scene_character(request, story_slug: str, scene_order: int):
     
     # Form logic for adding scene characters
     if request.method == 'POST':
-        form = SceneCharacterForm(request.POST, instance=scene, story_slug=story_slug)
+        form = SceneCharacterForm(request.POST, instance=scene)
         if form.is_valid():
             scene = form.save()
             return redirect('scene_detail', story_slug=story_slug, scene_order=scene_order)
@@ -512,7 +512,10 @@ def create_or_update_character(request, story_slug=None, character_slug=None):
                     return redirect('character_detail', story_slug=story_slug, character_slug=new_character.slug)
 
             else:
-                form = CharacterForm(story_slug=story_slug, author_id=author_id)
+                form = CharacterForm(
+                    story_slug=story_slug,
+                    author_id=author_id
+                )
 
             template_name = 'new_character.html'
             context = {
@@ -680,7 +683,6 @@ def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
             print(f"Updating plot point {plotpoint_order} ...")
             form = PlotPointForm(
                 request.POST,
-                plot_id=plot_id,
                 instance=plotpoint
             )
             if form.is_valid():
@@ -692,10 +694,7 @@ def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
                 )
 
         else:
-            form = PlotPointForm(
-                plot_id=plot_id,
-                instance=plotpoint
-            )
+            form = PlotPointForm(instance=plotpoint)
 
         template_name = 'update_plotpoint.html'
         context = {
