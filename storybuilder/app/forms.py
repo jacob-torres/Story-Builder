@@ -22,7 +22,7 @@ class StoryForm(forms.ModelForm):
     premise = forms.CharField(required=False)
 
     def __init__(self, *args, **kwargs):
-        username = kwargs.pop('username', None)
+        author_id = kwargs.pop('author_id', None)
         super().__init__(*args, **kwargs)
 
         # Pre-populate fields if an instance of the object exists
@@ -33,8 +33,8 @@ class StoryForm(forms.ModelForm):
             self.fields['genres'].initial = self.instance.genres
 
             # Define the story that the object is associated with
-            if username:
-                self.instance.author = CustomUser.objects.get(username=username)
+            if author_id:
+                self.instance.author = CustomUser.objects.get(id=author_id)
 
     def clean(self):
         """Override the clean method for the story form."""

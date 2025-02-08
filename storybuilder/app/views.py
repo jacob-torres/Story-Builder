@@ -122,7 +122,7 @@ def create_or_update_story(request, story_slug=None):
         else:
             if request.method == 'POST':
                 print("Creating a new Story object ...")
-                form = StoryForm(request.POST, username=request.user.username)
+                form = StoryForm(request.POST, author_id=author_id)
                 if form.is_valid():
                     try:
                         new_story = form.save()
