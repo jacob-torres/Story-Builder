@@ -66,13 +66,12 @@ class SceneForm(forms.ModelForm):
         exclude = ['story', 'order']
 
     def __init__(self, *args, **kwargs):
-        author_id = kwargs.pop('author_id', None)
-        story_slug = kwargs.pop('story_slug', None)
+        story_id = kwargs.pop('story_id', None)
         super().__init__(*args, **kwargs)
 
         # Define the story that the object is associated with
-        if story_slug and author_id:
-            self.instance.story = Story.objects.get(slug=story_slug, author_id=author_id)
+        if story_id:
+            self.instance.story = Story.objects.get(id=story_id)
 
         # Pre-populate fields if an instance of the object exists
         if self.instance:
@@ -92,13 +91,12 @@ class CharacterForm(forms.ModelForm):
         enneagram_personality = forms.ChoiceField(choices=enneagram_choices)
 
     def __init__(self, *args, **kwargs):
-        author_id = kwargs.pop('author_id', None)
-        story_slug = kwargs.pop('story_slug', None)
+        story_id = kwargs.pop('story_id', None)
         super().__init__(*args, **kwargs)
 
         # Define the story that the object is associated with
-        if story_slug and author_id:
-            self.instance.story = Story.objects.get(slug=story_slug, author_id=author_id)
+        if story_id:
+            self.instance.story = Story.objects.get(id=story_id)
 
         # Pre-populate fields if an instance of the object exists
         if self.instance:
@@ -127,18 +125,17 @@ class PlotForm(forms.ModelForm):
         exclude = ['story']
 
     def __init__(self, *args, **kwargs):
-        author_id = kwargs.pop('author_id', None)
-        story_slug = kwargs.pop('story_slug', None)
+        story_id = kwargs.pop('story_id', None)
         super().__init__(*args, **kwargs)
+
+        # Define the story that the object is associated with
+        if story_id:
+            self.instance.story = Story.objects.get(id=story_id)
 
         # Pre-populate fields if an instance of the object exists
         if self.instance:
             self.fields['name'].initial = self.instance.name
             self.fields['description'].initial = self.instance.description
-
-            # Define the story that the object is associated with
-            if story_slug and author_id:
-                self.instance.story = Story.objects.get(slug=story_slug, author_id=author_id)
 
 
 class PlotPointForm(forms.ModelForm):
@@ -152,14 +149,14 @@ class PlotPointForm(forms.ModelForm):
         plot_id = kwargs.pop('plot_id', None)
         super().__init__(*args, **kwargs)
 
+        # Define the plot that the object is associated with
+        if plot_id:
+            self.instance.plot = Plot.objects.get(pk=plot_id)
+
         # Pre-populate fields if an instance of the object exists
         if self.instance:
             self.fields['name'].initial = self.instance.name
             self.fields['description'].initial = self.instance.description
-
-            # Define the plot that the object is associated with
-            if plot_id:
-                self.instance.plot = Plot.objects.get(pk=plot_id)
 
 
 class WordCountForm(forms.ModelForm):
@@ -190,17 +187,11 @@ class SceneCharacterForm(forms.ModelForm):
         fields = ['characters']
 
     def __init__(self, *args, **kwargs):
-        author_id = kwargs.pop('author_id', None)
-        story_slug = kwargs.pop('story_slug', None)
         super().__init__(*args, **kwargs)
 
         # Pre-populate fields if an instance of the object exists
         if self.instance:
             self.fields['characters'].initial = self.instance.characters
-
-            # Define the story that the object is associated with
-            if story_slug and author_id:
-                self.instance.story = Story.objects.get(slug=story_slug, author_id=author_id)
 
         # Define the character multiple choice field
         character_choices = [
