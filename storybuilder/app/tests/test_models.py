@@ -3,9 +3,8 @@ from django.urls import reverse
 from django.db.utils import IntegrityError
 
 from accounts.models import CustomUser
-
-from .models import Story, Scene, Character, Plot, PlotPoint
-from.forms import *
+from app.models import Story, Scene, Character, Plot, PlotPoint
+from app.forms import *
 
 # Create your tests here.
 class StoryTestCase(TestCase):
