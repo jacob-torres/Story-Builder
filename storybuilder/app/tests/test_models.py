@@ -102,10 +102,27 @@ class StoryTestCase(TestCase):
         self.assertIsInstance(story2, Story)
         self.assertEqual(story2.title, 'A Better Title')
 
-        # Delete new story object
-        print("Deleting Story 2")
+        # Create a story with a user-specified genre
+        form_data = {
+            'title': 'Story 3',
+            'description': 'Description for Story 3.',
+            'premise': 'Premise for Story 3.',
+            'genres': ['Romance', 'Other'],
+            'other_choice': 'A Wild New Genre'
+        }
+        form = StoryForm(data=form_data, author_id=self.author1.id)
+        story3 = form.save()
+
+        # Run test that other genre was properly handled in the clean method
+        self.assertIn('A Wild New Genre', story3.genres)
+
+        # Delete new story objects
+        print("Deleting Story 2 and 3")
         story2.delete()
-        self.assertFalse(Story.objects.filter(title='A Better Title').exists())
+        story3.delete()
+
+        # Test that Story 1 is the only story object left in the database
+        self.assertEqual(Story.objects.count(), 1)
 
     def test_invalid_story_form(self):
         """Testing story creation and update with invalid model form data."""
