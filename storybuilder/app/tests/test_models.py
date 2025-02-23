@@ -34,7 +34,10 @@ class StoryTestCase(TestCase):
 
         return super().setUp()
 
-    def test_story_create_and_update(self):
+
+### Story Model Tests
+
+    def test_story_model_create_update(self):
         """Test story creation and update."""
 
         print("*****************************")
@@ -69,7 +72,7 @@ class StoryTestCase(TestCase):
         self.assertNotEqual(self.story1.title, 'Story 1')
         self.assertEqual(self.story1.title, 'New Story Title')
 
-    def test_valid_story_form(self):
+    def test_story_model_valid_form(self):
         """Testing story creation and update with valid model form data."""
 
         print("*********************************")
@@ -124,7 +127,7 @@ class StoryTestCase(TestCase):
         # Test that Story 1 is the only story object left in the database
         self.assertEqual(Story.objects.count(), 1)
 
-    def test_invalid_story_form(self):
+    def test_story_model_invalid_form(self):
         """Testing story creation and update with invalid model form data."""
 
         print("*****************************")
@@ -153,6 +156,103 @@ class StoryTestCase(TestCase):
         # Run tests for missing description
         self.assertFalse(form.is_valid())
         self.assertIn('description', form.errors)
+
+
+    ### Scene Model Tests
+
+    def test_scene_model_create_update(self):
+        """Testing scene creation and update."""
+
+        print("**************************")
+        print("Testing Scene object creation and update")
+
+        # Run initial tests before scene creation
+        self.assertEqual(self.story1.scene_set.count(), 0)
+
+        # Create new scene for Story 1
+        print("Creating new scene for Story 1")
+        scene1 = Scene.objects.create(
+            title='Scene 1',
+            description='Description for Scene 1 in Story 1.',
+            story_id=self.story1.id
+        )
+        
+        # Test scene creation
+        self.assertNotEqual(self.story1.scene_set.count(), 0)
+        self.assertTrue(
+            Scene.objects.filter(title='Scene 1', story_id=self.story1.id).exists()
+        )
+
+        # Update scene data
+        print("Update scene dataq")
+        scene1.title = 'New Scene Title'
+        scene1.save()
+
+        # Test scene updated succesfully
+        self.assertEqual(scene1.title, 'New Scene Title')
+        self.assertEqual(self.story1.scene_set.count(), 1)
+
+    def test_scene_modelvalid_form(self):
+        """Test scene creation and update with valid form data."""
+
+        print("*****************************")
+        print("Testing scene creation and update with valid form data")
+
+        # Valid form data
+        print("Creating scene with valid form data")
+        form_data = {
+            'title': 'Scene 2',
+            'description': 'Description for Scene 2 in Story 1.'
+        }
+        form = SceneForm(data=form_data, story_id=self.story1.id)
+
+        # Test form validation
+        self.assertTrue(form.is_valid())
+
+        # Scene creation
+        scene2 = form.save()
+
+        # Test scene creation
+        self.assertTrue(
+            Scene.objects.filter(title='Scene 2', story_id=self.story1.id).exists()
+        )
+
+        # Update scene data
+        print("Update scene with invalid form data")
+        form_data = {
+            'title': 'A Better Title for This Scene',
+            'description': 'An even better description for this scene!'
+        }
+        form = SceneForm(data=form_data, instance=scene2)
+
+        # Test form validation
+        self.assertTrue(form.is_valid())
+
+        # Test scene update
+        scene2.save()
+        self.assertEqual(scene2.title, 'A Better Title for This Scene')
+        self.assertEqual(scene2.description, 'An even better description for this scene!')
+
+
+    def test_scene_model_invalid_form(self):
+        """Test for creating and updating scenes with invalid form data."""
+
+        print("************************************")
+        print("Testing scene creation and update with invalid form data")
+
+        # Update scene data
+        print("Update scene data with invalid form data")
+        form_data = {
+            'title': 'Scene 2',
+            'description': ''
+        }
+        form = SceneForm(data=form_data, story_id=self.story1.id)
+
+        # Test form validation
+        self.assertFalse(form.is_valid())
+
+
+    ### Teardown
 
     def tearDown(self):
 
