@@ -12,7 +12,10 @@ class StoryTestCase(TestCase):
 
     def setUp(self):
 
+        print("Story Model Test Setup")
+
         # Create new user object
+        print("Creating new user object author1")
         self.author1 = CustomUser.objects.create(
             username='author1',
             email='author1@exampleemail.com',
@@ -22,6 +25,7 @@ class StoryTestCase(TestCase):
         )
 
         # Create new story object
+        print("Creating new story object story1")
         self.story1 = Story.objects.create(
             title='Story 1',
             description='Description for Story 1.',
@@ -44,6 +48,7 @@ class StoryTestCase(TestCase):
         self.assertEqual(Story.objects.count(), 1)
 
         # Add values to story
+        print("Updating Story 1 with premise and genres")
         self.story1.premise = 'Premise for Story 1.'
         self.story1.genres = ['Fantasy', 'Horror', 'Experimental']
         self.story1.save()
@@ -56,6 +61,7 @@ class StoryTestCase(TestCase):
         self.assertNotIn('', self.story1.genres)
 
         # Update story title
+        print("Updating Story 1 title")
         self.story1.title = 'New Story Title'
         self.story1.save()
 
@@ -67,9 +73,10 @@ class StoryTestCase(TestCase):
         """Testing story creation and update with valid model form data."""
 
         print("*********************************")
-        print("Testing valid story form")
+        print("Testing valid story form Data")
 
         # Create story with model form
+        print("Valid form data for Story 2")
         form_data = {
             'title': 'Story 2',
             'description': 'Description for Story 2.',
@@ -85,6 +92,7 @@ class StoryTestCase(TestCase):
         self.assertEqual(story2.title, 'Story 2')
 
         # Update story via the model form
+        print("Valid form data for updating Story 2")
         form_data['title'] = 'A Better Title'
         form = StoryForm(data=form_data, instance=story2)
         story2 = form.save()
@@ -95,12 +103,18 @@ class StoryTestCase(TestCase):
         self.assertEqual(story2.title, 'A Better Title')
 
         # Delete new story object
+        print("Deleting Story 2")
         story2.delete()
+        self.assertFalse(Story.objects.filter(title='A Better Title').exists())
 
     def test_invalid_story_form(self):
         """Testing story creation and update with invalid model form data."""
 
+        print("*****************************")
+        print("Testing invalid story form data")
+
         # Create story with empty title
+        print("Invalid form data with empty title")
         form_data = {
             'title': '',
             'description': 'Description for Story 1.',
@@ -112,6 +126,7 @@ class StoryTestCase(TestCase):
         self.assertIn('title', form.errors)
 
         # Create story with empty description
+        print("Invalid form data with empty description")
         form_data = {
             'title': 'Story 2',
             'description': ''
@@ -123,6 +138,8 @@ class StoryTestCase(TestCase):
         self.assertIn('description', form.errors)
 
     def tearDown(self):
+
+        print("Story Model Test Teardown")
 
         # Delete story object and user object
         self.story1.delete()
