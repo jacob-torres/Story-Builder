@@ -458,6 +458,16 @@ class ModelTestCase(TestCase):
         self.assertEqual(plot.name, 'Plot for Story 1')
         self.assertEqual(plot.description, 'Description of the plot for Story 1.')
 
+        #  Update plot
+        print("Update plot details")
+        plot.name = 'New Name for the Plot'
+        plot.description = 'A much better description!'
+        plot.save()
+
+        # Test plot update
+        self.assertEqual(plot.name, 'New Name for the Plot')
+        self.assertEqual(plot.description, 'A much better description!')
+
 
     ### Teardown
 
