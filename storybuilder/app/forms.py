@@ -39,11 +39,11 @@ class StoryForm(forms.ModelForm):
     def clean(self):
         """Override the clean method for the story form."""
 
-        print("**********************************")
-        print("Story Form Clean Method")
+        # print("**********************************")
+        # print("Story Form Clean Method")
 
         cleaned_data = super().clean()
-        print(f"Data before genre cleaning: {cleaned_data}")
+        # print(f"Data before genre cleaning: {cleaned_data}")
 
         # Process other genre choice
         genre_choices = list(cleaned_data['genres'])
@@ -54,7 +54,7 @@ class StoryForm(forms.ModelForm):
             genre_choices.append(cleaned_data['other_choice'])
         cleaned_data['genres'] = genre_choices
 
-        print(f"cleaned_data: {cleaned_data}")
+        # print(f"cleaned_data: {cleaned_data}")
         return cleaned_data
     
 
