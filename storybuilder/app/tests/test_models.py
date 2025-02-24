@@ -269,6 +269,56 @@ class ModelTestCase(TestCase):
         )
 
 
+    ### Character Tests
+
+    def test_character_model_create_update(self):
+        """Test for character creation and update."""
+
+        print("***************************")
+        print("Testing character creation and update")
+
+        # Create character
+        print("Create character for Story 1")
+        character1 = Character.objects.create(first_name='Bob', story_id=self.story1.id)
+
+        # Test character creation
+        self.assertEqual(character1.first_name, 'Bob')
+        self.assertIsInstance(character1, Character)
+        self.assertTrue(
+            Character.objects.filter(first_name='Bob', story_id=self.story1.id).exists()
+        )
+
+        # Test character update
+        character1.first_name = 'Alice'
+        character1.location = 'Wonderland'
+        character1.save()
+
+        # Test character update
+        self.assertEqual(character1.first_name, 'Alice')
+        self.assertEqual(character1.location, 'Wonderland')
+
+    def test_character_model_valid_form(self):
+        """Test for character creation and update with valid form data."""
+
+        print("****************************")
+        print("Testing character creation and update with valid form data")
+
+        # Create character
+        print("Valid form data for creating a character")
+        form_data = {
+            'first_name': 'John',
+            'middle_name': 'Jacob',
+            'last_name': 'Jingleheimer Schmidt',
+            'gender': 'Man',
+            'personality_traits': ['Kind', 'Musical', 'Forgetful']
+        }
+        form = CharacterForm(data=form_data, story_id=self.story1.id)
+        character2 = form.save()
+
+        # Test character creation
+        self.assertEqual(character2.full_name, 'John Jacob Jingleheimer Schmidt')
+
+
     ### Teardown
 
     def tearDown(self):
