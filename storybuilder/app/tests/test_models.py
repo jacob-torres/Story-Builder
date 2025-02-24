@@ -134,7 +134,7 @@ class ModelTestCase(TestCase):
         print("Testing invalid story form data")
 
         # Create story with empty title
-        print("Invalid form data with empty title")
+        print("Invalid form data for creating a story with an empty title")
         form_data = {
             'title': '',
             'description': 'Description for Story 1.',
@@ -146,7 +146,7 @@ class ModelTestCase(TestCase):
         self.assertIn('title', form.errors)
 
         # Create story with empty description
-        print("Invalid form data with empty description")
+        print("Invalid form data for creating a story with an empty description")
         form_data = {
             'title': 'Story 2',
             'description': ''
@@ -154,6 +154,24 @@ class ModelTestCase(TestCase):
         form = StoryForm(data=form_data)
 
         # Run tests for missing description
+        self.assertFalse(form.is_valid())
+        self.assertIn('description', form.errors)
+
+        # Create valid story for testing update functionality
+        print("Valid form data for updating a story")
+        form_data = {
+            'title': 'Valid Story Title',
+            'description': 'Valid story description.'
+        }
+        form = StoryForm(data=form_data, author_id=self.author1.id)
+        story2 = form.save()
+
+        # Update story
+        print("Invalid form data for updating a story with an empty description")
+        form_data['description'] = ''
+        form = StoryForm(data=form_data, instance=story2)
+
+        # Test update with empty description
         self.assertFalse(form.is_valid())
         self.assertIn('description', form.errors)
 
@@ -188,7 +206,7 @@ class ModelTestCase(TestCase):
         scene1.title = 'New Scene Title'
         scene1.save()
 
-        # Test scene updated succesfully
+        # Test scene update
         self.assertEqual(scene1.title, 'New Scene Title')
         self.assertEqual(self.story1.scene_set.count(), 1)
 
@@ -209,13 +227,15 @@ class ModelTestCase(TestCase):
 
         # Test scene creation
         self.assertTrue(form.is_valid())
+        self.assertIsInstance(scene2, Scene)
         self.assertTrue(
             Scene.objects.filter(title='Scene 2', story_id=self.story1.id).exists()
         )
         self.assertEqual(scene2.title, 'Scene 2')
+        self.assertEqual(self.story1.scene_set.count(), 1)
 
         # Update scene data
-        print("Update scene with invalid form data")
+        print("Valid form data for updating a scene")
         form_data['description'] = 'A more exciting description!'
         form = SceneForm(data=form_data, instance=scene2)
         scene2 = form.save()
@@ -227,9 +247,12 @@ class ModelTestCase(TestCase):
         # Delete Scene 2
         print("Deleting Scene 2")
         scene2.delete()
+
+        # Test scene deletion
         self.assertFalse(
             Scene.objects.filter(title='Scene 2').exists()
         )
+        self.assertEqual(self.story1.scene_set.count(), 0)
 
 
     def test_scene_model_invalid_form(self):
@@ -239,7 +262,7 @@ class ModelTestCase(TestCase):
         print("Testing scene creation and update with invalid form data")
 
         # Create scene
-        print("Create scene with invalid form data")
+        print("Invalid form data for creating a scene with an empty description")
         form_data = {
             'title': 'Scene 3',
             'description': ''
@@ -248,25 +271,31 @@ class ModelTestCase(TestCase):
 
         # Test form validation
         self.assertFalse(form.is_valid())
+        self.assertIn('description', form.errors)
 
+        # Create valid scene for testing update functionality
         form_data['description'] = 'Valid description for Scene 3.'
         form = SceneForm(data=form_data, story_id=self.story1.id)
         scene3 = form.save()
         
         # Update scene data
-        print("Update scene data with invalid form data")
+        print("Invalid form data for updating a scene with an empty title")
         form_data['title'] = ''
         form = SceneForm(data=form_data, instance=scene3)
 
         # Test form validation
         self.assertFalse(form.is_valid())
+        self.assertIn('title', form.errors)
 
         # Delete Scene 3
         print("Deleting Scene 3")
         scene3.delete()
+
+        # Test scene deletion
         self.assertFalse(
             Scene.objects.filter(title='Scene 3').exists()
         )
+        self.assertEqual(self.story1.scene_set.count(), 0)
 
 
     ### Character Tests
@@ -284,6 +313,7 @@ class ModelTestCase(TestCase):
         # Test character creation
         self.assertEqual(character1.first_name, 'Bob')
         self.assertIsInstance(character1, Character)
+        self.assertEqual(Character.objects.count(), 1)
         self.assertTrue(
             Character.objects.filter(first_name='Bob', story_id=self.story1.id).exists()
         )
@@ -317,6 +347,31 @@ class ModelTestCase(TestCase):
 
         # Test character creation
         self.assertEqual(character2.full_name, 'John Jacob Jingleheimer Schmidt')
+        self.assertEqual(Character.objects.count(), 1)
+
+        # Update character
+        print("Valid form data for updating a character")
+        form_data['age'] = 42
+        form_data['occupation'] = 'Farmer'
+        form = CharacterForm(data=form_data, instance=character2)
+        character2 = form.save()
+
+        # Test character update
+        self.assertEqual(character2.age, 42)
+        self.assertEqual(character2.occupation, 'Farmer')
+
+        # Delete character 2
+        print("Deleteing character 2")
+        character2.delete()
+
+        # Test character deletion
+        self.assertFalse(
+            Character.objects.filter(
+                last_name='Jingleheimer Schmidt',
+                story_id=self.story1.id
+            ).exists()
+        )
+        self.assertEqual(Character.objects.count(), 0)
 
 
     ### Teardown
