@@ -7,12 +7,12 @@ from app.models import Story, Scene, Character, Plot, PlotPoint
 from app.forms import *
 
 # Create your tests here.
-class StoryTestCase(TestCase):
+class ModelTestCase(TestCase):
     """Test case for the Story model."""
 
     def setUp(self):
 
-        print("Story Model Test Setup")
+        print("Model Test Setup")
 
         # Create new user object
         print("Creating new user object author1")
@@ -41,7 +41,7 @@ class StoryTestCase(TestCase):
         """Test story creation and update."""
 
         print("*****************************")
-        print("Testing Story Creation ...")
+        print("Testing Story Creation")
 
         # Run tests
         self.assertEqual(self.story1.title, 'Story 1')
@@ -199,39 +199,37 @@ class StoryTestCase(TestCase):
         print("Testing scene creation and update with valid form data")
 
         # Valid form data
-        print("Creating scene with valid form data")
+        print("Valid form data for creating a scene")
         form_data = {
             'title': 'Scene 2',
             'description': 'Description for Scene 2 in Story 1.'
         }
         form = SceneForm(data=form_data, story_id=self.story1.id)
-
-        # Test form validation
-        self.assertTrue(form.is_valid())
-
-        # Scene creation
         scene2 = form.save()
 
         # Test scene creation
+        self.assertTrue(form.is_valid())
         self.assertTrue(
             Scene.objects.filter(title='Scene 2', story_id=self.story1.id).exists()
         )
+        self.assertEqual(scene2.title, 'Scene 2')
 
         # Update scene data
         print("Update scene with invalid form data")
-        form_data = {
-            'title': 'A Better Title for This Scene',
-            'description': 'An even better description for this scene!'
-        }
+        form_data['description'] = 'A more exciting description!'
         form = SceneForm(data=form_data, instance=scene2)
-
-        # Test form validation
-        self.assertTrue(form.is_valid())
+        scene2 = form.save()
 
         # Test scene update
-        scene2.save()
-        self.assertEqual(scene2.title, 'A Better Title for This Scene')
-        self.assertEqual(scene2.description, 'An even better description for this scene!')
+        self.assertTrue(form.is_valid())
+        self.assertEqual(scene2.description, 'A more exciting description!')
+
+        # Delete Scene 2
+        print("Deleting Scene 2")
+        scene2.delete()
+        self.assertFalse(
+            Scene.objects.filter(title='Scene 2').exists()
+        )
 
 
     def test_scene_model_invalid_form(self):
@@ -240,10 +238,10 @@ class StoryTestCase(TestCase):
         print("************************************")
         print("Testing scene creation and update with invalid form data")
 
-        # Update scene data
-        print("Update scene data with invalid form data")
+        # Create scene
+        print("Create scene with invalid form data")
         form_data = {
-            'title': 'Scene 2',
+            'title': 'Scene 3',
             'description': ''
         }
         form = SceneForm(data=form_data, story_id=self.story1.id)
@@ -251,12 +249,31 @@ class StoryTestCase(TestCase):
         # Test form validation
         self.assertFalse(form.is_valid())
 
+        form_data['description'] = 'Valid description for Scene 3.'
+        form = SceneForm(data=form_data, story_id=self.story1.id)
+        scene3 = form.save()
+        
+        # Update scene data
+        print("Update scene data with invalid form data")
+        form_data['title'] = ''
+        form = SceneForm(data=form_data, instance=scene3)
+
+        # Test form validation
+        self.assertFalse(form.is_valid())
+
+        # Delete Scene 3
+        print("Deleting Scene 3")
+        scene3.delete()
+        self.assertFalse(
+            Scene.objects.filter(title='Scene 3').exists()
+        )
+
 
     ### Teardown
 
     def tearDown(self):
 
-        print("Story Model Test Teardown")
+        print("Model Test Teardown")
 
         # Delete story object and user object
         self.story1.delete()
