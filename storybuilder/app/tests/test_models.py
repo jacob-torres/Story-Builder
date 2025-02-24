@@ -324,8 +324,17 @@ class ModelTestCase(TestCase):
         character1.save()
 
         # Test character update
+        self.assertIsInstance(character1, Character)
         self.assertEqual(character1.first_name, 'Alice')
         self.assertEqual(character1.location, 'Wonderland')
+        self.assertTrue(
+            Character.objects.filter(
+                first_name='Alice',
+                location='Wonderland',
+                story_id=self.story1.id
+            ).exists()
+        )
+        self.assertEqual(self.story1.character_set.count(), 1)
 
     def test_character_model_valid_form(self):
         """Test for character creation and update with valid form data."""
@@ -346,19 +355,20 @@ class ModelTestCase(TestCase):
         character2 = form.save()
 
         # Test character creation
+        self.assertIsInstance(character2, Character)
         self.assertEqual(character2.full_name, 'John Jacob Jingleheimer Schmidt')
-        self.assertEqual(Character.objects.count(), 1)
+        self.assertEqual(self.story1.character_set.count(), 1)
 
         # Update character
         print("Valid form data for updating a character")
         form_data['age'] = 42
-        form_data['occupation'] = 'Farmer'
+        form_data['occupation'] = 'Singer'
         form = CharacterForm(data=form_data, instance=character2)
         character2 = form.save()
 
         # Test character update
         self.assertEqual(character2.age, 42)
-        self.assertEqual(character2.occupation, 'Farmer')
+        self.assertEqual(character2.occupation, 'Singer')
 
         # Delete character 2
         print("Deleteing character 2")
@@ -371,7 +381,54 @@ class ModelTestCase(TestCase):
                 story_id=self.story1.id
             ).exists()
         )
-        self.assertEqual(Character.objects.count(), 0)
+        self.assertEqual(self.story1.character_set.count(), 0)
+
+    def test_model_character_invalid_form(self):
+        """Test for creating and updating a character with invalid form data."""
+
+        print("*************************")
+        print("Testing character creation and update with invalid form data")
+
+        # Create character with empty first name
+        print("Invalid form data for creating a character with an empty first name")
+        form_data = {
+            'first_name': '',
+            'last_name': 'Smith',
+            'gender': 'Unknown',
+            'description': 'Mystery character without a name.'
+        }
+        form = CharacterForm(data=form_data, story_id=self.story1.id)
+
+        # Test form validation
+        self.assertFalse(form.is_valid())
+        self.assertIn('first_name', form.errors)
+
+        # Create valid character for testing update functionality
+        form_data['first_name'] = 'Doug'
+        form = CharacterForm(data=form_data, story_id=self.story1.id)
+        character3 = form.save()
+
+        # Update character with empty first name
+        print("Invalid form data for updating a character with an empty first name")
+        form_data['first_name'] = ''
+        form = CharacterForm(data=form_data, instance=character3)
+
+        # Test form validation
+        self.assertFalse(form.is_valid())
+        self.assertIn('first_name', form.errors)
+
+        # Delete character 3
+        print("Delete character 3")
+        character3.delete()
+
+        # Test character deletion
+        self.assertFalse(
+            Character.objects.filter(
+                first_name='Doug',
+                story_id=self.story1.id
+            ).exists()
+        )
+        self.assertEqual(self.story1.character_set.count(), 0)
 
 
     ### Teardown
