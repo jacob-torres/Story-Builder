@@ -430,6 +430,29 @@ class ModelTestCase(TestCase):
         )
         self.assertEqual(self.story1.character_set.count(), 0)
 
+    
+    ### Plot and Plot Point Tests
+
+    def test_model_plot_create_update(self):
+        """Test for automatically creating a plot object and updating the object."""
+
+        print("*************************")
+        print("Testing plot update")
+
+        # Test the existence of the automatic plot creation for story 1
+        self.assertIsNotNone(self.story1.plot)
+
+        # Create new story to test automatic plot creation
+        print("Automatic plot creation")
+        story2 = Story.objects.create(
+            title='Story 2',
+            description='Description for Story 2.',
+            author_id=self.author1.id
+        )
+
+        # Test plot creation
+        self.assertIsNotNone(story2.plot)
+
 
     ### Teardown
 
