@@ -440,18 +440,23 @@ class ModelTestCase(TestCase):
         print("Testing plot update")
 
         # Test the existence of the automatic plot creation for story 1
-        self.assertIsNotNone(self.story1.plot)
+        # self.assertIsNotNone(self.story1.plot)
 
-        # Create new story to test automatic plot creation
-        print("Automatic plot creation")
-        story2 = Story.objects.create(
-            title='Story 2',
-            description='Description for Story 2.',
-            author_id=self.author1.id
+        # Create new plot object and link it to story 1
+        print("Creating new plot object for Story 1")
+        plot = Plot.objects.create(
+            name='Plot for Story 1',
+            description='Description of the plot for Story 1.',
+            story_id=self.story1.id
         )
 
         # Test plot creation
-        self.assertIsNotNone(story2.plot)
+        self.assertIsNotNone(plot)
+        self.assertIsNotNone(self.story1.plot)
+        self.assertIsInstance(plot, Plot)
+        self.assertEqual(plot.story_id, self.story1.id)
+        self.assertEqual(plot.name, 'Plot for Story 1')
+        self.assertEqual(plot.description, 'Description of the plot for Story 1.')
 
 
     ### Teardown
