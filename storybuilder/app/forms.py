@@ -32,7 +32,7 @@ class StoryForm(forms.ModelForm):
             self.fields['premise'].initial = self.instance.premise
             self.fields['genres'].initial = self.instance.genres
 
-            # Define the story that the object is associated with
+            # Define the author the story is associated with
             if author_id:
                 self.instance.author = CustomUser.objects.get(id=author_id)
 

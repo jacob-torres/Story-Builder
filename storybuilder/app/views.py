@@ -128,7 +128,7 @@ def create_or_update_story(request, story_slug=None):
                         new_story = form.save()
                         new_plot = Plot.objects.create(
                             name=f"Plot for {new_story.title}",
-                            description=f"Briefly summarize the plot of your story here.",
+                            description=f"The plot description for {new_story.title}.",
                             story_id=new_story.id
                         )
                         print(f"Successfully created new story {new_story.id} and plot {new_plot.id}.")
