@@ -226,7 +226,3 @@ class World(models.Model):
     def __str__(self):
         """Override the string method for the World object."""
         return self.name
-
-
-# Assign the story manager to the Story model
-# Story.objects = StoryManager()

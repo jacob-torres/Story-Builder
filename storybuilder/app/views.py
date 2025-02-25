@@ -122,16 +122,19 @@ def create_or_update_story(request, story_slug=None):
         else:
             if request.method == 'POST':
                 print("Creating a new Story object ...")
-                form = StoryForm(request.POST, author_id=author_id)
+
+                # Create initial story object for proper plot creation
+                new_story = Story.objects.create(
+                    title=request.POST['title'],
+                    description=request.POST['description'],
+                    author_id=author_id
+                )
+
+                # Update newly-created story object using form data
+                form = StoryForm(request.POST, instance=new_story)
                 if form.is_valid():
                     try:
                         new_story = form.save()
-                        # new_plot = Plot.objects.create(
-                        #     name=f"Plot for {new_story.title}",
-                        #     description=f"The plot description for {new_story.title}.",
-                        #     story_id=new_story.id
-                        # )
-                        # print(f"Successfully created new story {new_story.id} and plot {new_plot.id}.")
                         return redirect('story_detail', story_slug=new_story.slug)
                     except IntegrityError:
                         print("Duplicate story ...")
