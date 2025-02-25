@@ -40,7 +40,7 @@ class ViewTestCase(TestCase):
 
         # Test response status
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'<h1>Welcome to The Story Builder', response.content)
+        self.assertIn(b'<h1>Welcome to The Story Builder</h1>', response.content)
 
         # Create get request for the home view with user logged in
         print("Get request to the home view with user logged in")
