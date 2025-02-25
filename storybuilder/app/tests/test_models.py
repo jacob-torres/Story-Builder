@@ -15,21 +15,29 @@ class ModelTestCase(TestCase):
         print("Model Test Setup")
 
         # Create new user object
-        print("Creating new user object author1")
+        # print("Creating new user object author1")
         self.author1 = CustomUser.objects.create(
             username='author1',
             email='author1@exampleemail.com',
             password='ILoveBooks123!',
-            first_name='Alice',
+            first_name='Jack',
             last_name='Writer'
         )
 
         # Create new story object
-        print("Creating new story object story1")
+        # print("Creating new story object story1")
         self.story1 = Story.objects.create(
             title='Story 1',
             description='Description for Story 1.',
             author_id=self.author1.id
+        )
+
+        # Create plot
+        # print("Creating plot for Story 1")
+        Plot.objects.create(
+            name='Plot for Story 1',
+            description='Description of the plot for Story 1.',
+            story_id=self.story1.id
         )
 
         return super().setUp()
@@ -40,8 +48,8 @@ class ModelTestCase(TestCase):
     def test_story_model_create_update(self):
         """Test story creation and update."""
 
-        print("*****************************")
-        print("Testing Story Creation")
+        print("\n*****************************\n")
+        print("Testing Story Creation\n")
 
         # Run tests
         self.assertEqual(self.story1.title, 'Story 1')
@@ -75,8 +83,8 @@ class ModelTestCase(TestCase):
     def test_story_model_valid_form(self):
         """Testing story creation and update with valid model form data."""
 
-        print("*********************************")
-        print("Testing valid story form Data")
+        print("\n*********************************\n")
+        print("Testing valid story form Data\n")
 
         # Create story with model form
         print("Valid form data for Story 2")
@@ -130,8 +138,8 @@ class ModelTestCase(TestCase):
     def test_story_model_invalid_form(self):
         """Testing story creation and update with invalid model form data."""
 
-        print("*****************************")
-        print("Testing invalid story form data")
+        print("\n*****************************\n")
+        print("Testing invalid story form data\n")
 
         # Create story with empty title
         print("Invalid form data for creating a story with an empty title")
@@ -181,8 +189,8 @@ class ModelTestCase(TestCase):
     def test_scene_model_create_update(self):
         """Testing scene creation and update."""
 
-        print("**************************")
-        print("Testing Scene object creation and update")
+        print("\n**************************\n")
+        print("Testing Scene object creation and update\n")
 
         # Run initial tests before scene creation
         self.assertEqual(self.story1.scene_set.count(), 0)
@@ -213,8 +221,8 @@ class ModelTestCase(TestCase):
     def test_scene_modelvalid_form(self):
         """Test scene creation and update with valid form data."""
 
-        print("*****************************")
-        print("Testing scene creation and update with valid form data")
+        print("\n*****************************\n")
+        print("Testing scene creation and update with valid form data\n")
 
         # Valid form data
         print("Valid form data for creating a scene")
@@ -258,8 +266,8 @@ class ModelTestCase(TestCase):
     def test_scene_model_invalid_form(self):
         """Test for creating and updating scenes with invalid form data."""
 
-        print("************************************")
-        print("Testing scene creation and update with invalid form data")
+        print("\n************************************\n")
+        print("Testing scene creation and update with invalid form data\n")
 
         # Create scene
         print("Invalid form data for creating a scene with an empty description")
@@ -303,8 +311,8 @@ class ModelTestCase(TestCase):
     def test_character_model_create_update(self):
         """Test for character creation and update."""
 
-        print("***************************")
-        print("Testing character creation and update")
+        print("\n***************************\n")
+        print("Testing character creation and update\n")
 
         # Create character
         print("Create character for Story 1")
@@ -339,8 +347,8 @@ class ModelTestCase(TestCase):
     def test_character_model_valid_form(self):
         """Test for character creation and update with valid form data."""
 
-        print("****************************")
-        print("Testing character creation and update with valid form data")
+        print("\n****************************\n")
+        print("Testing character creation and update with valid form data\n")
 
         # Create character
         print("Valid form data for creating a character")
@@ -386,8 +394,8 @@ class ModelTestCase(TestCase):
     def test_model_character_invalid_form(self):
         """Test for creating and updating a character with invalid form data."""
 
-        print("*************************")
-        print("Testing character creation and update with invalid form data")
+        print("\n*************************\n")
+        print("Testing character creation and update with invalid form data\n")
 
         # Create character with empty first name
         print("Invalid form data for creating a character with an empty first name")
@@ -431,28 +439,20 @@ class ModelTestCase(TestCase):
         self.assertEqual(self.story1.character_set.count(), 0)
 
     
-    ### Plot and Plot Point Tests
+    ### Plot Tests
 
     def test_model_plot_create_update(self):
         """Test for automatically creating a plot object and updating the object."""
 
-        print("*************************")
-        print("Testing plot update")
+        print("\n*************************\n")
+        print("Testing plot update\n")
 
         # Test the existence of the automatic plot creation for story 1
-        # self.assertIsNotNone(self.story1.plot)
-
-        # Create new plot object and link it to story 1
-        print("Creating new plot object for Story 1")
-        plot = Plot.objects.create(
-            name='Plot for Story 1',
-            description='Description of the plot for Story 1.',
-            story_id=self.story1.id
-        )
+        self.assertIsNotNone(self.story1.plot)
 
         # Test plot creation
+        plot = self.story1.plot
         self.assertIsNotNone(plot)
-        self.assertIsNotNone(self.story1.plot)
         self.assertIsInstance(plot, Plot)
         self.assertEqual(plot.story_id, self.story1.id)
         self.assertEqual(plot.name, 'Plot for Story 1')
@@ -467,6 +467,69 @@ class ModelTestCase(TestCase):
         # Test plot update
         self.assertEqual(plot.name, 'New Name for the Plot')
         self.assertEqual(plot.description, 'A much better description!')
+
+    def test_model_plot_valid_form(self):
+        """Test for updating a plot with valid form data."""
+
+        print("\n***************************\n")
+        print("Testing plot update with valid form data\n")
+
+        # Update plot
+        print("Valid form data for updating a plot")
+        plot = self.story1.plot
+        form_data = {
+            'name': 'Amazing Plot for Story 1',
+            'description': 'More exciting plot description!'
+        }
+        form = PlotForm(data=form_data, instance=plot)
+        plot = form.save()
+
+        # Test form validation and plot update
+        self.assertTrue(form.is_valid())
+        self.assertEqual(plot.name, 'Amazing Plot for Story 1')
+        self.assertEqual(plot.description, 'More exciting plot description!')
+
+
+    def test_model_plot_invalid_form(self):
+        """Test for updating a plot with invalid form data."""
+
+        print("\n***************************\n")
+        print("Testing plot update with invalid form data\n")
+
+        # Update plot
+        print("Invalid form data for updating a plot with an empty name")
+        plot = self.story1.plot
+        form_data = {
+            'name': '',
+            'description': 'Description of the plot for Story 1.'
+        }
+        form = PlotForm(data=form_data, instance=plot)
+
+        # Test form validation
+        self.assertFalse(form.is_valid())
+        self.assertIn('name', form.errors)
+
+
+    ### Plot Point Tests
+
+    def test_model_plotpoint_create_update(self):
+        """Test for creating and updating plot points."""
+
+        print("\n*********************************\n")
+        print("Testing the creation and update of plot points\n")
+
+        # Create a plot point
+        plot = self.story1.plot
+        plotpoint1 = PlotPoint.objects.create(
+            name='Plotpoint 1',
+            description='Description of Plotpoint 1.',
+            plot_id=plot.id
+        )
+
+        # Test plot point creation
+        self.assertEqual(plot.plotpoint_set.count(), 1)
+        self.assertEqual(plotpoint1.name, 'Plotpoint 1')
+        self.assertEqual(plotpoint1.description, 'Description of Plotpoint 1.')
 
 
     ### Teardown
