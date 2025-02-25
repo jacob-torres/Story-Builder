@@ -10,6 +10,9 @@ from app.forms import *
 class ModelTestCase(TestCase):
     """Test case for the Story model."""
 
+
+    ### Setup
+
     def setUp(self):
 
         print("Model Test Setup")
@@ -530,6 +533,101 @@ class ModelTestCase(TestCase):
         self.assertEqual(plot.plotpoint_set.count(), 1)
         self.assertEqual(plotpoint1.name, 'Plotpoint 1')
         self.assertEqual(plotpoint1.description, 'Description of Plotpoint 1.')
+
+
+    def test_model_plotpoint_valid_form(self):
+        """Test for updating a plot point with valid form data."""
+
+        print("\n***************************\n")
+        print("Testing plot point update with valid form data\n")
+
+        # Create plot point
+        print("Valid form data for creating a plot point")
+        plot = self.story1.plot
+        form_data = {
+            'name': 'Plotpoint 2',
+            'description': 'Description of Plotpoint 2.'
+        }
+        form = PlotPointForm(data=form_data, plot_id=plot.id)
+        plotpoint2 = form.save()
+
+        # Test form validation and plot point creation
+        self.assertTrue(form.is_valid())
+        self.assertIsInstance(plotpoint2, PlotPoint)
+        self.assertEqual(plot.plotpoint_set.count(), 1)
+        self.assertEqual(plotpoint2.name, 'Plotpoint 2')
+        self.assertEqual(plotpoint2.description, 'Description of Plotpoint 2.')
+
+        # Update plot point
+        print("Valid form data for updating a plot point")
+        form_data['description'] = 'A better description of Plotpoint 2.'
+        form = PlotPointForm(data=form_data, instance=plotpoint2)
+        plotpoint2 = form.save()
+
+        # Test plot point update
+        self.assertEqual(plotpoint2.description, 'A better description of Plotpoint 2.')
+
+        # Delete plot point 2
+        print("Delete Plotpoint 2")
+        plotpoint2.delete()
+
+        # Test plot point deletion
+        self.assertFalse(
+            PlotPoint.objects.filter(
+                name='Plotpoint 2',
+                description='A better description of Plotpoint 2.',
+                plot_id=plot.id
+            ).exists()
+        )
+        self.assertEqual(plot.plotpoint_set.count(), 0)
+
+
+    def test_model_plotpoint_invalid_form(self):
+        """Test for updating a plot point with invalid form data."""
+
+        print("\n***************************\n")
+        print("Testing plot point update with invalid form data\n")
+
+        # Create plot point
+        print("Invalid form data for creating a plot point with an empty name")
+        plot = self.story1.plot
+        form_data = {
+            'name': '',
+            'description': 'Description of Plotpoint 3.'
+        }
+        form = PlotPointForm(data=form_data, plot_id=plot.id)
+
+        # Test form validation
+        self.assertFalse(form.is_valid())
+        self.assertIn('name', form.errors)
+
+        # Create plot point for testing update functionality
+        form_data['name'] = 'Plotpoint 3'
+        form = PlotPointForm(data=form_data, plot_id=plot.id)
+        plotpoint3 = form.save()
+
+        # Update plot point
+        print("Invalid form data for updating a plot point with an empty description")
+        form_data['description'] = ''
+        form = PlotPointForm(data=form_data, instance=plotpoint3)
+
+        # Test form validation
+        self.assertFalse(form.is_valid())
+        self.assertIn('description', form.errors)
+
+        # Delete plot point 3
+        print("Delete Plotpoint 3")
+        plotpoint3.delete()
+
+        # Test plot point deletion
+        self.assertFalse(
+            PlotPoint.objects.filter(
+                name='Plotpoint 3',
+                description='Description of Plotpoint 3.',
+                plot_id=plot.id
+            ).exists()
+        )
+        self.assertEqual(plot.plotpoint_set.count(), 0)
 
 
     ### Teardown
