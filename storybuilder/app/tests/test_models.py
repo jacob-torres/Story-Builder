@@ -36,11 +36,11 @@ class ModelTestCase(TestCase):
 
         # Create plot
         # print("Creating plot for Story 1")
-        Plot.objects.create(
-            name='Plot for Story 1',
-            description='Description of the plot for Story 1.',
-            story_id=self.story1.id
-        )
+        # Plot.objects.create(
+        #     name='Plot for Story 1',
+        #     description='Description of the plot for Story 1.',
+        #     story_id=self.story1.id
+        # )
 
         return super().setUp()
 

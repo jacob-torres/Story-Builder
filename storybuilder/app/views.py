@@ -43,8 +43,8 @@ def stories(request):
 def story_detail(request, story_slug):
     """View function for displaying story details."""
 
-    print("**************************************************")
-    print("Story Detail View")
+    print("\n**************************************************\n")
+    print("Story Detail View\n")
 
     author_id = request.user.id
     story = get_story_by_slug(story_slug, author_id)
@@ -94,10 +94,10 @@ def create_or_update_story(request, story_slug=None):
     context= {}
 
     try:
+        author_id = request.user.id
 
         # Update story if slug is passed
         if story_slug:
-            author_id = request.user.id
             story = get_story_by_slug(story_slug, author_id)
             if not story:
                 context = {'model_name': 'Story'}
@@ -126,12 +126,12 @@ def create_or_update_story(request, story_slug=None):
                 if form.is_valid():
                     try:
                         new_story = form.save()
-                        new_plot = Plot.objects.create(
-                            name=f"Plot for {new_story.title}",
-                            description=f"The plot description for {new_story.title}.",
-                            story_id=new_story.id
-                        )
-                        print(f"Successfully created new story {new_story.id} and plot {new_plot.id}.")
+                        # new_plot = Plot.objects.create(
+                        #     name=f"Plot for {new_story.title}",
+                        #     description=f"The plot description for {new_story.title}.",
+                        #     story_id=new_story.id
+                        # )
+                        # print(f"Successfully created new story {new_story.id} and plot {new_plot.id}.")
                         return redirect('story_detail', story_slug=new_story.slug)
                     except IntegrityError:
                         print("Duplicate story ...")

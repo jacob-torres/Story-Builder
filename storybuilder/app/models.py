@@ -14,6 +14,27 @@ mid_length = 250
 long_length = 500
 
 
+### Custom Story Manager
+
+class StoryManager(models.Manager):
+    """Custom manager for story objects."""
+
+    def create(self, **kwargs):
+        """
+        An associated plot object is created and connected
+        to each newly-created story object.
+        """
+
+        story = super().create(**kwargs)
+        plot = Plot.objects.create(
+            name=f"Plot for {story.title}",
+            description=f"Description of the plot for {story.title}.",
+            story_id=story.id
+        )
+        print(f"Successfully created new story {story.id} and plot {plot.id}.")
+        return story
+
+
 class Story(models.Model):
     """The story data structure, with characters, plots, worlds, and scenes."""
 
@@ -34,6 +55,9 @@ class Story(models.Model):
     date_finished = models.DateField(null=True)
     slug = models.SlugField(max_length=mid_length, blank=True)
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None, related_name='stories')
+
+    # Story object manager
+    objects = StoryManager()
 
     class Meta:
         constraints = [
@@ -202,3 +226,7 @@ class World(models.Model):
     def __str__(self):
         """Override the string method for the World object."""
         return self.name
+
+
+# Assign the story manager to the Story model
+# Story.objects = StoryManager()
