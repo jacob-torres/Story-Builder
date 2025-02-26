@@ -45,7 +45,7 @@ class ViewTestCase(TestCase):
         self.client.logout()
         response = self.client.get('/')
 
-        # Test response status
+        # Test response
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'<h1>Welcome to The Story Builder</h1>', response.content)
 
@@ -80,6 +80,17 @@ class ViewTestCase(TestCase):
 
     def test_view_stories(self):
         """Test for the stories view function."""
+
+        print("*******************************")
+        print("Testing the stories view")
+
+        # Create a get request for the stories URL
+        print("Get request to the stories URL")
+        response = self.client.get('/stories/')
+        print(response.content)
+
+        # Test response
+        self.assertEqual(response.status_code, 200)
 
 
     ### Teardown
