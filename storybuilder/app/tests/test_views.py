@@ -2,7 +2,7 @@ from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import AnonymousUser
 
 from accounts.models import CustomUser
-from app.views import *
+from app import views
 
 
 class ViewTestCase(TestCase):
@@ -62,16 +62,16 @@ class ViewTestCase(TestCase):
         print("Home view function call with no user logged in")
         request = self.request_factory.get('/')
         request.user = AnonymousUser()
-        response = home(request)
+        response = views.home(request)
 
-        # Test response status
+        # Test response
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'<h1>Welcome to The Story Builder</h1>', response.content)
 
         # Request with user logged in
         print("Home view function call with user logged in")
         request.user = self.user
-        response = home(request)
+        response = views.home(request)
 
         # Test response status
         self.assertEqual(response.status_code, 200)
@@ -87,10 +87,26 @@ class ViewTestCase(TestCase):
         # Create a get request for the stories URL
         print("Get request to the stories URL")
         response = self.client.get('/stories/')
-        print(response.content)
 
         # Test response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'You have no stories yet. When you do, they will be listed here.',
+            response.content
+        )
+
+        # Test view function in isolation
+        print("Stories view function call with get request")
+        request = self.request_factory.get('/stories/')
+        request.user = self.user
+        response = views.stories(request)
+
+        # Test response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'You have no stories yet. When you do, they will be listed here.',
+            response.content
+        )
 
 
     ### Teardown
