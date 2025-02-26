@@ -1,6 +1,8 @@
-from django.test import TestCase, Client
+from django.test import TestCase, Client, RequestFactory
+from django.contrib.auth.models import AnonymousUser
 
 from accounts.models import CustomUser
+from app.views import *
 
 
 class ViewTestCase(TestCase):
@@ -24,18 +26,23 @@ class ViewTestCase(TestCase):
 
         # Create client instance for sending URL requests
         self.client = Client()
+        self.client.force_login(self.user)
+
+        # Set up request factory for view function isolation
+        self.request_factory = RequestFactory()
 
         return super().setUp()
     
 
-    def test_view_home_get(self):
+    def test_view_home(self):
         """Test for the home view function."""
 
-        print("\n***********************\n")
-        print("Testing the home view function\n")
+        print("***********************")
+        print("Testing the home view function")
 
         # Create get request for the home view
-        print("Get request to the home view with no user logged in")
+        print("Get request to the home URL with no user logged in")
+        self.client.logout()
         response = self.client.get('/')
 
         # Test response status
@@ -43,7 +50,7 @@ class ViewTestCase(TestCase):
         self.assertIn(b'<h1>Welcome to The Story Builder</h1>', response.content)
 
         # Create get request for the home view with user logged in
-        print("Get request to the home view with user logged in")
+        print("Get request to the home URL with user logged in")
         self.client.force_login(self.user)
         response = self.client.get('/')
 
@@ -51,8 +58,28 @@ class ViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'<h1>Welcome back, Jack!</h1>', response.content)
 
-        # Log out user
-        self.client.logout()
+        # Test view function in isolation
+        print("Home view function call with no user logged in")
+        request = self.request_factory.get('/')
+        request.user = AnonymousUser()
+        response = home(request)
+
+        # Test response status
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<h1>Welcome to The Story Builder</h1>', response.content)
+
+        # Request with user logged in
+        print("Home view function call with user logged in")
+        request.user = self.user
+        response = home(request)
+
+        # Test response status
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<h1>Welcome back, Jack!</h1>', response.content)
+
+
+    def test_view_stories(self):
+        """Test for the stories view function."""
 
 
     ### Teardown
