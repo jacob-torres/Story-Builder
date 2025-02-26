@@ -115,7 +115,8 @@ class ViewTestCase(TestCase):
 
         print("View Test Teardown")
 
-        # Log out user from client
+        # Log out from client and delete user object
         self.client.logout()
+        self.user.delete()
 
         return super().tearDown()
