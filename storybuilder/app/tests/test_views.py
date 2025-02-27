@@ -91,7 +91,7 @@ class ViewTestCase(TestCase):
         # Test response
         self.assertEqual(response.status_code, 200)
         self.assertIn(
-            b'You have no stories yet. When you do, they will be listed here.',
+            b'<p>You have no stories yet. When you do, they will be listed here.</p>',
             response.content
         )
 
