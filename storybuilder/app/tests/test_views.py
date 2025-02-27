@@ -2,7 +2,7 @@ from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import AnonymousUser
 
 from accounts.models import CustomUser
-from app import views
+from app import views, forms
 
 
 class ViewTestCase(TestCase):
@@ -107,6 +107,64 @@ class ViewTestCase(TestCase):
             b'You have no stories yet. When you do, they will be listed here.',
             response.content
         )
+
+    def test_view_new_story(self):
+        """Test for the create or update story view in creating a new story."""
+
+        print("*****************************")
+        print("Testing the story view for creating a new story.")
+
+        # Connect using the client
+        print("Get request to the new story URL")
+        response = self.client.get('/stories/new/')
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<h1>Create a New Story</h1>', response.content)
+        self.assertIn('form', response.context)
+        self.assertIsInstance(response.context['form'], forms.StoryForm)
+
+        # Post request using the client
+        print("Post request to the new story URL")
+        form_data = {
+            'title': 'Story 1',
+            'description': 'Description for Story 1.',
+            'author_id': self.user.id
+        }
+        response = self.client.post('/stories/new/', data=form_data)
+
+        # Test the response
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual('/stories/story-1/', response.url)
+
+        # Test view function in isolation
+        print("New story view function call with get request")
+        request = self.request_factory.get('/stories/new/')
+        request.user = self.user
+        response = views.create_or_update_story(request)
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<h1>Create a New Story</h1>', response.content)
+        self.assertIn(b'<form method="post">', response.content)
+        self.assertIn(b'<input type="text" name="title"', response.content)
+        self.assertIn(b'<input type="checkbox" name="genres"', response.content)
+
+        # Post request with view function in isolation
+        print("New story view function with post request")
+        form_data = {
+            'title': 'Story 2',
+            'description': 'Description for Story 2.',
+            'author_id': self.user.id
+        }
+
+        request = self.request_factory.post('/stories/new/', data=form_data)
+        request.user = self.user
+        response = views.create_or_update_story(request)
+
+        # Test the response
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual('/stories/story-2/', response.url)
 
 
     ### Teardown
