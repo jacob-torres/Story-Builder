@@ -300,13 +300,8 @@ def create_or_update_scene(request, story_slug, scene_order=None):
         else:
             if request.method == 'POST':
                 print("Creating a new Scene object ...")
-                # form = SceneForm(
-                #     request.POST,
-                #     story_slug=story_slug,
-                #     author_id=author_id
-                # )
+                form = SceneForm(request.POST, story_id=story.id)
                 if form.is_valid():
-                    form = SceneForm(request.POST, story_id=story.id)
                     new_scene = form.save()
                     return redirect('scene_detail', story_slug=story_slug, scene_order=new_scene.order)
 
