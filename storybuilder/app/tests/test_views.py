@@ -108,13 +108,31 @@ class ViewTestCase(TestCase):
             response.content
         )
 
-    def test_view_new_story(self):
+        # Create story through the client for story list testing
+        print("Creating test story ...")
+        self.client.post(
+            '/stories/new/',
+            data=   {
+                'title': 'Story 1',
+                'description': 'Description for Story 1.',
+                'author_id': self.user.id
+            }
+        )
+        response = self.client.get('/stories/')
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<table>', response.content)
+        self.assertIn(b'<th>Story Title</th>', response.content)
+        self.assertIn(b'<a href=story-1>Story 1</a>', response.content)
+
+    def test_view_story_create_update(self):
         """Test for the create or update story view in creating a new story."""
 
         print("*****************************")
         print("Testing the story view for creating a new story.")
 
-        # Connect using the client
+        # Get request using the client
         print("Get request to the new story URL")
         response = self.client.get('/stories/new/')
 
@@ -135,7 +153,7 @@ class ViewTestCase(TestCase):
 
         # Test the response
         self.assertEqual(response.status_code, 302)
-        self.assertEqual('/stories/story-1/', response.url)
+        self.assertEqual(response.url, '/stories/story-1/')
         self.assertEqual(self.user.stories.count(), 1)
 
         # Test view function in isolation
@@ -165,7 +183,7 @@ class ViewTestCase(TestCase):
 
         # Test the response
         self.assertEqual(response.status_code, 302)
-        self.assertEqual('/stories/story-2/', response.url)
+        self.assertEqual(response.url, '/stories/story-2/')
         self.assertEqual(self.user.stories.count(), 2)
 
     def test_view_story_detail(self):
@@ -206,6 +224,102 @@ class ViewTestCase(TestCase):
         self.assertIn(b'<title>Story 1 | The Story Builder</title>', response.content)
         self.assertIn(b'<h1>Story Details</h1>', response.content)
         self.assertIn(b'<h2>Description</h2>', response.content)
+
+    def test_view_scenes(self):
+        """Test for the scenes view."""
+
+        print("*******************************")
+        print("Testing the scenes view")
+
+        # Create story for testing scene functionality
+        print("Creating test story ...")
+        self.client.post(
+            '/stories/new/',
+            data={
+                'title': 'Story 1',
+                'description': 'A story for Testing!',
+                'author_id': self.user.id
+            }
+        )
+
+        # Create a get request for the scenes URL
+        print("Get request to the scenes URL")
+        response = self.client.get('/stories/story-1/scenes/')
+
+        # Test response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'You have no scenes yet. When you do, they will be listed here.',
+            response.content
+        )
+
+        # Test view function in isolation
+        print("scenes view function call with get request")
+        request = self.request_factory.get('/stories/story-1/scenes/')
+        request.user = self.user
+        response = views.scenes(request, story_slug='story-1')
+
+        # Test response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'You have no scenes yet. When you do, they will be listed here.',
+            response.content
+        )
+
+        # Create a scene through the client for scene list testing
+        print("Creating test scene ...")
+        response = self.client.post(
+            '/stories/story-1/scenes/new/',
+            data=   {
+                'title': 'Scene 1',
+                'description': 'Description for Scene 1.'
+                # 'story_id': self.user.stories.first().id
+            }
+        )
+        print(response)
+        response = self.client.get('/stories/story-1/scenes/')
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<table>', response.content)
+        self.assertIn(b'<th>Scene Title</th>', response.content)
+        self.assertIn(b'<a href=1>Scene 1</a>', response.content)
+
+    def test_view_scene_create_update(self):
+        """Test for the create and update functionality for scenes."""
+    
+    def test_view_scene_detail(self):
+        """Test for the scene detail page."""
+
+    def test_view_scene_move(self):
+        """Test for moving a scene up or down in the scene list."""
+
+    def test_view_characters(self):
+        """Test for the characters view."""
+
+    def test_view_character_create_update(self):
+        """Test for the create and update functionality for characters."""
+
+    def test_view_character_detail(self):
+        """Test for the character detail page."""
+    
+    def test_view_plot_create_update(self):
+        """Test for the create and update functionality for the plot."""
+
+    def test_view_plot_detail(self):
+        """Test for the plot detail page."""
+
+    def test_view_plotpoints(self):
+        """Test for the plotpoints view."""
+
+    def test_view_plotpoint_create_update(self):
+        """Test for the create and update functionality for plot points."""
+
+    def test_view_plotpoint_detail(self):
+        """Test for the plot point detail page."""
+
+    def test_view_plotpoint_move(self):
+        """Test for moving a plot point up or down in the plot point list."""
 
 
     ### Teardown
