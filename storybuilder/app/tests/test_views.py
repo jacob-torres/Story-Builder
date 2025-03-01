@@ -136,6 +136,7 @@ class ViewTestCase(TestCase):
         # Test the response
         self.assertEqual(response.status_code, 302)
         self.assertEqual('/stories/story-1/', response.url)
+        self.assertEqual(self.user.stories.count(), 1)
 
         # Test view function in isolation
         print("New story view function call with get request")
@@ -165,6 +166,46 @@ class ViewTestCase(TestCase):
         # Test the response
         self.assertEqual(response.status_code, 302)
         self.assertEqual('/stories/story-2/', response.url)
+        self.assertEqual(self.user.stories.count(), 2)
+
+    def test_view_story_detail(self):
+        """Test for the story detail view."""
+
+        print("*********************************")
+        print("Testing the story detail view")
+
+        # Create new story for testing through the client
+        print("Creating test story ...")
+        self.client.post(
+            '/stories/new/',
+            data={
+                'title': 'Story 1',
+                'description': 'Description for Story 1.',
+                'author_id': self.user.id
+            }
+        )
+
+        # Client request for story detail page
+        print("Get request to the URL for story detail page")
+        response = self.client.get('/stories/story-1/')
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<title>Story 1 | The Story Builder</title>', response.content)
+        self.assertIn(b'<h1>Story Details</h1>', response.content)
+        self.assertIn(b'<h2>Description</h2>', response.content)
+
+        # View function in isolation
+        print("Story detail view function call with get request")
+        request = self.request_factory.get('/stories/story-1/')
+        request.user = self.user
+        response = views.story_detail(request, story_slug='story-1')
+
+        # Test response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<title>Story 1 | The Story Builder</title>', response.content)
+        self.assertIn(b'<h1>Story Details</h1>', response.content)
+        self.assertIn(b'<h2>Description</h2>', response.content)
 
 
     ### Teardown
