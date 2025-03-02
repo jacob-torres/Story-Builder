@@ -111,9 +111,9 @@ def create_or_update_story(request, story_slug=None):
                     return redirect('story_detail', story_slug=story.slug)
             else:
                 form = StoryForm(instance=story)
+
             template_name = 'update_story.html'
             context = {
-                'user': request.user,
                 'form': form,
                 'story_title': story.title
             }
@@ -290,10 +290,12 @@ def create_or_update_scene(request, story_slug, scene_order=None):
 
             else:
                 form = SceneForm(instance=scene)
+
             template_name = 'update_scene.html'
             context = {
                 'form': form,
-                'story_title': story.title
+                'story_title': story.title,
+                'scene_title': scene.title
             }
 
         # Create new scene

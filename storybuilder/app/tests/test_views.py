@@ -3,6 +3,7 @@ from django.contrib.auth.models import AnonymousUser
 
 from accounts.models import CustomUser
 from app import views, forms
+from app.models import Story
 
 
 class ViewTestCase(TestCase):
@@ -24,9 +25,27 @@ class ViewTestCase(TestCase):
             last_name='Writer'
         )
 
+        # Create story for testing story component functionality
+        self.story1 = Story.objects.create(
+            title='Story 1',
+            description='Description for Story 1.',
+            author_id=self.user.id
+        )
+
         # Create client instance for sending URL requests
         self.client = Client()
         self.client.force_login(self.user)
+
+        # # Create story for testing scene functionality
+        # print("Creating test story ...")
+        # self.client.post(
+        #     '/stories/new/',
+        #     data={
+        #         'title': 'Story 1',
+        #         'description': 'A story for Testing!',
+        #         'author_id': self.user.id
+        #     }
+        # )
 
         # Set up request factory for view function isolation
         self.request_factory = RequestFactory()
@@ -88,6 +107,29 @@ class ViewTestCase(TestCase):
         print("Get request to the stories URL")
         response = self.client.get('/stories/')
 
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<table>', response.content)
+        self.assertIn(b'<th>Story Title</th>', response.content)
+        self.assertIn(b'<a href=story-1>Story 1</a>', response.content)
+
+        # Test view function in isolation
+        print("Stories view function call with get request")
+        request = self.request_factory.get('/stories/')
+        request.user = self.user
+        response = views.stories(request)
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<table>', response.content)
+        self.assertIn(b'<th>Story Title</th>', response.content)
+        self.assertIn(b'<a href=story-1>Story 1</a>', response.content)
+
+        # Delete test story to test empty story list
+        print("Get request to the stories URL with no stories")
+        self.user.stories.all().delete()
+        response = self.client.get('/stories/')
+
         # Test response
         self.assertEqual(response.status_code, 200)
         self.assertIn(
@@ -96,7 +138,7 @@ class ViewTestCase(TestCase):
         )
 
         # Test view function in isolation
-        print("Stories view function call with get request")
+        print("Stories view function call with get request and no stories")
         request = self.request_factory.get('/stories/')
         request.user = self.user
         response = views.stories(request)
@@ -108,31 +150,13 @@ class ViewTestCase(TestCase):
             response.content
         )
 
-        # Create story through the client for story list testing
-        print("Creating test story ...")
-        self.client.post(
-            '/stories/new/',
-            data=   {
-                'title': 'Story 1',
-                'description': 'Description for Story 1.',
-                'author_id': self.user.id
-            }
-        )
-        response = self.client.get('/stories/')
-
-        # Test the response
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'<table>', response.content)
-        self.assertIn(b'<th>Story Title</th>', response.content)
-        self.assertIn(b'<a href=story-1>Story 1</a>', response.content)
-
     def test_view_story_create_update(self):
         """Test for the create or update story view in creating a new story."""
 
         print("*****************************")
-        print("Testing the story view for creating a new story.")
+        print("Testing the view for creating and updating a story.")
 
-        # Get request using the client
+        # Get request: render new story form using the client
         print("Get request to the new story URL")
         response = self.client.get('/stories/new/')
 
@@ -142,19 +166,19 @@ class ViewTestCase(TestCase):
         self.assertIn('form', response.context)
         self.assertIsInstance(response.context['form'], forms.StoryForm)
 
-        # Post request using the client
+        # Post request: create a story using the client
         print("Post request to the new story URL")
         form_data = {
-            'title': 'Story 1',
-            'description': 'Description for Story 1.',
+            'title': 'Story 2',
+            'description': 'Description for Story 2.',
             'author_id': self.user.id
         }
         response = self.client.post('/stories/new/', data=form_data)
 
         # Test the response
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/stories/story-1/')
-        self.assertEqual(self.user.stories.count(), 1)
+        self.assertEqual(response.url, '/stories/story-2/')
+        self.assertEqual(self.user.stories.count(), 2)
 
         # Test view function in isolation
         print("New story view function call with get request")
@@ -172,8 +196,8 @@ class ViewTestCase(TestCase):
         # Post request with view function in isolation
         print("New story view function with post request")
         form_data = {
-            'title': 'Story 2',
-            'description': 'Description for Story 2.',
+            'title': 'Story 3',
+            'description': 'Description for Story 3.',
             'author_id': self.user.id
         }
 
@@ -183,25 +207,14 @@ class ViewTestCase(TestCase):
 
         # Test the response
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/stories/story-2/')
-        self.assertEqual(self.user.stories.count(), 2)
+        self.assertEqual(response.url, '/stories/story-3/')
+        self.assertEqual(self.user.stories.count(), 3)
 
     def test_view_story_detail(self):
         """Test for the story detail view."""
 
         print("*********************************")
         print("Testing the story detail view")
-
-        # Create new story for testing through the client
-        print("Creating test story ...")
-        self.client.post(
-            '/stories/new/',
-            data={
-                'title': 'Story 1',
-                'description': 'Description for Story 1.',
-                'author_id': self.user.id
-            }
-        )
 
         # Client request for story detail page
         print("Get request to the URL for story detail page")
@@ -230,17 +243,6 @@ class ViewTestCase(TestCase):
 
         print("*******************************")
         print("Testing the scenes view")
-
-        # Create story for testing scene functionality
-        print("Creating test story ...")
-        self.client.post(
-            '/stories/new/',
-            data={
-                'title': 'Story 1',
-                'description': 'A story for Testing!',
-                'author_id': self.user.id
-            }
-        )
 
         # Create a get request for the scenes URL
         print("Get request to the scenes URL")
@@ -273,10 +275,8 @@ class ViewTestCase(TestCase):
             data=   {
                 'title': 'Scene 1',
                 'description': 'Description for Scene 1.'
-                # 'story_id': self.user.stories.first().id
             }
         )
-        print(response)
         response = self.client.get('/stories/story-1/scenes/')
 
         # Test the response
@@ -287,7 +287,81 @@ class ViewTestCase(TestCase):
 
     def test_view_scene_create_update(self):
         """Test for the create and update functionality for scenes."""
-    
+
+        print("**********************")
+        print("Testing the view for creating and updating a scene.")
+
+        # Get request: render new scene form using the client
+        print("Get request to the new scene URL")
+        response = self.client.get('/stories/story-1/scenes/new/')
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<h1>Create a New Scene in Story 1</h1>', response.content)
+        self.assertIn('form', response.context)
+        self.assertIsInstance(response.context['form'], forms.SceneForm)
+
+        # Post request: Create a scene using the client
+        print("Post request to the new scene URL")
+        response = self.client.post(
+        '/stories/story-1/scenes/new/',
+        data=   {
+            'title': 'Scene 1',
+            'description': 'Description for Scene 1.'
+        }
+    )
+
+    # Test the response
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/stories/story-1/scenes/1/')
+        self.assertEqual(self.story1.scene_set.count(), 1)
+
+        # Get request: render update scene form using the client
+        print("Get request to the update scene URL")
+        response = self.client.get('/stories/story-1/scenes/1/update/')
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<h1>Update Scene Scene 1 from Story 1</h1>',
+            response.content
+        )
+        self.assertIn('form', response.context)
+        self.assertIsInstance(response.context['form'], forms.SceneForm)
+
+        # Post request: update scene using the client
+        print("Post request to the update scene URL")
+        response = self.client.post(
+            '/stories/story-1/scenes/1/update/',
+            data={
+                'title': 'Scene 1',
+                'description': 'Better description for Scene 1!'
+            }
+        )
+
+        # Test the response
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/stories/story-1/scenes/1/')
+        self.assertEqual(
+            self.story1.scene_set.get(order=1).description,
+            'Better description for Scene 1!'
+        )
+
+        # Post request: update scene using the client with invalid data
+        print("Post request to the update scene URL with empty title")
+        response = self.client.post(
+            '/stories/story-1/scenes/1/update/',
+            data={
+                'description': 'An even better description for Scene 1'
+            }
+        )
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['form'].is_valid())
+        self.assertIsNotNone(response.context['form'].errors)
+        self.assertIn('title', response.context['form'].errors)
+
     def test_view_scene_detail(self):
         """Test for the scene detail page."""
 
