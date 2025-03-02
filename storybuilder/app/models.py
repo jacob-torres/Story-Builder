@@ -40,8 +40,8 @@ class Story(models.Model):
 
     # Story details
     title = models.CharField(max_length=short_length, null=False)
-    description = models.TextField(max_length=long_length, null=True)
-    premise = models.CharField(max_length=mid_length, null=True)
+    description = models.TextField(max_length=long_length, null=True, default=None, blank=True)
+    premise = models.CharField(max_length=mid_length, null=True, default=None, blank=True)
 
     genres = ArrayField(
         models.CharField(max_length=tiny_length),
@@ -142,7 +142,7 @@ class Scene(models.Model):
     """A single unit or building block of a story."""
 
     title = models.CharField(max_length=short_length, null=False)
-    description = models.TextField(max_length=long_length, null=True)
+    description = models.TextField(max_length=long_length, null=True, default=None, blank=True)
     notes = ArrayField(
         models.CharField(max_length=long_length),
         blank=True,
