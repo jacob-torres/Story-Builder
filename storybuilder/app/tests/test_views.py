@@ -316,6 +316,22 @@ class ViewTestCase(TestCase):
         self.assertEqual(response.url, '/stories/story-1/scenes/1/')
         self.assertEqual(self.story1.scene_set.count(), 1)
 
+        # Post request: Create a scene using the client with invalid data
+        print("Post request to the new scene URL with empty title")
+        response = self.client.post(
+        '/stories/story-1/scenes/new/',
+        data=   {
+            'description': 'Description for invalid scene.'
+        }
+    )
+
+    # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['form'].is_valid())
+        self.assertIsNotNone(response.context['form'].errors)
+        self.assertIn('title', response.context['form'].errors)
+        self.assertEqual(self.story1.scene_set.count(), 1)
+
         # Get request: render update scene form using the client
         print("Get request to the update scene URL")
         response = self.client.get('/stories/story-1/scenes/1/update/')
