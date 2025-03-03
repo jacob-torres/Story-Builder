@@ -53,6 +53,7 @@ class StoryForm(forms.ModelForm):
             genre_choices.remove('Other')
             genre_choices.append(cleaned_data['other_choice'])
         cleaned_data['genres'] = genre_choices
+        cleaned_data.pop('other_choice')
 
         # print(f"cleaned_data: {cleaned_data}")
         return cleaned_data
