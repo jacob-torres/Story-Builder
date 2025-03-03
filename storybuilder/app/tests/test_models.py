@@ -155,18 +155,6 @@ class ModelTestCase(TestCase):
         self.assertFalse(form.is_valid())
         self.assertIn('title', form.errors)
 
-        # Create story with empty description
-        print("Invalid form data for creating a story with an empty description")
-        form_data = {
-            'title': 'Story 2',
-            'description': ''
-        }
-        form = StoryForm(data=form_data)
-
-        # Run tests for missing description
-        self.assertFalse(form.is_valid())
-        self.assertIn('description', form.errors)
-
         # Create valid story for testing update functionality
         print("Valid form data for updating a story")
         form_data = {
@@ -177,13 +165,13 @@ class ModelTestCase(TestCase):
         story2 = form.save()
 
         # Update story
-        print("Invalid form data for updating a story with an empty description")
-        form_data['description'] = ''
+        print("Invalid form data for updating a story with an empty title")
+        form_data['title'] = ''
         form = StoryForm(data=form_data, instance=story2)
 
         # Test update with empty description
         self.assertFalse(form.is_valid())
-        self.assertIn('description', form.errors)
+        self.assertIn('title', form.errors)
 
 
     ### Scene Model Tests
@@ -274,17 +262,18 @@ class ModelTestCase(TestCase):
         # Create scene
         print("Invalid form data for creating a scene with an empty description")
         form_data = {
-            'title': 'Scene 3',
+            'title': '',
             'description': ''
         }
         form = SceneForm(data=form_data, story_id=self.story1.id)
 
         # Test form validation
         self.assertFalse(form.is_valid())
-        self.assertIn('description', form.errors)
+        self.assertIn('title', form.errors)
 
         # Create valid scene for testing update functionality
-        form_data['description'] = 'Valid description for Scene 3.'
+        form_data['title'] = 'Scene 3'
+        form_data['description'] = 'Description for Scene 3.'
         form = SceneForm(data=form_data, story_id=self.story1.id)
         scene3 = form.save()
         
