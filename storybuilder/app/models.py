@@ -33,7 +33,7 @@ class StoryManager(models.Manager):
         )
         print(f"Successfully created new story {story.id} and plot {plot.id}.")
         return story
-
+        
 
 class Story(models.Model):
     """The story data structure, with characters, plots, worlds, and scenes."""
