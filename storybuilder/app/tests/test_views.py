@@ -329,6 +329,7 @@ class ViewTestCase(TestCase):
         self.assertFalse(
             self.user.stories.filter(title='Story 2').exists()
         )
+        self.assertEqual(self.user.stories.count(), 3)
 
         # Post request: view function call in isolation for story update with invalid data
         print("Update story view function with post request and empty title")
@@ -350,6 +351,7 @@ class ViewTestCase(TestCase):
         self.assertIn(b'<form method="post">', response.content)
         self.assertIn(b'<input type="text" name="title"', response.content)
         self.assertIn(b'<input type="checkbox" name="genres"', response.content)
+        self.assertEqual(self.user.stories.count(), 3)
 
     def test_view_story_detail(self):
         """Test for the story detail view."""
