@@ -352,7 +352,7 @@ class ViewTestCase(TestCase):
         print("*********************************")
         print("Testing the story detail view")
 
-        # Client request for story detail page
+        # Get request: render the story detail page using the client
         print("Get request to the URL for story detail page")
         response = self.client.get('/stories/story-1/')
 
@@ -362,7 +362,7 @@ class ViewTestCase(TestCase):
         self.assertIn(b'<h1>Story Details</h1>', response.content)
         self.assertIn(b'<h2>Description</h2>', response.content)
 
-        # View function in isolation
+        # Get request: story detail View function in isolation
         print("Story detail view function call with get request")
         request = self.request_factory.get('/stories/story-1/')
         request.user = self.user
@@ -560,8 +560,30 @@ class ViewTestCase(TestCase):
             response.content
         )
 
+        # Get request: scene detail view function in isolation
+        print("Scene detail view function call with get request")
+        request = self.request_factory.get('/stories/story-1/scenes/1/')
+        request.user = self.user
+        response = views.scene_detail(request, story_slug='story-1', scene_order=1)
+
+        # Test response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<title>Scene 1, from Story 1 | The Story Builder</title>', response.content)
+        self.assertIn(b'<h1>Scene 1</h1>', response.content)
+        self.assertIn(
+            b'<h2>Scene 1 in <a href="/stories/story-1">Story 1</a></h2>',
+            response.content
+        )
+        self.assertIn(b'<p>Description for Scene 1.</p>', response.content)
+
     def test_scene_move(self):
         """Test for moving a scene up or down in the scene list."""
+
+        print("***************************")
+        print("Testing the view functionality for moving a scene up or down in the list.")
+
+        # Create two test scenes
+        
 
 
     ### Plot Point View Tests
