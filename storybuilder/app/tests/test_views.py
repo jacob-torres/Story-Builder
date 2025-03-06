@@ -528,6 +528,38 @@ class ViewTestCase(TestCase):
     def test_scene_detail(self):
         """Test for the scene detail page."""
 
+        print("**********************")
+        print("Testing the scene detail page.")
+
+        # Create test scene
+        form_data = {
+            'title': 'Scene 1',
+            'description': 'Description for Scene 1.'
+            }
+        response = self.client.post('/stories/story-1/scenes/new/', data=form_data)
+        self.assertEqual(response.status_code, 302)
+
+        # Get request: render new scene form using the client
+        print("Get request to the scene detail URL")
+        response = self.client.get('/stories/story-1/scenes/1/')
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('form', response.context)
+        self.assertIn(
+            b'<form id="scene-note-form" style="display: none;" method="post">',
+            response.content
+        )
+        self.assertIn(b'<h1>Scene 1</h1>', response.content)
+        self.assertIn   (
+            b'<h2>Scene 1 in <a href="/stories/story-1">Story 1</a></h2>',
+            response.content
+        )
+        self.assertIn(
+            b'<p>Description for Scene 1.</p>',
+            response.content
+        )
+
     def test_scene_move(self):
         """Test for moving a scene up or down in the scene list."""
 
