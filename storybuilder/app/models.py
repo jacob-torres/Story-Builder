@@ -159,18 +159,7 @@ class Scene(models.Model):
 
     def __str__(self):
         """Override the string method for the Scene object."""
-        return self.title
-
-    def save(self, *args, **kwargs):
-        """Override the save method for the scene model."""
-
-        if not self.id:
-            prev_scene = Scene.objects.filter(
-                story=self.story
-            ).order_by('-order').first()
-            if prev_scene:
-                self.order = prev_scene.order + 1
-        super().save(*args, **kwargs)
+        return f"{self.title} (Scene Number {self.order} in {self.story.title})"
 
 
 class Plot(models.Model):
