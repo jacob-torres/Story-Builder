@@ -383,8 +383,8 @@ class ViewTestCase(TestCase):
         print("*******************************")
         print("Testing the scenes view")
 
-        # Create a get request for the scenes URL
-        print("Get request to the scenes URL")
+        # Get request: render the scenes page with no scenes using the client
+        print("Get request to the scenes URL with no scenes")
         response = self.client.get('/stories/story-1/scenes/')
 
         # Test response
@@ -394,8 +394,8 @@ class ViewTestCase(TestCase):
             response.content
         )
 
-        # Test view function in isolation
-        print("scenes view function call with get request")
+        # Get request: view function in isolation with no scenes
+        print("scenes view function call with get request and no scenes")
         request = self.request_factory.get('/stories/story-1/scenes/')
         request.user = self.user
         response = views.scenes(request, story_slug='story-1')
@@ -409,14 +409,29 @@ class ViewTestCase(TestCase):
 
         # Create a scene through the client for scene list testing
         print("Creating test scene ...")
-        response = self.client.post(
-            '/stories/story-1/scenes/new/',
-            data=   {
-                'title': 'Scene 1',
-                'description': 'Description for Scene 1.'
-            }
-        )
+        form_data = {
+            'title': 'Scene 1',
+            'description': 'Description for Scene 1.'
+        }
+        response = self.client.post('/stories/story-1/scenes/new/', data=form_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/stories/story-1/scenes/1/')
+
+        # Get request: Render the scenes page with 1 scene using the client
+        print("Get request to the scenes URL with 1 scene")
         response = self.client.get('/stories/story-1/scenes/')
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<table>', response.content)
+        self.assertIn(b'<th>Scene Title</th>', response.content)
+        self.assertIn(b'<a href=1>Scene 1</a>', response.content)
+
+        # Get request: scenes view function in isolation with 1 scene
+        print("Scenes view function call with get request and 1 scene")
+        request = self.request_factory.get('/stories/story-1/scenes/')
+        request.user = self.user
+        response = views.scenes(request, story_slug='story-1')
 
         # Test the response
         self.assertEqual(response.status_code, 200)
@@ -482,6 +497,7 @@ class ViewTestCase(TestCase):
         }
         response = self.client.post('/stories/story-1/scenes/new/', data=form_data)
         self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/stories/story-1/scenes/1/')
 
         # Get request: render update scene form using the client
         print("Get request to the update scene URL")
@@ -538,6 +554,7 @@ class ViewTestCase(TestCase):
             }
         response = self.client.post('/stories/story-1/scenes/new/', data=form_data)
         self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/stories/story-1/scenes/1/')
 
         # Get request: render new scene form using the client
         print("Get request to the scene detail URL")
@@ -583,7 +600,10 @@ class ViewTestCase(TestCase):
         print("Testing the view functionality for moving a scene up or down in the list.")
 
         # Create two test scenes
-        
+        form_data = {'title': 'First Scene'}
+        response = self.client.post('/stories/story-1/scenes/new/', data=form_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/stories/story-1/scenes/1/')
 
 
     ### Plot Point View Tests
