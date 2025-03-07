@@ -200,7 +200,7 @@ def scenes(request, story_slug):
         return render(request, '404.html', status=404, context=context)
 
     try:
-        scenes = Scene.objects.filter(story_id=story.id)
+        scenes = Scene.objects.filter(story_id=story.id).order_by('order')
         context = {
             'story_title': story.title,
             'scenes': scenes
@@ -786,12 +786,20 @@ def move_up(request, story_slug, scene_order=None, plotpoint_order=None):
                 context = {'model_name': 'Scene'}
                 return render(request, '404.html', status=404, context=context)
         
-        prev_scene = Scene.objects.filter(order__lt=scene.order).order_by('-order').first()
+        print(f"Scene: {scene}")
+        print(f"Scene order: {scene.order}")
+        prev_scene = Scene.objects.filter(
+            order__lt=scene.order,
+            story=story
+            ).order_by('-order').first()
+        print(f"Previous scene: {prev_scene}")
         if prev_scene:
+            print(f"Previous scene order: {prev_scene.order}")
             prev_scene.order, scene.order = scene.order, prev_scene.order
             prev_scene.save()
             scene.save()
-        return redirect('story_detail', story_slug=story_slug)
+            print(f"Successfully reordered scene to number {scene.order}")
+        return redirect('scenes', story_slug=story_slug)
 
     elif plotpoint_order:
         print(f"Reordering plot point {plotpoint_order}")
@@ -801,7 +809,11 @@ def move_up(request, story_slug, scene_order=None, plotpoint_order=None):
             context = {'model_name': 'Plot Point'}
             return render(request, '404.html', status=404, context=context)
         
-        prev_plotpoint = PlotPoint.objects.filter(order__lt=plotpoint.order).order_by('-order').first()
+        # FIXME: Get plot
+        prev_plotpoint = PlotPoint.objects.filter(
+            order__lt=plotpoint.order
+            # plot=plot
+        ).order_by('-order').first()
         if prev_plotpoint:
             prev_plotpoint.order, plotpoint.order = plotpoint.order, prev_plotpoint.order
             prev_plotpoint.save()
