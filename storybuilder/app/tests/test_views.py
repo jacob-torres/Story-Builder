@@ -601,23 +601,26 @@ class ViewTestCase(TestCase):
 
         # Create test scenes
         print("Creating test scenes ...")
-        # form_data = {'title': 'Scene 0'}
-        # response = self.client.post('/stories/story-1/scenes/new/', data=form_data)
-        # self.assertEqual(response.status_code, 302)
-        # self.assertEqual(response.url, '/stories/story-1/scenes/1/')
-        # form_data = {'title': 'Scene 1'}
-        # response = self.client.post('/stories/story-1/scenes/new/', data=form_data)
-        # self.assertEqual(response.status_code, 302)
-        # self.assertEqual(response.url, '/stories/story-1/scenes/2/')
-        for i in range(3):
+        for i in range(1, 4):
             form_data = {'title': f'Scene {i}'}
-            print(f"Scene title: {form_data['title']}")
-            print(f"Scene Order: {i + 1}")
-            self.client.post('/stories/story-1/scenes/new/', data=form_data)
-        self.assertEqual(self.story1.scene_set.count(), 2)
-        print(self.story1.scene_set.all())
+            response = self.client.post('/stories/story-1/scenes/new/', data=form_data)
+            self.assertEqual(response.status_code, 302)
+            self.assertEqual(response.url, f'/stories/story-1/scenes/{i}/')
+        self.assertEqual(self.story1.scene_set.count(), 3)
 
-        # Get request: render the scenes page after moving a scene up
+        # Get request: render the scenes page after moving a scene up using the client
+        print("Get request to the scenes URL after moving a scene up")
+        response = self.client.get('/stories/story-1/scenes/2/up/')
+
+        # Test the response
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/stories/story-1/scenes/')
+        self.assertEqual(
+            self.story1.scene_set.get(title='Scene 2').order, 1
+        )
+        self.assertEqual(
+            self.story1.scene_set.get(title='Scene 1').order, 2
+        )
 
 
     ### Plot Point View Tests
