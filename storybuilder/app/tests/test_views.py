@@ -597,13 +597,27 @@ class ViewTestCase(TestCase):
         """Test for moving a scene up or down in the scene list."""
 
         print("***************************")
-        print("Testing the view functionality for moving a scene up or down in the list.")
+        print("Testing the view functionality for moving a scene up or down in the list")
 
-        # Create two test scenes
-        form_data = {'title': 'First Scene'}
-        response = self.client.post('/stories/story-1/scenes/new/', data=form_data)
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/stories/story-1/scenes/1/')
+        # Create test scenes
+        print("Creating test scenes ...")
+        # form_data = {'title': 'Scene 0'}
+        # response = self.client.post('/stories/story-1/scenes/new/', data=form_data)
+        # self.assertEqual(response.status_code, 302)
+        # self.assertEqual(response.url, '/stories/story-1/scenes/1/')
+        # form_data = {'title': 'Scene 1'}
+        # response = self.client.post('/stories/story-1/scenes/new/', data=form_data)
+        # self.assertEqual(response.status_code, 302)
+        # self.assertEqual(response.url, '/stories/story-1/scenes/2/')
+        for i in range(3):
+            form_data = {'title': f'Scene {i}'}
+            print(f"Scene title: {form_data['title']}")
+            print(f"Scene Order: {i + 1}")
+            self.client.post('/stories/story-1/scenes/new/', data=form_data)
+        self.assertEqual(self.story1.scene_set.count(), 2)
+        print(self.story1.scene_set.all())
+
+        # Get request: render the scenes page after moving a scene up
 
 
     ### Plot Point View Tests
