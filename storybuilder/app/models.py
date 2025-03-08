@@ -161,6 +161,19 @@ class Scene(models.Model):
         """Override the string method for the Scene object."""
         return f"{self.title} (Scene Number {self.order} in {self.story.title})"
 
+    def save(self, **kwargs):
+        """Override the save method of a scene object for setting the scene order."""
+
+        # Reset order value on new scene objects
+        if not self.id:
+            prev_scene = Scene.objects.filter(
+                story=self.story
+            ).order_by('-order').first()
+            if prev_scene:
+                self.order = prev_scene.order + 1
+
+        return super().save(**kwargs)
+
 
 class Plot(models.Model):
     """Plots and their plot points, characters, and progressions."""
