@@ -622,6 +622,36 @@ class ViewTestCase(TestCase):
             self.story1.scene_set.get(title='Scene 1').order, 2
         )
 
+        # Get request: view function for moving a scene up in isolation
+        print("View function call for moving a scene up")
+        request = self.request_factory.get('/stories/story-1/scenes/3/up/')
+        request.user = self.user
+        response = views.move_up(request, story_slug='story-1', scene_order=3)
+
+        # Test the response
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/stories/story-1/scenes/')
+        self.assertEqual(
+            self.story1.scene_set.get(title='Scene 3').order, 2
+        )
+        self.assertEqual(
+            self.story1.scene_set.get(title='Scene 1').order, 3
+        )
+
+        # Get request: render the scenes page after moving a scene down using the client
+        print("Get request to the scenes URL after moving a scene down")
+        response = self.client.get('/stories/story-1/scenes/2/down/')
+
+        # Test the response
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/stories/story-1/scenes/')
+        self.assertEqual(
+            self.story1.scene_set.get(title='Scene 1').order, 3
+        )
+        self.assertEqual(
+            self.story1.scene_set.get(title='Scene 3').order, 2
+        )
+
 
     ### Plot Point View Tests
 
