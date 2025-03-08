@@ -786,15 +786,11 @@ def move_up(request, story_slug, scene_order=None, plotpoint_order=None):
                 context = {'model_name': 'Scene'}
                 return render(request, '404.html', status=404, context=context)
         
-        print(f"Scene: {scene}")
-        print(f"Scene order: {scene.order}")
         prev_scene = Scene.objects.filter(
             order__lt=scene.order,
             story=story
-            ).order_by('-order').first()
-        print(f"Previous scene: {prev_scene}")
+        ).order_by('-order').first()
         if prev_scene:
-            print(f"Previous scene order: {prev_scene.order}")
             prev_scene.order, scene.order = scene.order, prev_scene.order
             prev_scene.save()
             scene.save()
@@ -842,12 +838,16 @@ def move_down(request, story_slug, scene_order=None, plotpoint_order=None):
                 context = {'model_name': 'Scene'}
                 return render(request, '404.html', status=404, context=context)
         
-        next_scene = Scene.objects.filter(order__gt=scene.order).order_by('order').first()
+        next_scene = Scene.objects.filter(
+            order__gt=scene.order,
+            story=story
+        ).order_by('order').first()
         if next_scene:
             next_scene.order, scene.order = scene.order, next_scene.order
             next_scene.save()
             scene.save()
-        return redirect('story_detail', story_slug=story_slug)
+            print(f"Successfully reordered scene to number {scene.order}")
+        return redirect('scenes', story_slug=story_slug)
 
     elif plotpoint_order:
         print(f"Reordering plot point {plotpoint_order}")
