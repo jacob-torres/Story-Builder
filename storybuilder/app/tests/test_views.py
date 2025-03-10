@@ -674,6 +674,62 @@ class ViewTestCase(TestCase):
     def test_characters(self):
         """Test for the characters view."""
 
+        print("*******************************")
+        print("Testing the characters view")
+
+        # Get request: render the characters page with no characters using the client
+        print("Get request to the characters URL with no characters")
+        response = self.client.get('/stories/story-1/characters/')
+
+        # Test response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'There are no characters in this story yet. When you add some, they will be listed here.',
+            response.content
+        )
+
+        # Get request: view function in isolation with no characters
+        print("characters view function call with get request and no characters")
+        request = self.request_factory.get('/stories/story-1/characters/')
+        request.user = self.user
+        response = views.characters(request, story_slug='story-1')
+
+        # Test response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'There are no characters in this story yet. When you add some, they will be listed here.',
+            response.content
+        )
+
+        # Create a character through the client for character list testing
+        print("Creating test character ...")
+        form_data = {'first_name': 'Alice'}
+        response = self.client.post('/stories/story-1/characters/new/', data=form_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/stories/story-1/characters/alice/')
+
+        # Get request: Render the characters page with 1 scene using the client
+        print("Get request to the characters URL with 1 character")
+        response = self.client.get('/stories/story-1/characters/')
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<table>', response.content)
+        self.assertIn(b'<th>Name</th>', response.content)
+        self.assertIn(b'<a href=alice>Alice</a>', response.content)
+
+        # Get request: characters view function in isolation with 1 scene
+        print("characters view function call with get request and 1 character")
+        request = self.request_factory.get('/stories/story-1/characters/')
+        request.user = self.user
+        response = views.characters(request, story_slug='story-1')
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<table>', response.content)
+        self.assertIn(b'<th>Name</th>', response.content)
+        self.assertIn(b'<a href=alice>Alice</a>', response.content)
+
     def test_character_create(self):
         """Test for the view functionality for creating characters."""
 
