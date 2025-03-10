@@ -556,7 +556,7 @@ class ViewTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/stories/story-1/scenes/1/')
 
-        # Get request: render new scene form using the client
+        # Get request: render scene detail page using the client
         print("Get request to the scene detail URL")
         response = self.client.get('/stories/story-1/scenes/1/')
 
@@ -569,7 +569,7 @@ class ViewTestCase(TestCase):
         )
         self.assertIn(b'<h1>Scene 1</h1>', response.content)
         self.assertIn   (
-            b'<h2>Scene 1 in <a href="/stories/story-1">Story 1</a></h2>',
+            b'<h2>Scene Number 1 in <a href="/stories/story-1">Story 1</a></h2>',
             response.content
         )
         self.assertIn(
@@ -588,7 +588,7 @@ class ViewTestCase(TestCase):
         self.assertIn(b'<title>Scene 1, from Story 1 | The Story Builder</title>', response.content)
         self.assertIn(b'<h1>Scene 1</h1>', response.content)
         self.assertIn(
-            b'<h2>Scene 1 in <a href="/stories/story-1">Story 1</a></h2>',
+            b'<h2>Scene Number 1 in <a href="/stories/story-1">Story 1</a></h2>',
             response.content
         )
         self.assertIn(b'<p>Description for Scene 1.</p>', response.content)
@@ -732,6 +732,52 @@ class ViewTestCase(TestCase):
 
     def test_character_create(self):
         """Test for the view functionality for creating characters."""
+
+        print("**********************")
+        print("Testing the view for creating a character.")
+
+        # Get request: render new character form using the client
+        print("Get request to the new character URL")
+        response = self.client.get('/stories/story-1/characters/new/')
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<h1>Create a New Character in Story 1</h1>', response.content)
+        self.assertIn('form', response.context)
+        self.assertIsInstance(response.context['form'], forms.CharacterForm)
+
+        # Post request: Create a character using the client
+        print("Post request to the new character URL")
+        form_data = {
+            'first_name': 'Alice',
+            'location': 'Wonderland',
+            'description': 'Alice is a curious girl.'
+        }
+        response = self.client.post('/stories/story-1/characters/new/', data=form_data)
+
+    # Test the response
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/stories/story-1/characters/alice/')
+        self.assertEqual(self.story1.character_set.count(), 1)
+        self.assertEqual(
+            self.story1.character_set.get(first_name='Alice').location,
+            'Wonderland'
+        )
+
+        # Post request: Create a character using the client with invalid data
+        print("Post request to the new character URL with empty first name")
+        form_data = {
+            'last_name': 'Lastname',
+            'description': 'Description for invalid character.'
+        }
+        response = self.client.post('/stories/story-1/characters/new/', data=form_data)
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['form'].is_valid())
+        self.assertIsNotNone(response.context['form'].errors)
+        self.assertIn('first_name', response.context['form'].errors)
+        self.assertEqual(self.story1.character_set.count(), 1)
 
     def test_character_update(self):
         """Test for the view functionality for updating characters."""
