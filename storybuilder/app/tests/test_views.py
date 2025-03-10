@@ -646,14 +646,30 @@ class ViewTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/stories/story-1/scenes/')
         self.assertEqual(
-            self.story1.scene_set.get(title='Scene 1').order, 3
+            self.story1.scene_set.get(title='Scene 3').order, 3
         )
         self.assertEqual(
-            self.story1.scene_set.get(title='Scene 3').order, 2
+            self.story1.scene_set.get(title='Scene 1').order, 2
+        )
+
+        # Get request: view function for moving a scene down in isolation
+        print("View function call for moving a scene down")
+        request = self.request_factory.get('/stories/story-1/scenes/1/down/')
+        request.user = self.user
+        response = views.move_down(request, story_slug='story-1', scene_order=1)
+
+        # Test the response
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/stories/story-1/scenes/')
+        self.assertEqual(
+            self.story1.scene_set.get(title='Scene 2').order, 2
+        )
+        self.assertEqual(
+            self.story1.scene_set.get(title='Scene 1').order, 1
         )
 
 
-    ### Plot Point View Tests
+    ### Character View Tests
 
     def test_characters(self):
         """Test for the characters view."""
