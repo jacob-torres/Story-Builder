@@ -189,7 +189,7 @@ class ViewTestCase(TestCase):
         self.assertIn(b'<input type="text" name="title"', response.content)
         self.assertIn(b'<input type="checkbox" name="genres"', response.content)
 
-        # Get request: view function call in isolation
+        # Get request: new story view function in isolation
         print("New story view function call with get request")
         request = self.request_factory.get('/stories/new/')
         request.user = self.user
@@ -483,6 +483,53 @@ class ViewTestCase(TestCase):
         self.assertIsNotNone(response.context['form'].errors)
         self.assertIn('title', response.context['form'].errors)
         self.assertEqual(self.story1.scene_set.count(), 1)
+
+        # Get request: new scene view function in isolation
+        print("New scene view function call with get request")
+        request = self.request_factory.get('/stories/story-1/scenes/new/')
+        request.user = self.user
+        response = views.create_or_update_scene(request, story_slug='story-1')
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<h1>Create a New Scene in Story 1</h1>', response.content)
+        self.assertIn(b'<form method="post">', response.content)
+        self.assertIn(b'<input type="text" name="title"', response.content)
+        self.assertIn(b'<input type="text" name="notes"', response.content)
+
+        # Post request: New scene view function in isolation
+        print("New scene view function call with post request")
+        form_data = {
+            'title': 'Scene 2',
+            'description': 'Description for Scene 2.'
+        }
+        request = self.request_factory.post(
+            '/stories/story-1/scenes/new/',
+            data=form_data
+        )
+        request.user = self.user
+        response = views.create_or_update_scene(request, story_slug='story-1')
+
+    # Test the response
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/stories/story-1/scenes/2/')
+        self.assertEqual(self.story1.scene_set.count(), 2)
+
+        # Post request: New scene view function in isolation with invalid data
+        print("New scene view function call with post request and empty title")
+        form_data = {
+            'description': 'Description for invalid scene.'
+        }
+        request = self.request_factory.post(
+            '/stories/story-1/scenes/new/',
+            data=form_data
+        )
+        request.user = self.user
+        response = views.create_or_update_scene(request, story_slug='story-1')
+
+    # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.story1.scene_set.count(), 2)
 
     def test_scene_update(self):
         """Test for the view functionality for updating scenes."""
