@@ -588,6 +588,81 @@ class ViewTestCase(TestCase):
         self.assertIsNotNone(response.context['form'].errors)
         self.assertIn('title', response.context['form'].errors)
 
+        # Get request: update scene view function in isolation
+        print("Update scene view function call with get request")
+        request = self.request_factory.get('/stories/story-1/scenes/1/update/')
+        request.user = self.user
+        response = views.create_or_update_scene(
+            request,
+            story_slug='story-1',
+            scene_order=1
+        )
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<h1>Update Scene Scene 1 from Story 1</h1>',
+            response.content
+        )
+        self.assertIn(b'<form method="post">', response.content)
+        self.assertIn(b'<input type="text" name="title"', response.content)
+        self.assertIn(b'<input type="text" name="notes"', response.content)
+
+        # Post request: update scene view function in isolation
+        print("Update scene view function call with post request")
+        form_data = {
+            'title': 'Better Scene Title',
+            'description': 'Yet another description for Scene 1!'
+        }
+        request = self.request_factory.post(
+            '/stories/story-1/scenes/1/update/',
+            data=form_data
+        )
+        request.user = self.user
+        response = views.create_or_update_scene(
+            request,
+            story_slug='story-1',
+            scene_order=1
+        )
+
+        # Test the response
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/stories/story-1/scenes/1/')
+        self.assertEqual(
+            self.story1.scene_set.get(order=1).title,
+            'Better Scene Title'
+        )
+        self.assertEqual(
+            self.story1.scene_set.get(order=1).description,
+            'Yet another description for Scene 1!'
+        )
+
+        # Post request: update scene view function in isolation with invalid data
+        print("Update scene view function call with post request and empty title")
+        form_data = {
+            'description': 'An even better description for Scene 1'
+        }
+        request = self.request_factory.post(
+            '/stories/story-1/scenes/1/update/',
+            data=form_data
+        )
+        request.user = self.user
+        response = views.create_or_update_scene(
+            request,
+            story_slug='story-1',
+            scene_order=1
+        )
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<h1>Update Scene Better Scene Title from Story 1</h1>',
+            response.content
+        )
+        self.assertIn(b'<form method="post">', response.content)
+        self.assertIn(b'<input type="text" name="title"', response.content)
+        self.assertIn(b'<input type="text" name="notes"', response.content)
+
     def test_scene_detail(self):
         """Test for the scene detail page."""
 
