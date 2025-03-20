@@ -984,7 +984,7 @@ class ViewTestCase(TestCase):
         # Test the response
         self.assertEqual(response.status_code, 200)
         self.assertIn(
-            b'<h1>Update Character Alice</h1>',
+            b'<h1>Update Character Alice from <a href="/stories/story-1/">Story 1</a></h1>',
             response.content
         )
         self.assertIn('form', response.context)
@@ -996,7 +996,7 @@ class ViewTestCase(TestCase):
         print("Post request to the update character URL")
         form_data = {
             'first_name': 'Alice',
-            'last_name': 'Kingsley',
+            'last_name': 'The Curious Girl',
             'age': 10,
             'location': 'Wonderland',
             'description': 'Alice is a curious girl who follows a white rabbit into a dream world.'
@@ -1005,27 +1005,30 @@ class ViewTestCase(TestCase):
 
         # Test the response
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/stories/story-1/characters/alice-kingsley/')
+        self.assertEqual(response.url, '/stories/story-1/characters/alice-the-curious-girl/')
         self.assertEqual(
             self.story1.character_set.get(first_name='Alice').age,
             10
         )
         self.assertEqual(
             self.story1.character_set.get(location='Wonderland').full_name,
-            'Alice Kingsley'
+            'Alice The Curious Girl'
         )
 
         # Post request: update character using the client with invalid data
         print("Post request to the update character URL with empty first name")
         form_data = {
+            'last_name': 'The Curious Girl',
+            'age': 10,
+            'location': 'Wonderland',
             'description': 'Description for Invalid Alice.'
         }
-        response = self.client.post('/stories/story-1/characters/alice-kingsley/update/', data=form_data)
+        response = self.client.post('/stories/story-1/characters/alice-the-curious-girl/update/', data=form_data)
 
         # Test the response
         self.assertEqual(response.status_code, 200)
         self.assertIn(
-            b'<h1>Update character Alice Kingsley</h1>',
+            b'<h1>Update Character Alice The Curious Girl from <a href="/stories/story-1/">Story 1</a></h1>',
             response.content
         )
         self.assertFalse(response.context['form'].is_valid())
@@ -1034,26 +1037,26 @@ class ViewTestCase(TestCase):
 
         # Get request: update character view function in isolation
         print("Update character view function call with get request")
-        request = self.request_factory.get('/stories/story-1/characters/alice-kingsley/update/')
+        request = self.request_factory.get('/stories/story-1/characters/alice-the-curious-girl/update/')
         request.user = self.user
         response = views.create_or_update_character(
             request,
             story_slug='story-1',
-            character_slug='alice-kingsley'
+            character_slug='alice-the-curious-girl'
         )
 
         # Test the response
         self.assertEqual(response.status_code, 200)
         self.assertIn(
-            b'<h1>Update character Alice Kingsley</h1>',
+            b'<h1>Update Character Alice The Curious Girl from <a href="/stories/story-1/">Story 1</a></h1>',
             response.content
         )
         self.assertIn(b'<form method="post">', response.content)
         self.assertIn(b'<input type="text" name="first_name"', response.content)
         self.assertIn(b'<input type="number" name="age"', response.content)
 
-        # Post request: update character view function in isolation
-        print("Update character view function call with post request")
+        # Post request: update character view function in isolation removing last name
+        print("Update character view function call with post request removing last name")
         form_data = {
             'first_name': 'Alice',
             'age': 10,
@@ -1061,14 +1064,14 @@ class ViewTestCase(TestCase):
             'description': 'Alice is a curious girl who follows a white rabbit into a dream world.'
         }
         request = self.request_factory.post(
-            '/stories/story-1/characters/alice-kingsley/update/',
+            '/stories/story-1/characters/alice-the-curious-girl/update/',
             data=form_data
         )
         request.user = self.user
         response = views.create_or_update_character(
             request,
             story_slug='story-1',
-            character_slug='alice-kingsley'
+            character_slug='alice-the-curious-girl'
         )
 
         # Test the response
@@ -1082,6 +1085,8 @@ class ViewTestCase(TestCase):
         # Post request: update character view function in isolation with invalid data
         print("Update character view function call with post request and empty first name")
         form_data = {
+            'age': 10,
+            'location': 'Wonderland',
             'description': 'Description for invalid Alice.'
         }
         request = self.request_factory.post(
@@ -1098,7 +1103,7 @@ class ViewTestCase(TestCase):
         # Test the response
         self.assertEqual(response.status_code, 200)
         self.assertIn(
-            b'<h1>Update character Alice</h1>',
+            b'<h1>Update Character Alice from <a href="/stories/story-1/">Story 1</a></h1>',
             response.content
         )
         self.assertIn(b'<form method="post">', response.content)
