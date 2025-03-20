@@ -667,7 +667,7 @@ class ViewTestCase(TestCase):
         """Test for the scene detail page."""
 
         print("**********************")
-        print("Testing the scene detail page.")
+        print("Testing the scene detail page")
 
         # Create test scene
         form_data = {
@@ -1112,6 +1112,55 @@ class ViewTestCase(TestCase):
 
     def test_character_detail(self):
         """Test for the character detail page."""
+
+        print("**********************")
+        print("Testing the character detail page")
+
+        # Create test character
+        form_data = {
+            'first_name': 'Bob',
+            'middle_name': 'The',
+            'last_name': 'Builder',
+            'gender': 'Man',
+            'age': 30,
+            'occupation': 'Builder',
+            'description': 'Bob loves to build things!'
+            }
+        response = self.client.post('/stories/story-1/characters/new/', data=form_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/stories/story-1/characters/bob-the-builder/')
+
+        # Get request: render character detail page using the client
+        print("Get request to the character detail URL")
+        response = self.client.get('/stories/story-1/characters/bob-the-builder/')
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<h1>Character Details for Bob The Builder from <a href="/stories/story-1/">Story 1</a></h1>',
+            response.content
+        )
+        self.assertIn   (
+            b'<p>Bob loves to build things!</p>',
+            response.content
+        )
+
+        # Get request: character detail view function in isolation
+        print("character detail view function call with get request")
+        request = self.request_factory.get('/stories/story-1/characters/bob-the-builder/')
+        request.user = self.user
+        response = views.character_detail(request, story_slug='story-1', character_slug='bob-the-builder')
+
+        # Test response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<h1>Character Details for Bob The Builder from <a href="/stories/story-1/">Story 1</a></h1>',
+            response.content
+        )
+        self.assertIn   (
+            b'<p>Bob loves to build things!</p>',
+            response.content
+        )
 
 
     ### Plot Point View Tests
