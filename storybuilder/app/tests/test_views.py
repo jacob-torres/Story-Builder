@@ -1163,10 +1163,47 @@ class ViewTestCase(TestCase):
         )
 
 
-    ### Plot Point View Tests
+    ### Plot View Tests
 
     def test_plot_create(self):
         """Test for the view functionality for automatic plot creation."""
+
+        print("**************************************")
+        print("Testing automatic plot creation upon story creation")
+
+        # Test that the story created in setup has a plot
+        print(self.story1)
+        print(self.story1.plot)
+        self.assertIsNotNone(self.story1.plot)
+
+        # Post request: new story URL using the client
+        print("Get request to the new story URL to test plot creation")
+        form_data = {'title': 'Story 2'}
+        response = self.client.post('/stories/new/', data=form_data)
+
+        # Test the response
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/stories/story-2/')
+        self.assertEqual(self.user.stories.count(), 2)
+        self.assertTrue(
+            self.user.stories.filter(title='Story 2').exists()
+        )
+        self.assertIsNotNone(self.user.stories.get(title='Story 2').plot)
+
+        # Get request: render the plot detail page using the client
+        print("Get request to the plot detail URL for Story 2")
+        response = self.client.get('/stories/story-2/plot/')
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<h1>Plot for <a href="/stories/story-2/">Story 2</a></h1>',
+            response.content
+        )
+        self.assertIn(
+            b'<p>Description of the plot for Story 2.</p>',
+            response.content
+        )
 
     def test_plot_update(self):
         """Test for the view functionality for updating a plot."""
