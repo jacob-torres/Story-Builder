@@ -493,6 +493,8 @@ def create_or_update_character(request, story_slug=None, character_slug=None):
             template_name = 'update_character.html'
             context = {
                 'form': form,
+                'character_name': character.full_name,
+                'story_slug': story.slug,
                 'story_title': story.title
             }
 
@@ -586,6 +588,7 @@ def plot_detail(request, story_slug):
         return render(request, '404.html', status=404, context=context)
 
     context = {
+        'story_slug': story.slug,
         'story_title': story.title,
         'plot': plot
     }
