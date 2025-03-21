@@ -55,6 +55,10 @@ class ViewTestCase(TestCase):
 
         # Test response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Home | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(b'<h1>Welcome to The Story Builder</h1>', response.content)
 
         # Create get request for the home view with user logged in
@@ -62,8 +66,12 @@ class ViewTestCase(TestCase):
         self.client.force_login(self.user)
         response = self.client.get('/')
 
-        # Test status code
+        # Test the response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Home | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(b'<h1>Welcome back, Jack!</h1>', response.content)
 
         # Test view function in isolation
@@ -74,6 +82,10 @@ class ViewTestCase(TestCase):
 
         # Test response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Home | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(b'<h1>Welcome to The Story Builder</h1>', response.content)
 
         # Request with user logged in
@@ -83,6 +95,10 @@ class ViewTestCase(TestCase):
 
         # Test response status
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Home | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(b'<h1>Welcome back, Jack!</h1>', response.content)
 
 
@@ -100,6 +116,10 @@ class ViewTestCase(TestCase):
 
         # Test the response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Stories | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(b'<table>', response.content)
         self.assertIn(b'<th>Story Title</th>', response.content)
         self.assertIn(b'<a href=story-1>Story 1</a>', response.content)
@@ -112,6 +132,10 @@ class ViewTestCase(TestCase):
 
         # Test the response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Stories | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(b'<table>', response.content)
         self.assertIn(b'<th>Story Title</th>', response.content)
         self.assertIn(b'<a href=story-1>Story 1</a>', response.content)
@@ -123,6 +147,10 @@ class ViewTestCase(TestCase):
 
         # Test response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Stories | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(
             b'You have no stories yet. When you do, they will be listed here.',
             response.content
@@ -136,6 +164,10 @@ class ViewTestCase(TestCase):
 
         # Test response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Stories | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(
             b'You have no stories yet. When you do, they will be listed here.',
             response.content
@@ -153,6 +185,10 @@ class ViewTestCase(TestCase):
 
         # Test the response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Create a New Story | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(b'<h1>Create a New Story</h1>', response.content)
         self.assertIn('form', response.context)
         self.assertIsInstance(response.context['form'], forms.StoryForm)
@@ -197,6 +233,10 @@ class ViewTestCase(TestCase):
 
         # Test the response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Create a New Story | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(b'<h1>Create a New Story</h1>', response.content)
         self.assertIn(b'<form method="post">', response.content)
         self.assertIn(b'<input type="text" name="title"', response.content)
@@ -215,7 +255,9 @@ class ViewTestCase(TestCase):
 
         # Test the response
         self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.content, b'')
         self.assertEqual(response.url, '/stories/story-3/')
+        self.assertEqual(response.content, b'')
         self.assertEqual(self.user.stories.count(), 3)
 
         # Post request: view function call in isolation with invalid data
@@ -232,12 +274,20 @@ class ViewTestCase(TestCase):
         # Test the response
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.user.stories.count(), 3)
+        self.assertIn(
+            b'<title>Create a New Story | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(b'<h1>Create a New Story</h1>', response.content)
         self.assertIn(b'<form method="post">', response.content)
         self.assertIn(b'<input type="text" name="title"', response.content)
         self.assertIn(b'<input type="checkbox" name="genres"', response.content)
 
     def test_story_update(self):
+        """Test for the view functionality for updating a story."""
+
+        print("**********************")
+        print("Testing the view for updating a story")
 
         # Get request: render the update story form using the client
         print("Get request to the update story URL")
@@ -265,6 +315,7 @@ class ViewTestCase(TestCase):
         # Test the response
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/stories/better-title-for-story-1/')
+        self.assertEqual(response.content, b'')
         self.assertTrue(
             self.user.stories.filter(description='Better description for Story 1!').exists()
         )
@@ -285,6 +336,10 @@ class ViewTestCase(TestCase):
 
         # Test the response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Update Better Title for Story 1 | The Story Builder</title>',
+            response.content
+        )
         self.assertFalse(response.context['form'].is_valid())
         self.assertIsNotNone(response.context['form'].errors)
         self.assertIn('title', response.context['form'].errors)
@@ -297,6 +352,10 @@ class ViewTestCase(TestCase):
 
         # Test the response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Update Better Title for Story 1 | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(b'<h1>Update Better Title for Story 1</h1>', response.content)
         self.assertIn(b'<form method="post">', response.content)
         self.assertIn(b'<input type="text" name="title"', response.content)
@@ -318,6 +377,7 @@ class ViewTestCase(TestCase):
         # Test the response
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/stories/new-story/')
+        self.assertEqual(response.content, b'')
         self.assertTrue(
             self.user.stories.filter(title='New Story').exists()
         )
@@ -340,6 +400,10 @@ class ViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(
             self.user.stories.filter(title='New Story').exists()
+        )
+        self.assertIn(
+            b'<title>Update New Story | The Story Builder</title>',
+            response.content
         )
         self.assertIn(b'<h1>Update New Story</h1>', response.content)
         self.assertIn(b'<form method="post">', response.content)
@@ -390,6 +454,10 @@ class ViewTestCase(TestCase):
         # Test response
         self.assertEqual(response.status_code, 200)
         self.assertIn(
+            b'<title>Scenes from Story 1 | The Story Builder</title>',
+            response.content
+        )
+        self.assertIn(
             b'You have no scenes yet. When you do, they will be listed here.',
             response.content
         )
@@ -402,6 +470,10 @@ class ViewTestCase(TestCase):
 
         # Test response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Scenes from Story 1 | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(
             b'You have no scenes yet. When you do, they will be listed here.',
             response.content
@@ -423,6 +495,10 @@ class ViewTestCase(TestCase):
 
         # Test the response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Scenes from Story 1 | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(b'<table>', response.content)
         self.assertIn(b'<th>Scene Title</th>', response.content)
         self.assertIn(b'<a href=1>Scene 1</a>', response.content)
@@ -435,6 +511,10 @@ class ViewTestCase(TestCase):
 
         # Test the response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Scenes from Story 1 | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(b'<table>', response.content)
         self.assertIn(b'<th>Scene Title</th>', response.content)
         self.assertIn(b'<a href=1>Scene 1</a>', response.content)
@@ -451,6 +531,10 @@ class ViewTestCase(TestCase):
 
         # Test the response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Create a New Scene in Story 1 | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(b'<h1>Create a New Scene in Story 1</h1>', response.content)
         self.assertIn('form', response.context)
         self.assertIsInstance(response.context['form'], forms.SceneForm)
@@ -466,6 +550,7 @@ class ViewTestCase(TestCase):
     # Test the response
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/stories/story-1/scenes/1/')
+        self.assertEqual(response.content, b'')
         self.assertEqual(self.story1.scene_set.count(), 1)
 
         # Post request: Create a scene using the client with invalid data
@@ -479,6 +564,10 @@ class ViewTestCase(TestCase):
 
     # Test the response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Create a New Scene in Story 1 | The Story Builder</title>',
+            response.content
+        )
         self.assertFalse(response.context['form'].is_valid())
         self.assertIsNotNone(response.context['form'].errors)
         self.assertIn('title', response.context['form'].errors)
@@ -492,6 +581,10 @@ class ViewTestCase(TestCase):
 
         # Test the response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Create a New Scene in Story 1 | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(b'<h1>Create a New Scene in Story 1</h1>', response.content)
         self.assertIn(b'<form method="post">', response.content)
         self.assertIn(b'<input type="text" name="title"', response.content)
@@ -513,6 +606,7 @@ class ViewTestCase(TestCase):
     # Test the response
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/stories/story-1/scenes/2/')
+        self.assertEqual(response.content, b'')
         self.assertEqual(self.story1.scene_set.count(), 2)
 
         # Post request: New scene view function in isolation with invalid data
@@ -529,6 +623,10 @@ class ViewTestCase(TestCase):
 
     # Test the response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Create a New Scene in Story 1 | The Story Builder</title>',
+            response.content
+        )
         self.assertEqual(self.story1.scene_set.count(), 2)
 
     def test_scene_update(self):
@@ -537,7 +635,7 @@ class ViewTestCase(TestCase):
         print("**********************")
         print("Testing the view for updating a scene")
 
-        # Create scene for update testing
+        # Create test scene for update
         form_data = {
             'title': 'Scene 1',
             'description': 'Description for Scene 1.'
@@ -545,6 +643,7 @@ class ViewTestCase(TestCase):
         response = self.client.post('/stories/story-1/scenes/new/', data=form_data)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/stories/story-1/scenes/1/')
+        self.assertEqual(response.content, b'')
 
         # Get request: render update scene form using the client
         print("Get request to the update scene URL")
@@ -552,6 +651,10 @@ class ViewTestCase(TestCase):
 
         # Test the response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Update Scene Scene 1 from Story 1 | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(
             b'<h1>Update Scene Scene 1 from Story 1</h1>',
             response.content
@@ -570,6 +673,7 @@ class ViewTestCase(TestCase):
         # Test the response
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/stories/story-1/scenes/1/')
+        self.assertEqual(response.content, b'')
         self.assertEqual(
             self.story1.scene_set.get(order=1).description,
             'Better description for Scene 1!'
@@ -584,6 +688,10 @@ class ViewTestCase(TestCase):
 
         # Test the response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Update Scene Scene 1 from Story 1 | The Story Builder</title>',
+            response.content
+        )
         self.assertFalse(response.context['form'].is_valid())
         self.assertIsNotNone(response.context['form'].errors)
         self.assertIn('title', response.context['form'].errors)
@@ -600,6 +708,10 @@ class ViewTestCase(TestCase):
 
         # Test the response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Update Scene Scene 1 from Story 1 | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(
             b'<h1>Update Scene Scene 1 from Story 1</h1>',
             response.content
@@ -628,6 +740,7 @@ class ViewTestCase(TestCase):
         # Test the response
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/stories/story-1/scenes/1/')
+        self.assertEqual(response.content, b'')
         self.assertEqual(
             self.story1.scene_set.get(order=1).title,
             'Better Scene Title'
@@ -656,6 +769,10 @@ class ViewTestCase(TestCase):
         # Test the response
         self.assertEqual(response.status_code, 200)
         self.assertIn(
+            b'<title>Update Scene Better Scene Title from Story 1</title>',
+            response.content
+        )
+        self.assertIn(
             b'<h1>Update Scene Better Scene Title from Story 1</h1>',
             response.content
         )
@@ -677,6 +794,7 @@ class ViewTestCase(TestCase):
         response = self.client.post('/stories/story-1/scenes/new/', data=form_data)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/stories/story-1/scenes/1/')
+        self.assertEqual(response.content, b'')
 
         # Get request: render scene detail page using the client
         print("Get request to the scene detail URL")
@@ -687,6 +805,10 @@ class ViewTestCase(TestCase):
         self.assertIn('form', response.context)
         self.assertIn(
             b'<form id="scene-note-form" style="display: none;" method="post">',
+            response.content
+        )
+        self.assertIn(
+            b'<title>Scene 1, from Story 1 | The Story Builder</title>',
             response.content
         )
         self.assertIn(b'<h1>Scene 1</h1>', response.content)
@@ -707,7 +829,10 @@ class ViewTestCase(TestCase):
 
         # Test response
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'<title>Scene 1, from Story 1 | The Story Builder</title>', response.content)
+        self.assertIn(
+            b'<title>Scene 1, from Story 1 | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(b'<h1>Scene 1</h1>', response.content)
         self.assertIn(
             b'<h2>Scene Number 1 in <a href="/stories/story-1">Story 1</a></h2>',
@@ -737,6 +862,7 @@ class ViewTestCase(TestCase):
         # Test the response
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/stories/story-1/scenes/')
+        self.assertEqual(response.content, b'')
         self.assertEqual(
             self.story1.scene_set.get(title='Scene 2').order, 1
         )
@@ -753,6 +879,7 @@ class ViewTestCase(TestCase):
         # Test the response
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/stories/story-1/scenes/')
+        self.assertEqual(response.content, b'')
         self.assertEqual(
             self.story1.scene_set.get(title='Scene 3').order, 2
         )
@@ -767,6 +894,7 @@ class ViewTestCase(TestCase):
         # Test the response
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/stories/story-1/scenes/')
+        self.assertEqual(response.content, b'')
         self.assertEqual(
             self.story1.scene_set.get(title='Scene 3').order, 3
         )
@@ -783,6 +911,7 @@ class ViewTestCase(TestCase):
         # Test the response
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/stories/story-1/scenes/')
+        self.assertEqual(response.content, b'')
         self.assertEqual(
             self.story1.scene_set.get(title='Scene 2').order, 2
         )
@@ -806,6 +935,10 @@ class ViewTestCase(TestCase):
         # Test response
         self.assertEqual(response.status_code, 200)
         self.assertIn(
+            b'<title>Characters in Story 1 | The Story Builder</title>',
+            response.content
+        )
+        self.assertIn(
             b'There are no characters in this story yet. When you add some, they will be listed here.',
             response.content
         )
@@ -819,6 +952,10 @@ class ViewTestCase(TestCase):
         # Test response
         self.assertEqual(response.status_code, 200)
         self.assertIn(
+            b'<title>Characters in Story 1 | The Story Builder</title>',
+            response.content
+        )
+        self.assertIn(
             b'There are no characters in this story yet. When you add some, they will be listed here.',
             response.content
         )
@@ -830,12 +967,18 @@ class ViewTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/stories/story-1/characters/alice/')
 
+        self.assertEqual(response.content, b'')
+
         # Get request: Render the characters page with 1 scene using the client
         print("Get request to the characters URL with 1 character")
         response = self.client.get('/stories/story-1/characters/')
 
         # Test the response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Characters in Story 1 | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(b'<table>', response.content)
         self.assertIn(b'<th>Name</th>', response.content)
         self.assertIn(b'<a href=alice>Alice</a>', response.content)
@@ -848,6 +991,10 @@ class ViewTestCase(TestCase):
 
         # Test the response
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Characters in Story 1 | The Story Builder</title>',
+            response.content
+        )
         self.assertIn(b'<table>', response.content)
         self.assertIn(b'<th>Name</th>', response.content)
         self.assertIn(b'<a href=alice>Alice</a>', response.content)
@@ -1238,6 +1385,119 @@ class ViewTestCase(TestCase):
 
     def test_plot_update(self):
         """Test for the view functionality for updating a plot."""
+
+        print("**********************")
+        print("Testing the view for updating a plot")
+
+        # Get request: render the update plot form using the client
+        print("Get request to the update plot URL")
+        response = self.client.get('/stories/story-1/plot/update/')
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<title>Update Plot for Story 1 | The Story Builder</title>',
+            response.content
+        )
+        self.assertIn(
+            b'<h1>Update Plot for <a href="/stories/story-1/">Story 1</a></h1>',
+            response.content
+        )
+        self.assertIn(b'<form method="post">', response.content)
+        self.assertIn(b'<input type="text" name="title"', response.content)
+        self.assertIn(b'<input type="checkbox" name="genres"', response.content)
+
+        # Post request: update a story using the client
+        print("Post request to the update story URL")
+        form_data = {
+            'title': 'Better Title for Story 1',
+            'description': 'Better description for Story 1!'
+        }
+        response = self.client.post('/stories/story-1/update/', data=form_data)
+
+        # Test the response
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/stories/better-title-for-story-1/')
+        self.assertTrue(
+            self.user.stories.filter(description='Better description for Story 1!').exists()
+        )
+        self.assertFalse(
+            self.user.stories.filter(title='Story 1').exists()
+        )
+
+        # Post request: update a story using the client with invalid form data
+        print("Post request to the update story URL with empty title")
+        form_data = {
+            'title': '',
+            'description': 'Better description for Story 1!'
+        }
+        response = self.client.post(
+            '/stories/better-title-for-story-1/update/',
+            data=form_data
+        )
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['form'].is_valid())
+        self.assertIsNotNone(response.context['form'].errors)
+        self.assertIn('title', response.context['form'].errors)
+
+        # Get request: view function call in isolation for story update
+        print("Update story view function call with get request")
+        request = self.request_factory.get('/stories/story-1/update/')
+        request.user = self.user
+        response = views.create_or_update_story(request, story_slug='better-title-for-story-1')
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<h1>Update Better Title for Story 1</h1>', response.content)
+        self.assertIn(b'<form method="post">', response.content)
+        self.assertIn(b'<input type="text" name="title"', response.content)
+        self.assertIn(b'<input type="checkbox" name="genres"', response.content)
+
+        # Post request: view function call in isolation for story update
+        print("Update story view function with post request")
+        form_data = {
+            'title': 'New Story',
+            'description': 'Description for new story.'
+        }
+        request = self.request_factory.post('/stories/story-1/update/', data=form_data)
+        request.user = self.user
+        response = views.create_or_update_story(
+            request,
+            story_slug='better-title-for-story-1'
+        )
+
+        # Test the response
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/stories/new-story/')
+        self.assertTrue(
+            self.user.stories.filter(title='New Story').exists()
+        )
+        self.assertFalse(
+            self.user.stories.filter(title='Better Title for Story 1').exists()
+        )
+
+        # Post request: view function call in isolation for story update with invalid data
+        print("Update story view function with post request and empty title")
+        form_data = {
+            'title': '',
+            'description': 'Description for invalid story.'
+        }
+
+        request = self.request_factory.post('/stories/new-story/update/', data=form_data)
+        request.user = self.user
+        response = views.create_or_update_story(request, 'new-story')
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(
+            self.user.stories.filter(title='New Story').exists()
+        )
+        self.assertIn(b'<h1>Update New Story</h1>', response.content)
+        self.assertIn(b'<form method="post">', response.content)
+        self.assertIn(b'<input type="text" name="title"', response.content)
+        self.assertIn(b'<input type="checkbox" name="genres"', response.content)
 
     def test_plot_detail(self):
         """Test for the plot detail page and plot point list."""
