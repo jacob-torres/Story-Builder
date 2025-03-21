@@ -1172,8 +1172,6 @@ class ViewTestCase(TestCase):
         print("Testing automatic plot creation upon story creation")
 
         # Test that the story created in setup has a plot
-        print(self.story1)
-        print(self.story1.plot)
         self.assertIsNotNone(self.story1.plot)
 
         # Post request: new story URL using the client
@@ -1202,6 +1200,39 @@ class ViewTestCase(TestCase):
         )
         self.assertIn(
             b'<p>Description of the plot for Story 2.</p>',
+            response.content
+        )
+
+        # Post request: new story view function in isolation
+        print("New story view function call with post request to test plot creation")
+        form_data = {'title': 'Story 3'}
+        request = self.request_factory.post('/stories/new/', data=form_data)
+        request.user = self.user
+        response = views.create_or_update_story(request)
+
+        # Test the response
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/stories/story-3/')
+        self.assertEqual(self.user.stories.count(), 3)
+        self.assertTrue(
+            self.user.stories.filter(title='Story 3').exists()
+        )
+        self.assertIsNotNone(self.user.stories.get(title='Story 3').plot)
+
+        # Get request: plot detail view function in isolation
+        print("Plot detail view function call with get request for Story 3")
+        request = self.request_factory.get('/stories/story-3/plot/')
+        request.user = self.user
+        response = views.plot_detail(request, story_slug='story-3')
+
+        # Test the response
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            b'<h1>Plot for <a href="/stories/story-3/">Story 3</a></h1>',
+            response.content
+        )
+        self.assertIn(
+            b'<p>Description of the plot for Story 3.</p>',
             response.content
         )
 
