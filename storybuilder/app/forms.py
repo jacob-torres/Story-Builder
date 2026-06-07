@@ -190,20 +190,14 @@ class SceneCharacterForm(forms.ModelForm):
         story_slug = kwargs.pop('story_slug', None)
         super().__init__(*args, **kwargs)
 
-        # Pre-populate fields if an instance of the object exists
-        if self.instance:
-            self.fields['characters'].initial = self.instance.characters
+        # Define the story that the object is associated with
+        if story_slug and author_id:
+            self.instance.story = Story.objects.get(slug=story_slug, author_id=author_id)
 
-            # Define the story that the object is associated with
-            if story_slug and author_id:
-                self.instance.story = Story.objects.get(slug=story_slug, author_id=author_id)
-
-        # Define the character multiple choice field
-        character_choices = [
-            (character.full_name, character.full_name) for character in Character.objects.filter(story=self.instance.story)
-        ]
-
-        characters = forms.MultipleChoiceField(
-            choices=character_choices,
-            widget=forms.CheckboxSelectMultiple
+        # Define the character field, scoped to characters belonging to this story
+        self.fields['characters'] = forms.ModelMultipleChoiceField(
+            queryset=Character.objects.filter(story=self.instance.story),
+            widget=forms.CheckboxSelectMultiple,
+            required=False,
+            initial=self.instance.characters.all() if self.instance.pk else None
         )
