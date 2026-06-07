@@ -42,12 +42,9 @@ class CustomUser(AbstractUser):
         super().clean()
 
         # Construct full name
-        names = [self.first_name, self.middle_name, self.last_name]
-        for name in names:
-            if not name:
-                names.remove(name)
+        names = [name for name in [self.first_name, self.middle_name, self.last_name] if name]
 
-        self.full_name = ' '.join(filter(None, names))
+        self.full_name = ' '.join(names)
 
 
 class UserProfile(models.Model):

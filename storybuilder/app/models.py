@@ -98,10 +98,7 @@ class Character(models.Model):
         super().clean()
 
         # Construct full name
-        names = [self.first_name, self.middle_name, self.last_name]
-        for name in names:
-            if not name:
-                names.remove(name)
+        names = [name for name in [self.first_name, self.middle_name, self.last_name] if name]
 
         if len(names) == 1:
             self.full_name = self.first_name
