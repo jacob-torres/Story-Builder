@@ -14,7 +14,7 @@ div.action-btn {
 
 button.action-btn {
     background-color: var(--accent-color);
-    color: var(--dark-text-color);
+    color: var(--dark-foreground-color);
   }
 
 

@@ -17,14 +17,14 @@ html, body {
 }
 
 body {
-  light-background-color: var(--light-background-color);
+  background-color: var(--light-background-color);
   color: var(--dark-foreground-color);
   padding: 1.25rem;
 }
 
 /* Banner */
 section.banner {
-  light-background-color: var(--accent-color);
+  background-color: var(--accent-color);
   margin: 0 auto;
   padding: 1rem;
   border: hidden;
@@ -39,7 +39,7 @@ header {
 
 /* Link Styles */
 a:hover {
-  light-background-color: var(--light-background-color);
+  background-color: var(--light-background-color);
   color: var(--primary-color);
   text-decoration: underline; /* Add underline on hover */
 }
@@ -82,7 +82,7 @@ nav li a {
 
 /* Footer */
 footer {
-  light-background-color: #F0E68C;  /* Light Yellow */
+  background-color: #F0E68C;  /* Light Yellow */
 }
 
 
@@ -94,7 +94,7 @@ div.big-btn {
 }
 
 button.big-btn {
-  light-background-color: var(--primary-color);
+  background-color: var(--primary-color);
   color: var(--light-foreground-color);
 }
 

@@ -1,6 +1,6 @@
 /* Home Page */
 main {
-    background-color: var(--background-color);
+    background-color: var(--light-background-color);
 }
 
 section.top-section {

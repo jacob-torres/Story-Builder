@@ -1,0 +1,48 @@
+/* Account & Profile Styles */
+
+/* Forms (login, register, profile update) */
+form p {
+    margin-bottom: 0.75rem;
+}
+
+form label {
+    display: inline-block;
+    margin-bottom: 0.25rem;
+    font-weight: bold;
+    color: var(--dark-foreground-color);
+}
+
+form input,
+form textarea,
+form select {
+    width: 100%;
+    max-width: 24rem;
+    padding: 0.4rem;
+    border: 1px solid var(--dark-foreground-color);
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Danger zone (e.g. account deletion) */
+div.danger {
+    margin-top: 2rem;
+    padding: 1rem;
+    border: 2px solid #B22222;  /* Firebrick Red */
+    border-radius: 6px;
+    background-color: #FDEDEC;  /* Pale Red */
+}
+
+div.danger h2 {
+    margin-top: 0;
+    color: #B22222;  /* Firebrick Red */
+}
+
+div.danger button {
+    background-color: #B22222;  /* Firebrick Red */
+    border-color: #B22222;
+}
+
+div.danger button a {
+    color: var(--light-foreground-color);
+    text-decoration: none;
+}
