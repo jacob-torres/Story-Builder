@@ -1,6 +1,5 @@
 from django.db import models
 from django.db.models import UniqueConstraint
-from django.contrib.postgres.fields import ArrayField
 from django.utils.text import slugify
 
 from accounts.models import CustomUser
@@ -22,11 +21,7 @@ class Story(models.Model):
     description = models.TextField(max_length=long_length, null=True)
     premise = models.CharField(max_length=mid_length, null=True)
 
-    genres = ArrayField(
-        models.CharField(max_length=tiny_length),
-        blank=True,
-        null=True
-    )
+    genres = models.JSONField(blank=True, default=list)
 
     word_count = models.PositiveIntegerField(default=0)
     date_started = models.DateField(auto_now_add=True)
@@ -75,13 +70,9 @@ class Character(models.Model):
     body_type = models.CharField(max_length=short_length, blank=True, null=True)
 
     # Personality
-    personality_traits = ArrayField(
-        models.CharField(max_length=tiny_length),
-        blank=True,
-        null=True
-    )
-    mbti_personality = models.CharField(choices=mbti_choices, blank=True, null=True)
-    enneagram_personality = models.CharField(choices=enneagram_choices, blank=True, null=True)
+    personality_traits = models.JSONField(blank=True, default=list)
+    mbti_personality = models.CharField(max_length=short_length, choices=mbti_choices, blank=True, null=True)
+    enneagram_personality = models.CharField(max_length=short_length, choices=enneagram_choices, blank=True, null=True)
 
     # Long character description
     description = models.TextField(max_length=long_length, blank=True, null=True)
@@ -116,11 +107,7 @@ class Scene(models.Model):
 
     title = models.CharField(max_length=short_length, null=False)
     description = models.TextField(max_length=long_length, null=True)
-    notes = ArrayField(
-        models.CharField(max_length=long_length),
-        blank=True,
-        default=list
-    )
+    notes = models.JSONField(blank=True, default=list)
 
     # Relationships: One story and one possible plot point, one or more characters
     story = models.ForeignKey(Story, on_delete=models.CASCADE, default=None)
