@@ -786,7 +786,7 @@ def move_up(request, story_slug, scene_order=None, plotpoint_order=None):
                 context = {'model_name': 'Scene'}
                 return render(request, '404.html', status=404, context=context)
         
-        prev_scene = Scene.objects.filter(order__lt=scene.order).order_by('-order').first()
+        prev_scene = Scene.objects.filter(story=story, order__lt=scene.order).order_by('-order').first()
         if prev_scene:
             prev_scene.order, scene.order = scene.order, prev_scene.order
             prev_scene.save()
@@ -801,7 +801,7 @@ def move_up(request, story_slug, scene_order=None, plotpoint_order=None):
             context = {'model_name': 'Plot Point'}
             return render(request, '404.html', status=404, context=context)
         
-        prev_plotpoint = PlotPoint.objects.filter(order__lt=plotpoint.order).order_by('-order').first()
+        prev_plotpoint = PlotPoint.objects.filter(plot=plotpoint.plot, order__lt=plotpoint.order).order_by('-order').first()
         if prev_plotpoint:
             prev_plotpoint.order, plotpoint.order = plotpoint.order, prev_plotpoint.order
             prev_plotpoint.save()
@@ -830,7 +830,7 @@ def move_down(request, story_slug, scene_order=None, plotpoint_order=None):
                 context = {'model_name': 'Scene'}
                 return render(request, '404.html', status=404, context=context)
         
-        next_scene = Scene.objects.filter(order__gt=scene.order).order_by('order').first()
+        next_scene = Scene.objects.filter(story=story, order__gt=scene.order).order_by('order').first()
         if next_scene:
             next_scene.order, scene.order = scene.order, next_scene.order
             next_scene.save()
@@ -845,7 +845,7 @@ def move_down(request, story_slug, scene_order=None, plotpoint_order=None):
             context = {'model_name': 'Plot Point'}
             return render(request, '404.html', status=404, context=context)
         
-        next_plotpoint = PlotPoint.objects.filter(order__lt=plotpoint.order).order_by('-order').first()
+        next_plotpoint = PlotPoint.objects.filter(plot=plotpoint.plot, order__gt=plotpoint.order).order_by('order').first()
         if next_plotpoint:
             next_plotpoint.order, plotpoint.order = plotpoint.order, next_plotpoint.order
             next_plotpoint.save()
