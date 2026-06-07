@@ -92,12 +92,12 @@ def create_or_update_story(request, story_slug=None):
 
     template_name = ''
     context= {}
+    author_id = request.user.id
 
     try:
 
         # Update story if slug is passed
         if story_slug:
-            author_id = request.user.id
             story = get_story_by_slug(story_slug, author_id)
             if not story:
                 context = {'model_name': 'Story'}
