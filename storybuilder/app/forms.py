@@ -83,13 +83,13 @@ class SceneForm(forms.ModelForm):
 class CharacterForm(forms.ModelForm):
     """Form for creating a new character."""
 
+    # Define personality type fields
+    mbti_personality = forms.ChoiceField(choices=mbti_choices, required=False)
+    enneagram_personality = forms.ChoiceField(choices=enneagram_choices, required=False)
+
     class Meta:
         model = Character
         exclude = ['full_name', 'story', 'slug']
-
-        # Define personality type fields
-        mbti_personality = forms.ChoiceField(choices=mbti_choices)
-        enneagram_personality = forms.ChoiceField(choices=enneagram_choices)
 
     def __init__(self, *args, **kwargs):
         author_id = kwargs.pop('author_id', None)
