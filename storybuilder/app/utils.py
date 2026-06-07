@@ -64,10 +64,10 @@ def get_plot(story_id: int):
         return None
 
 
-def get_plotpoint(story_slug: str, plotpoint_order: int):
+def get_plotpoint(story_slug: str, plotpoint_order: int, author_id: int):
     """Get a plot point object by story ID and plot point order."""
 
-    story = get_story_by_slug(story_slug)
+    story = get_story_by_slug(story_slug, author_id)
     if not story:
         return None
 

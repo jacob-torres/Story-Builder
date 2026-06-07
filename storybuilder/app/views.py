@@ -640,7 +640,7 @@ def plotpoint_detail(request, story_slug, plotpoint_order):
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
 
-    plotpoint = get_plotpoint(story_slug, plotpoint_order)
+    plotpoint = get_plotpoint(story_slug, plotpoint_order, author_id)
     if not plotpoint:
         context = {'model_name': 'Plot Point'}
         return render(request, '404.html', status=404, context=context)
@@ -673,7 +673,7 @@ def create_or_update_plotpoint(request, story_slug, plotpoint_order=None):
 
     # Update plot point
     if plotpoint_order:
-        plotpoint = get_plotpoint(story_slug, plotpoint_order)
+        plotpoint = get_plotpoint(story_slug, plotpoint_order, author_id)
         if not plotpoint:
             context = {'model_name': 'Plot Point'}
             return render(request, '404.html', status=404, context=context)
@@ -743,7 +743,7 @@ def delete_plotpoint(request, story_slug, plotpoint_order):
         context = {'model_name': 'Story'}
         return render(request, '404.html', status=404, context=context)
 
-    plotpoint = get_plotpoint(story_slug, plotpoint_order)
+    plotpoint = get_plotpoint(story_slug, plotpoint_order, author_id)
     if not plotpoint:
         context = {'model_name': 'Plot Point'}
         return render(request, '404.html', status=404, context=context)
@@ -796,7 +796,7 @@ def move_up(request, story_slug, scene_order=None, plotpoint_order=None):
     elif plotpoint_order:
         print(f"Reordering plot point {plotpoint_order}")
 
-        plotpoint = get_plotpoint(story_slug, plotpoint_order)
+        plotpoint = get_plotpoint(story_slug, plotpoint_order, author_id)
         if not plotpoint:
             context = {'model_name': 'Plot Point'}
             return render(request, '404.html', status=404, context=context)
@@ -840,7 +840,7 @@ def move_down(request, story_slug, scene_order=None, plotpoint_order=None):
     elif plotpoint_order:
         print(f"Reordering plot point {plotpoint_order}")
 
-        plotpoint = get_plotpoint(story_slug, plotpoint_order)
+        plotpoint = get_plotpoint(story_slug, plotpoint_order, author_id)
         if not plotpoint:
             context = {'model_name': 'Plot Point'}
             return render(request, '404.html', status=404, context=context)
